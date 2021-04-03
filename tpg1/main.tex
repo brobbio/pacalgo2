@@ -1,6 +1,6 @@
 \documentclass[10pt, a4paper]{article}
 \usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
-%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish]{babel}
 \usepackage{indentfirst}
@@ -197,128 +197,119 @@
 
 \begin{document}
 
+\materia{Coso}
+\titulo{asdad}
+\integrante{asd}{232}{2323}
 \maketitle
 
 \section{Introducción}
 Esta es la introducción en \LaTeX.
 
 \section{Desarrollo}
-\subsection{Escribir TADs}
-Por ahora es una versión $\beta$ 2.0. Para la eñe (\~n), escribir eso, y para los acentos, probar con \'esto (recordar que la \href{http://www.rae.es}{RAE}\footnote{Pero, ¿qué me importa lo que dice la RAE?} ya no acepta la tilde salvo para desambiguar).
+\subsection{Parte 1}
 
-\begin{tad}{\tadNombre{NombreDelTad}}
-\tadUsa{Tipo1, Tipo2, Nat}
-\tadExporta{observadores, operación adicional}
-\tadGeneros{súperTAD}
+\begin{tad}{\tadNombre{Casillero}}
 
+    \tadExtiende{Tupla(nat, nat)}
+
+    \tadGeneros{casillero}
+
+    \tadOtrasOperaciones
+    \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{$\bullet$ - $\bullet$ ($c_1$, $c_2$)}{casillero, casillero}{casillero}{}
+
+    \tadAxiomas[]
+    \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
+    \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
+    \tadAxioma{$\pi_1$($c1$ - $c2$)}{máx\{$\pi_1$($c_1$) - $\pi_1$($c_2$), 0\}}
+    \tadAxioma{$\pi_2$($c1$ - $c2$)}{máx\{$\pi_2$($c_1$) - $\pi_2$($c_2$), 0\}}
+
+\end{tad}
+
+\newpage
+
+\begin{tad}{\tadNombre{Mapa}} 
+
+    \tadUsa{Nat, Casillero}
+    \tadExporta{observadores, operación adicional}
+    \tadGeneros{mapa}
+
+    \tadObservadores
+        \tadOperacion{fantasmas}{mapa}{conj(casillero)}{}
+        \tadOperacion{paredes}{mapa}{conj(casillero)}{}
+        \tadOperacion{dimensiones}{mapa}{tupla(nat,nat)}{}
+        \tadOperacion{casilleroInicial}{mapa}{casillero}{}
+        \tadOperacion{casilleroDeLlegada}{mapa}{casillero}{}
+        \tadOperacion{aDistanciaMenosDeN}{mapa, casillero, nat}{conj(casillero)}{}
+
+    \tadGeneradores
+        \tadOperacion{nuevoMapa}{tupla(nat; nat)\ $d$, casillero\ $inicio$, casillero\  $fin$, conj(casillero)\ $fs$, conj(casillero)\ $ps$}{mapa}{$ \emptyset?(fs \cap ps) \wedge$\\
+            $ \emptyset?$(aDistanciaMenosDeN($inicio$, 3) $\cap fs$) $\wedge$\\
+            $(inicio \neq fin) \wedge $\\ 
+            $(\forall f \in fs)(\pi_1(f) \leq \pi_1(d) \wedge \pi_2(f) \leq \pi_2(d)) \wedge $\\
+            $(\forall p \in ps)(\pi_1(p) \leq \pi_1(d) \wedge \pi_2(p) \leq \pi_2(d))$}
+
+    \tadOtrasOperaciones
+      \tadOperacion{casillerosLibres}{mapa}{conj(casillero)}{}
+
+    \tadAxiomas[]
+        \tadAxioma{fantasmas(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$fs$}
+        \tadAxioma{paredes(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$ps$}
+        \tadAxioma{dimensiones(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$dimension$}
+        \tadAxioma{casilleroInicial(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$inicio$}
+        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$casilleroDeLlegada$}
+        \tadAxioma{aDistanciaMenosDeN($m$,\ $c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)) \\
+          $\cap$ casillerosLibres($m$) FI} 
+        \tadAxioma{casillerosLibres($m$)}{\{ ($c : $casillero) \\ 
+          ($\pi_1$($c$) $\leq$ $\pi_1$(dimensiones($m$)) $\wedge$ \\ 
+          $\pi_2$($c$) $\leq$ $\pi_2$(dimensiones($m$))) \} - (fantasmas($m$) $\cup$ paredes($m$))}
+
+\end{tad}
+
+
+\newpage
+\begin{tad}{\tadNombre{Pacman}}
+\tadGeneros{Pacman}
+\tadUsa {mapa}
+\tadIgualdadObservacional{p_1}{p_2}{Pacman}{VerMapa($p_1$)=VerMapa($p_2$)$\wedge$ Trayectoria($p_1$)=Trayectoria($p_2$)}
 \tadObservadores
-\tadOperacion{obs1}{súperTAD}{nat}{}
-\tadOperacion{obs2}{súperTAD/s,nat/n_1,nat/n_2}{nat}{condición(s,$n_1$) $\land n_2<10$}
-
+\tadAlinearFunciones{HistorialMovimientos}{Pacman}
+\tadOperacion{VerMapa}{Pacman}{mapa}{}
+\tadOperacion{Trayectoria}{Pacman}{sec(Casilla)}{}
 \tadGeneradores
-\tadOperacion{gen1}{}{súperTAD}{}
-\tadOperacion{gen2}{súperTAD/s,nat/n}{súperTAD}{condición(s,n)}
-
+\tadAlinearFunciones{InicializarJuego}{mapa\text{ } m}
+\tadOperacion{InicializarJuego}{mapa\text{ } m}{p}{}
+\tadOperacion{Arriba}{Pacman \text{ }p}{p}{Arriba$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
+\tadOperacion{Abajo}{Pacman \text{ }p}{p}{Abajo$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
+\tadOperacion{Derecha}{Pacman \text{ }p}{p}{Derecha$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
+\tadOperacion{Izquierda}{Pacman \text{ }p}{p}{Izquierda$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
 \tadOtrasOperaciones
-\tadOperacion{condición}{súperTAD,nat}{bool}{}
-
-\tadAxiomas[$\ldots$]
-
-\tadAxioma{obs1(gen1)}{0}
-\tadAxioma{obs1(gen2($s,n$))}{1 + obs1($s$)}
-
-\tadAxioma{condicion($s,n$)}{\IF $n>5$ THEN condicion($s,n-1$) ELSE condicion($s,n+1$) FI\\
-	$\lor$ $n>$ \IF obs1($s$) $<$ $n$ THEN 1 ELSE 10 FI}
+\tadAlinearFunciones{DireccionesPosibles}{Pacman\text{ } p}
+\tadOperacion{DireccionesPosibles}{Pacman\text{ } p}{conj(Direccion)}{}
+\tadOperacion{Perdió?}{Pacman\text{ } p}{Bool}{}
+\tadOperacion{Ganó?}{Pacman\text{ } p}{Bool}{}
+\tadOperacion{PosicionActual}{Pacman\text{ }p}{Casilla}{}
+\tadAxiomas
+\tadAxioma{VerMapa(InicializarJuego m)}{m}
+\tadAxioma{VerMapa(Arriba(p))}{VerMapa(p)}
+\tadAxioma{VerMapa(Abajo(p))}{VerMapa(p)}
+\tadAxioma{VerMapa(Izquierda(p))}{VerMapa(p)}
+\tadAxioma{VerMapa(Derecha(p))}{VerMapa(p)}
+\tadAlinearAxiomas{PosicionActual(InicializarJuego\text{ }m)}
+\tadAxioma{AdistanciaN(p,n)}{\IF n=0 THEN $\{\text{PosicionActual}(p)\}$ ELSE AdistanciaMenosDeN(p,n)-AdistanciaMenosDeN(p,n-1) FI}
+\tadAxioma{Trayectoria(InicializarJuego m)}{CasillaInicial(m)$\bullet \langle\rangle$}
+\tadAxioma{Trayectoria(Arriba(p))}{$\langle\pi_1$(PosicionActual(p)),suc($\pi_2$(PosicionActual(p)))$\rangle\bullet$ Trayectoria(p)}
+\tadAxioma{Trayectoria(Abajo(p))}{$\langle\pi_1$(PosicionActual(p)),pred($\pi_2$(PosicionActual(p)))$\rangle\bullet$ Trayectoria(p)}
+\tadAxioma{Trayectoria(Izquierda(p))}{$\langle$ pred($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\bullet$ Trayectoria(p)}
+\tadAxioma{Trayectoria(Derecha(p))}{$\langle$ suc($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\bullet$ Trayectoria(p)}
+\tadAxioma{Perdió?(p)}{$\exists$ (f$\in $ fantasmas(VerMapa(p)))(f$\in$ ADistanciaMenosDeN(p,3))}
+\tadAxioma{Ganó?(p)}{PosicionActual(p)=casilleroFin(VerMapa(p))}
+\tadAxioma{PosicionActual(p)}{prim(Trayectoria(p))}
+\tadAxioma{DireccionesPosibles(p)}{(\IF $\langle$ suc($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN$\{$Derecha$\}$ELSE$\varnothing$ FI)$\cup$(\IF $\langle$ pred($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{$Izquierda$\}$ ELSE $\varnothing$ FI)$\cup$(\IF $\langle\pi_1$(PosicionActual(p)),suc($\pi_2$(PosicionActual(p)))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{Arriba\}$ ELSE $\varnothing$ FI)$\cup$(\IF $\langle \pi_1$(PosicionActual(p)),pred($\pi_2$(PosicionActual(p)))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{Abajo\}$ ELSE $\varnothing$ FI) }
 \end{tad}
 
 
-\begin{tad}{\tadNombre{TuplaRara($\alpha$)} es $\langle$\tadNombre{Nat}, \tadNombre{secu($\alpha$)}$\rangle$ }
-\end{tad}
-
-Otra opción, para que no aparezca el Fin TAD:
-
-\textbf{TAD} \tadNombre{OtraTuplaRara($\alpha$)} es \tadNombre{Tupla}(\tadNombre{Nat} $\times$ \tadNombre{secu($\alpha$)})
-
-\subsection{Escribir pseudoc\'odigo}
-Tambi\'en presentaremos el algoritmo del \'exito\footnote{Puede fallar. }:
-
-% atajo para asignarle un valor a una variable en el entorno de algorithm!
-% uso: \asignar{i}{0}
-\newcommand{\asignar}[2]{$#1 \gets #2$}
-
-\begin{algorithm}[H]
-    \caption{\textsc{hacerGuia}(\textbf{in} \textit{A} : \texttt{guia}, \textit{parámetroInútil} : \texttt{Nat}) $\longrightarrow$ \texttt{bool}}
-    \begin{algorithmic}[1]
-      \State \asignar{i}{0} \Comment{esto es $\Theta$(1)}
-
-      \State \asignar{n}{guia.\text{cantEjercicios()}} \Comment{$\bigO$(1)}
-
-     \State \asignar{consultas}{\textsc{diccVacio}} 
-
-      \State \textsc{prepararMate()} \Comment{$\Omega$($n^n$)}
-
-      \While {$i < n$}
-      \State \textsc{pensarEjercicio(i)} 
-      \If{\textsc{tengoConsultas($i$)}}
-        \State \textsc{escribirConsultasEjercicio($i$,$consultas$)} 
-      \Else
-        \State \textsc{comerBizochito()}
-      \EndIf
-        \State \textsc{comerBizochito()}
-      \EndWhile
-      
-      \For{miVariable}
-           \State hacer algo
-      \EndFor
-
-      \State \Return{\textsc{vacio?}($consultas$)} 
-    \end{algorithmic}
-  \end{algorithm}
-
-\todo[inline]{¡Una forma piola de anotar lo que les falte!}
-
-\subsection{Elección de estructuras}
-
-\subsubsection*{Ejercicio 2: Sistema de estadísticas}
-
-Se desea diseñar un sistema de estadísticas para la cantidad de personas
-que ingresan a un banco. Al final del día, un empleado del banco ingresa en
-el sistema el total de ingresantes para ese día. Se desea saber, en cualquier
-intervalo de días, la cantidad total de personas que ingresaron al banco.
-La siguiente es una especificación del problema.
-
-\begin{framed}
-\vspace{-0.2cm}
-\small
-\begin{tad}{\tadNombre{IngresosAlBanco}}
-\tadObservadores
-\tadOperacion{totDias}{iab}{nat}{}
-\tadOperacion{cantPersonas}{iab/i,nat/d,nat/h}{nat}{$1 \le d \land d \le h \land h \le totDias(i)$}
-
-\tadGeneradores
-\tadOperacion{Comenzar}{}{iab}{}
-\tadOperacion{TerminaDia}{iab,nat}{iab}{}
-
-\tadAxiomas[$\ldots$]
-
-\tadAxioma{totDias(Comenzar)}{0}
-\tadAxioma{totDias(TerminaDia($i,n$))}{1 + totDias($i$)}
-
-\tadAxioma{cantPersonas(TerminaDia($i,n$),$d,h$)}{\IF totDias($i$) $<$ $h$ THEN $n$ ELSE 0 FI
-	$+$ \IF totDias($i$) $<$ $d$ THEN 0 ELSE cantPersonas($i,d,\min(h,$totDias$(i))$) FI}
-\end{tad}
-\vspace{-0.2cm}
-\end{framed}
-
-\begin{enumerate}
-\item Dar una estructura de representación que permita que la función
-\textit{cantPersonas} tome $O(1)$.
-\item Calcular cuánta memoria usa la estructura, en función de la cantidad de
-días que pasaron $n$.
-\item Si el cálculo del punto anterior fue una función que no es $O(n)$, piense
-otra estructura que permita resolver el problema utilizando $O(n)$ memoria.
-\end{enumerate}
-
-\section{Conclusiones}
-Esta cátedra es la mejor. Especialmente en humildad.
 \end{document}
