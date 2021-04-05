@@ -58,7 +58,7 @@
 \thispagestyle{fancy}
 \addtolength{\headheight}{1pt}
 \lhead{Algoritmos y Estructuras de Datos II}
-\rhead{$1^{\mathrm{er}}$ cuatrimestre de 2020}
+\rhead{$1^{\mathrm{er}}$ cuatrimestre de 2021}
 \cfoot{\thepage /\pageref{LastPage}}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -106,10 +106,10 @@
 
 % ----- Macro para generar la tabla de integrantes -------------------------
 
-\integrante{Church, Alonso}{1/20}{alonso@iglesia.com}
-\integrante{Lovelace, Ada}{10/19}{ada\_de\_los\_dientes@tatooine.com}
-\integrante{Null, Linda}{100/18}{null@null.null}
-\integrante{Turing, Alan}{314/16}{halting@problem.com}
+%\integrante{Church, Alonso}{1/20}{alonso@iglesia.com}
+%\integrante{Lovelace, Ada}{10/19}{ada\_de\_los\_dientes@tatooine.com}
+%\integrante{Null, Linda}{100/18}{null@null.null}
+%\integrante{Turing, Alan}{314/16}{halting@problem.com}
 
 \def\tablaints{
     \begin{tabular}{|l@{\hspace{4ex}}c@{\hspace{4ex}}l|}
@@ -164,8 +164,8 @@
 %\def\subtitulo#1{\def\Subtitulo{#1}}
 %\def\grupo#1{\def\Grupo{#1}}
     \par\vspace{\stretch{1}}
-    \titulo{El diseño contraataca}
-    \subtitulo{La cosa se pone compleja}
+    \titulo{Pacalgo2}
+    \subtitulo{Los inertes}
     {\large Departamento de Computaci\'on}\\[0.5em]
     {\large Facultad de Ciencias Exactas y Naturales}\\[0.5em]
     {\large Universidad de Buenos Aires}
@@ -199,11 +199,14 @@
 
 \materia{Coso}
 \titulo{asdad}
-\integrante{asd}{232}{2323}
+\integrante{Valentina Madelaine Saravia Ruiz}{257/18}{valentina.saraviaruiz@gmail.com}
+\integrante{Bruno Robbio}{480/09}{brobbio@hotmail.com}
+\integrante{Nicolas Andres Kinaschuk}{248/15}{nicolaskinaschuk@gmail.com}
+\integrante{Pedro Joel Burgos}{804/18}{facultadburgospedrojoel@hotmail.com}
 \maketitle
 
-\section{Introducción}
-Esta es la introducción en \LaTeX.
+%\section{Introducción}
+%Esta es la introducción en \LaTeX.
 
 \section{Desarrollo}
 \subsection{Parte 1}
@@ -211,18 +214,26 @@ Esta es la introducción en \LaTeX.
 \begin{tad}{\tadNombre{Casillero}}
 
     \tadExtiende{Tupla(nat, nat)}
-
+    \tadUsa{Nat}
     \tadGeneros{casillero}
+    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
 
     \tadOtrasOperaciones
     \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
-    \tadOperacion{$\bullet$ - $\bullet$ ($c_1$, $c_2$)}{casillero, casillero}{casillero}{}
+    \tadOperacion{$\bullet$ - $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{aDistanciaMenosDeN}{casillero, nat}{conj(casillero)}{}
 
     \tadAxiomas[]
+    \tadAlinearAxiomas{aDistanciaMenosDeN($c$,\ $n$)}
     \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
     \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
-    \tadAxioma{$\pi_1$($c1$ - $c2$)}{máx\{$\pi_1$($c_1$) - $\pi_1$($c_2$), 0\}}
-    \tadAxioma{$\pi_2$($c1$ - $c2$)}{máx\{$\pi_2$($c_1$) - $\pi_2$($c_2$), 0\}}
+    \tadAxioma{$\pi_1$($c1$ - $c2$)}{\IF $\pi_1$($c_2$) > $\pi_1$($c_1$) THEN 0 ELSE $\pi_1$($c_1$) - $\pi_1$($c_2$) FI}
+    \tadAxioma{$\pi_2$($c1$ - $c2$)}{\IF $\pi_2$($c_2$) > $\pi_2$($c_1$) THEN 0 ELSE $\pi_2$($c_1$) - $\pi_2$($c_2$) FI}
+    \tadAxioma{aDistanciaMenosDeN($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$,\ $n-1$)) FI} 
 
 \end{tad}
 
@@ -231,8 +242,13 @@ Esta es la introducción en \LaTeX.
 \begin{tad}{\tadNombre{Mapa}} 
 
     \tadUsa{Nat, Casillero}
-    \tadExporta{observadores, operación adicional}
     \tadGeneros{mapa}
+    \tadExporta{mapa, observadores, generadores, casillerosLibres}
+    \tadIgualdadObservacional{m_1}{m_2}{mapa}{fantasmas($m_1$)$\igobs$fantasmas($m_2$)$\ \wedge$\\
+        paredes($m_1$)$\igobs$paredes($m_2$)\ $\wedge$\\
+        dimensiones($m_1$)$\igobs$dimensiones($m_2$)\ $\wedge$\\
+        casilleroInicial($m_1$)$\igobs$casilleroInicial($m_2$)\ $\wedge$\\
+        casilleroDeLlegada($m_1$)$\igobs$casilleroDeLlegada($m_2$)}
 
     \tadObservadores
         \tadOperacion{fantasmas}{mapa}{conj(casillero)}{}
@@ -240,7 +256,6 @@ Esta es la introducción en \LaTeX.
         \tadOperacion{dimensiones}{mapa}{tupla(nat,nat)}{}
         \tadOperacion{casilleroInicial}{mapa}{casillero}{}
         \tadOperacion{casilleroDeLlegada}{mapa}{casillero}{}
-        \tadOperacion{aDistanciaMenosDeN}{mapa, casillero, nat}{conj(casillero)}{}
 
     \tadGeneradores
         \tadOperacion{nuevoMapa}{tupla(nat; nat)\ $d$, casillero\ $inicio$, casillero\  $fin$, conj(casillero)\ $fs$, conj(casillero)\ $ps$}{mapa}{$ \emptyset?(fs \cap ps) \wedge$\\
@@ -257,12 +272,8 @@ Esta es la introducción en \LaTeX.
         \tadAxioma{paredes(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$ps$}
         \tadAxioma{dimensiones(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$dimension$}
         \tadAxioma{casilleroInicial(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$inicio$}
-        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$casilleroDeLlegada$}
-        \tadAxioma{aDistanciaMenosDeN($m$,\ $c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)) \\
-          $\cap$ casillerosLibres($m$) FI} 
+        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimension$, $inicio$, $fin$, $fs$, $ps$))}{$fin$}
+        
         \tadAxioma{casillerosLibres($m$)}{\{ ($c : $casillero) \\ 
           ($\pi_1$($c$) $\leq$ $\pi_1$(dimensiones($m$)) $\wedge$ \\ 
           $\pi_2$($c$) $\leq$ $\pi_2$(dimensiones($m$))) \} - (fantasmas($m$) $\cup$ paredes($m$))}
@@ -271,45 +282,57 @@ Esta es la introducción en \LaTeX.
 
 
 \newpage
-\begin{tad}{\tadNombre{Pacman}}
-\tadGeneros{Pacman}
-\tadUsa {mapa}
-\tadIgualdadObservacional{p_1}{p_2}{Pacman}{VerMapa($p_1$)=VerMapa($p_2$)$\wedge$ Trayectoria($p_1$)=Trayectoria($p_2$)}
+\begin{tad}{\tadNombre{Pacalgo2}}
+
+
+    \tadUsa {mapa, conj}
+    \tadGeneros{pacalgo2}
+    \tadExporta{pacalgo2, observadores, generadores}
+    \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ trayectoria($p_1$)$\igobs$trayectoria($p_2$)}
+
 \tadObservadores
-\tadAlinearFunciones{HistorialMovimientos}{Pacman}
-\tadOperacion{VerMapa}{Pacman}{mapa}{}
-\tadOperacion{Trayectoria}{Pacman}{sec(Casilla)}{}
+    \tadAlinearFunciones{historialMovimientos}{pacalgo2}
+    \tadOperacion{verMapa}{pacalgo2}{mapa}{}
+    \tadOperacion{trayectoria}{pacalgo2}{sec(casillero)}{}
+
 \tadGeneradores
-\tadAlinearFunciones{InicializarJuego}{mapa\text{ } m}
-\tadOperacion{InicializarJuego}{mapa\text{ } m}{p}{}
-\tadOperacion{Arriba}{Pacman \text{ }p}{p}{Arriba$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
-\tadOperacion{Abajo}{Pacman \text{ }p}{p}{Abajo$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
-\tadOperacion{Derecha}{Pacman \text{ }p}{p}{Derecha$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
-\tadOperacion{Izquierda}{Pacman \text{ }p}{p}{Izquierda$\in$\ DireccionesPosibles(p)\ $\wedge\ \lnot$Ganó?(p) $\wedge\lnot$\ Perdió?(p)}
+    \tadAlinearFunciones{inicializarJuego}{mapa\text{ } m}
+    \tadOperacion{inicializarJuego}{mapa}{pacalgo2}{}
+    \tadOperacion{arriba}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) + $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{abajo}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) - $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{derecha}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) + $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{izquierda}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) - $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+
 \tadOtrasOperaciones
-\tadAlinearFunciones{DireccionesPosibles}{Pacman\text{ } p}
-\tadOperacion{DireccionesPosibles}{Pacman\text{ } p}{conj(Direccion)}{}
-\tadOperacion{Perdió?}{Pacman\text{ } p}{Bool}{}
-\tadOperacion{Ganó?}{Pacman\text{ } p}{Bool}{}
-\tadOperacion{PosicionActual}{Pacman\text{ }p}{Casilla}{}
+    \tadAlinearFunciones{direccionesPosibles}{pacalgo2}
+    \tadOperacion{direccionesPosibles}{pacalgo2}{conj(casillero)}{}
+    \tadOperacion{perdió?}{pacalgo2}{bool}{}
+    \tadOperacion{ganó?}{pacalgo2}{bool}{}
+    \tadOperacion{posicionActual}{pacalgo2}{casillero}{}
+
 \tadAxiomas
-\tadAxioma{VerMapa(InicializarJuego m)}{m}
-\tadAxioma{VerMapa(Arriba(p))}{VerMapa(p)}
-\tadAxioma{VerMapa(Abajo(p))}{VerMapa(p)}
-\tadAxioma{VerMapa(Izquierda(p))}{VerMapa(p)}
-\tadAxioma{VerMapa(Derecha(p))}{VerMapa(p)}
-\tadAlinearAxiomas{PosicionActual(InicializarJuego\text{ }m)}
-\tadAxioma{AdistanciaN(p,n)}{\IF n=0 THEN $\{\text{PosicionActual}(p)\}$ ELSE AdistanciaMenosDeN(p,n)-AdistanciaMenosDeN(p,n-1) FI}
-\tadAxioma{Trayectoria(InicializarJuego m)}{CasillaInicial(m)$\bullet \langle\rangle$}
-\tadAxioma{Trayectoria(Arriba(p))}{$\langle\pi_1$(PosicionActual(p)),suc($\pi_2$(PosicionActual(p)))$\rangle\bullet$ Trayectoria(p)}
-\tadAxioma{Trayectoria(Abajo(p))}{$\langle\pi_1$(PosicionActual(p)),pred($\pi_2$(PosicionActual(p)))$\rangle\bullet$ Trayectoria(p)}
-\tadAxioma{Trayectoria(Izquierda(p))}{$\langle$ pred($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\bullet$ Trayectoria(p)}
-\tadAxioma{Trayectoria(Derecha(p))}{$\langle$ suc($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\bullet$ Trayectoria(p)}
-\tadAxioma{Perdió?(p)}{$\exists$ (f$\in $ fantasmas(VerMapa(p)))(f$\in$ ADistanciaMenosDeN(p,3))}
-\tadAxioma{Ganó?(p)}{PosicionActual(p)=casilleroFin(VerMapa(p))}
-\tadAxioma{PosicionActual(p)}{prim(Trayectoria(p))}
-\tadAxioma{DireccionesPosibles(p)}{(\IF $\langle$ suc($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN$\{$Derecha$\}$ELSE$\varnothing$ FI)$\cup$(\IF $\langle$ pred($\pi_1$(PosicionActual(p))),$\pi_2$(PosicionActual(p))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{$Izquierda$\}$ ELSE $\varnothing$ FI)$\cup$(\IF $\langle\pi_1$(PosicionActual(p)),suc($\pi_2$(PosicionActual(p)))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{Arriba\}$ ELSE $\varnothing$ FI)$\cup$(\IF $\langle \pi_1$(PosicionActual(p)),pred($\pi_2$(PosicionActual(p)))$\rangle\in$ casillerosLibres(VerMapa(p)) THEN $\{Abajo\}$ ELSE $\varnothing$ FI) }
+\tadAlinearAxiomas{trayectoria(InicializarJuego $m$)}
+    \tadAxioma{verMapa(inicializarJuego($m$)}{$m$}
+    \tadAxioma{verMapa(arriba($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(abajo($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(izquierda($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(derecha($p$))}{verMapa($p$)}
+    \tadAxioma{trayectoria(inicializarJuego $m$)}{casilleroInicial($m$) $\bullet$ $\langle\rangle$}
+    \tadAxioma{trayectoria(arriba($p$))}{(posiciónActual($p$) + $\langle 0,1\rangle$)\ $\bullet$ trayectoria($p$)}
+    \tadAxioma{trayectoria(abajo($p$))}{(posiciónActual($p$) - $\langle 0,1\rangle$)\ $\bullet$ trayectoria($p$)}
+    \tadAxioma{trayectoria(izquierda($p$))}{(posiciónActual($p$) - $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
+    \tadAxioma{trayectoria(derecha($p$))}{(posiciónActual($p$) + $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
+    \tadAxioma{perdió?($p$)}{$\exists$ (f $\in$ fantasmas(verMapa($p$)))\\ (f $\in$ aDistanciaMenosDeN(posiciónActual($p$),3))}
+    \tadAxioma{ganó?($p$)}{posiciónActual($p$)=casilleroDeLlegada(verMapa($p$))}
+    \tadAxioma{posiciónActual($p$)}{prim(trayectoria($p$))}
+    \tadAxioma{direccionesPosibles($p$)}{aDistanciaMenosDeN(posiciónActual($p$),1)$\cap$casillerosLibres(verMapa($p$))\\
+        - posiciónActual($p$)}
 \end{tad}
 
+\subsection{Parte 2}
+
+\section{Conclusiones}
+
+    Cosa
 
 \end{document}
