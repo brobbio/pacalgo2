@@ -531,7 +531,7 @@
     \tadOperacion{nivelDeChocolate}{pacalgo2}{nat}{}
 
 \tadAxiomas
-\tadAlinearAxiomas{chocolatesRestantes(izquierda($p$))}
+\tadAlinearAxiomas{chocolatesRestantes(inicializarJuego($m$))}
     \tadAxioma{verMapa(inicializarJuego($m$)}{$m$}
     \tadAxioma{verMapa(arriba($p$))}{verMapa($p$)}
     \tadAxioma{verMapa(abajo($p$))}{verMapa($p$)}
@@ -542,11 +542,13 @@
     \tadAxioma{trayectoria(abajo($p$))}{(posiciónActual($p$) - $\langle 0,1\rangle$)\ $\bullet$ trayectoria($p$)}
     \tadAxioma{trayectoria(izquierda($p$))}{(posiciónActual($p$) - $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
     \tadAxioma{trayectoria(derecha($p$))}{(posiciónActual($p$) + $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
-    \tadAxioma{trayectoria(inicializarJuego $m$)}{casilleroInicial($m$) $\bullet$ $\langle\rangle$}
+    \tadAxioma{trayectoria(inicializarJuego($m$))}{casilleroInicial($m$) $\bullet$ $\langle\rangle$}
+    \tadAxioma{nivelDeChocolate(inicializarJuego($m$))}{\IF casilleroInicial($m$) $\in$ conjChocolates($m$) THEN 10 ELSE 0 FI}
     \tadAxioma{nivelDeChocolate(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
     \tadAxioma{nivelDeChocolate(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
     \tadAxioma{nivelDeChocolate(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
     \tadAxioma{nivelDeChocolate(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
+    \tadAxioma{chocolatesRestantes(inicializarJuego($m$))}{\IF casilleroInicial($m$) $\in$ conjChocolates($m$) THEN conjChocolates($m$) - \{ casilleroInicial($m$) \} ELSE conjChocolates($m$) FI}
     \tadAxioma{chocolatesRestantes(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 0,1\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
     \tadAxioma{chocolatesRestantes(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 0,1\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
     \tadAxioma{chocolatesRestantes(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 1,0\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
