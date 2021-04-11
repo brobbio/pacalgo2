@@ -212,13 +212,18 @@
 \integrante{Pedro Joel Burgos}{804/18}{facultadburgospedrojoel@hotmail.com}
 \maketitle
 
-%\section{Introducción}
-%Esta es la introducción en \LaTeX.
+\section{Introducción}
+\subsection{Consideraciones}
+
+    \begin{itemize}
+       \item No se puede arrancar el mapa ganando o perdiendo 
+       \item El mapa puede no tener un camino ganador o perdedor
+    \end{itemize}
 
 \section{Desarrollo}
 \subsection{Parte 1}
 
-\begin{tad}{\tadNombre{Casillero}}
+\begin{tad}{\tadNombre{Casillero\footnote{Creamos este TAD para simplificar las operaciones entre casilleros}}}
 
     \tadExtiende{Tupla(int, int)}
     \tadUsa{Int}
@@ -228,21 +233,23 @@
     \tadOtrasOperaciones
     \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
     \tadOperacion{$\bullet$ - $\bullet$}{casillero, casillero}{casillero}{}
-    \tadOperacion{aDistanciaMenosDeN}{casillero, nat}{conj(casillero)}{}
+    \tadOperacion{aDistanciaMenosDeN }{casillero, nat}{conj(casillero)}{}
 
     \tadAxiomas[]
-    \tadAlinearAxiomas{aDistanciaMenosDeN($c$,\ $n$)}
+    \tadAlinearAxiomas{aDistanciaMenosDeN\footnote[2]{}($c$,\ $n$)}
     \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
     \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
     \tadAxioma{$\pi_1$($c1$ - $c2$)}{$\pi_1$($c_1$) - $\pi_1$($c_2$)}
     \tadAxioma{$\pi_2$($c1$ - $c2$)}{$\pi_2$($c_1$) - $\pi_2$($c_2$)}
-    \tadAxioma{aDistanciaMenosDeN($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+    \tadAxioma{aDistanciaMenosDeN\footnote[2]{}($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
           aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
           aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
           aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$,\ $n-1$)) FI} 
+          aDistanciaMenosDeN($c$,\ $n-1$)) FI}
 
 \end{tad}
+
+    \footnotetext[2]{Devuelve los casilleros a distancia n Manhattan}
 
 \newpage
 
@@ -255,77 +262,69 @@
         conjParedes($m_1$)$\igobs$conjParedes($m_2$)\ $\wedge$\\
         dimensiones($m_1$)$\igobs$dimensiones($m_2$)\ $\wedge$\\
         casilleroInicial($m_1$)$\igobs$casilleroInicial($m_2$)\ $\wedge$\\
-        vertice($m_1$)$\igobs$vertice($m_2$)\ $\wedge$\\
+        vértice($m_1$)$\igobs$vértice($m_2$)\ $\wedge$\\
         casilleroDeLlegada($m_1$)$\igobs$casilleroDeLlegada($m_2$)}
 
     \tadObservadores
         \tadOperacion{conjFantasmas}{mapa}{conj(casillero)}{}
         \tadOperacion{conjParedes}{mapa}{conj(casillero)}{}
-        \tadOperacion{dimensiones}{mapa}{tupla(nat,nat)}{}
-        \tadOperacion{vertice}{mapa}{casillero}{}
+        \tadOperacion{dimensiones\footnote[3]{}}{mapa}{tupla(nat,nat)}{}
+        \tadOperacion{vértice\footnote[3]{}}{mapa}{casillero}{}
         \tadOperacion{casilleroInicial}{mapa}{casillero}{}
         \tadOperacion{casilleroDeLlegada}{mapa}{casillero}{}
 
     \tadGeneradores
-            \quad nuevoMapa : tupla(nat, nat)\ $dimensi\acute{o}n$ $\times$ casillero\ $vertice$ $\times$ casillero\ $inicio$ $\times$ casillero\ $fin$ $\times$ 
+            \quad nuevoMapa : tupla(nat, nat)\ $dimensi\acute{o}n$ $\times$ casillero\ $v\acute{e}rtice$ $\times$ casillero\ $inicio$ $\times$ casillero\ $fin$ $\times$ 
 
             \qquad $ $ conj(casillero)\ $fantasmas$ $\times$ conj(casillero)\ $paredes$  $\longrightarrow$ mapa
             \begin{equation*}
             \begin{rcases}
             \begin{dcases}
             \emptyset?(fantasmas \cap paredes)\wedge (inicio \neq fin)\ \wedge \\
-            dentroDeLasDimensiones(dimensi\acute{o}n, vertice, inicio)\ \wedge\\
-            dentroDeLasDimensiones(dimensi\acute{o}n, vertice, fin)\ \wedge\\
-            (\forall f \in fantasmas)(dentroDeLasDimensiones(dimensi\acute{o}n, vertice, f))\ \wedge \\
-            (\forall p \in paredes)(dentroDeLasDimensiones(dimensi\acute{o}n, vertice, p))\ \wedge\\
-            \exists\alpha\in sec(casillero)(soluci\acute{o}nV\acute{a}lida?(\alpha, inicio, fin, paredes, fantasmas, dimensi\acute{o}n, v\acute{e}rtice))
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, inicio)\ \wedge\\
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, fin)\ \wedge\\
+            (\forall f \in fantasmas)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, f) \wedge \\
+                \quad f \not \in aDistanciaMenosDeN(inicio, f, 3) )\ \wedge \\
+            (\forall p \in paredes)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, p))
             \end{dcases}
             \end{rcases}
             \end{equation*}
     \tadOtrasOperaciones
       \tadOperacion{casillerosLibres}{mapa}{conj(casillero)}{}
       \tadOperacion{dentroDeLasDimensiones}{tupla(int, int), casillero, casillero}{bool}{}
-      \tadOperacion{casillerosADerecha}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosIzquierda}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosHorizontales}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosArriba}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosAbajo}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosVerticales}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
+      \tadOperacion{casillerosADerecha}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosIzquierda}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosHorizontales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosArriba}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosAbajo}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+
+      \footnotetext[3]{El vértice junto a la dimensión son para delimitar el mapa}
       \newpage
-      \tadOperacion{generarcasillerosHorizontales}{mapa\ m, conj(casillero)\ C}{conj(casillero)}{$\forall\ c\in C$(dentroDeLasDimensiones(dimensión($m$), vértice($m$), c))}
+
+      \tadOperacion{casillerosVerticales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{generarCasillerosHorizontales}{mapa\ $m$, conj(casillero)\ $C$}{conj(casillero)}{($\forall\ c\in C$)(dentroDeLasDimensiones(dimensión($m$), vértice($m$), c))}
     \tadAxiomas[]
-        \tadAxioma{conjFantasmas(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fantasmas$}
-        \tadAxioma{conjParedes(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$paredes$}
-        \tadAxioma{dimensiones(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$dimensi\acute{o}n$}
-        \tadAxioma{casilleroInicial(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$inicio$}
-        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fin$}
-        \tadAxioma{vertice(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$vertice$}
-        \tadAxioma{dentroDeLasDimensiones($dimensi\acute{o}n$, $vertice$, $casilla$)}{($0 \leq \pi_1(casilla) - \pi_1(vertice) < \pi_1(dimensi\acute{o}n)) \wedge \\
-            (0 \leq \pi_2(casilla) - \pi_2(vertice) < \pi_2(dimensi\acute{o}n)$)}
-        \tadAxioma{casillerosLibres($m$)}{generarCasillerosHorizontales($m$,casillerosVerticales(vértice($m$),$m$))$-$(conjFantasmas($m$) $\cup$ conjParedes($m$))}
-        \tadAxioma{generarCasillerosHorizontales($m$, casilleros)}{\IF casilleros =  $\emptyset$ THEN $\emptyset$ ELSE casillerosHorizontales(dameUno(casilleros, $m$))$\cup$\\ generarCasillerosHorizontales($m$, sinUno(casilleros))FI}
-        \tadAxioma{casillerosHorizontales(c,m)}{casillerosADerecha(c,m)$\cup$casillerosAIzquierda(c, m)}
+        \tadAxioma{conjFantasmas(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fantasmas$}
+        \tadAxioma{conjParedes(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$paredes$}
+        \tadAxioma{dimensiones(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$dimensi\acute{o}n$}
+        \tadAxioma{casilleroInicial(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$inicio$}
+        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fin$}
+        \tadAxioma{vértice(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$v\acute{e}rtice$}
+        \tadAxioma{dentroDeLasDimensiones\footnote[4]{Validamos que los casilleros esten en las dimensiones del mapa}($dimensi\acute{o}n$, $v\acute{e}rtice$, $casilla$)}{($0 \leq \pi_1(casilla) - \pi_1(v\acute{e}rtice) < \pi_1(dimensi\acute{o}n)) \wedge \\
+            (0 \leq \pi_2(casilla) - \pi_2(v\acute{e}rtice) < \pi_2(dimensi\acute{o}n)$)}
+        \tadAxioma{casillerosLibres\footnote[5]{Devuelve los casilleros no ocupados por fantasmas o paredes}($m$)}{generarCasillerosHorizontales($m$,casillerosVerticales(vértice($m$),$m$))$-$(conjFantasmas($m$) $\cup$ conjParedes($m$))}
+        \tadAxioma{generarCasillerosHorizontales\footnote[6]{Dado un conjunto de casilleros aplica la función casillerosHorizontales a cada elemento del conjunto}($m$, casilleros)}{\IF casilleros =  $\emptyset$ THEN $\emptyset$ ELSE casillerosHorizontales(dameUno(casilleros, $m$))$\cup$\\ generarCasillerosHorizontales($m$, sinUno(casilleros))FI}
+        \tadAxioma{casillerosHorizontales\footnote[7]{Devuelve la fila de c}(c,m)}{casillerosADerecha(c,m)$\cup$casillerosAIzquierda(c, m)}
         \tadAxioma{casillerosADerecha(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle1,0\rangle$) THEN  casillerosADerecha(c$+\langle 1,0\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
         \tadAxioma{casillerosAIzquierda(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle1,0\rangle$) THEN  casillerosAIzquierda(c$-\langle 1,0\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
         
-        \tadAxioma{casillerosVerticales(c,m)}{casillerosArriba(c,m)$\cup$casillerosAbajo(c, m)}
+        \tadAxioma{casillerosVerticales\footnote[8]{Devuelve la columna de c}(c,m)}{casillerosArriba(c,m)$\cup$casillerosAbajo(c, m)}
         \tadAxioma{casillerosArriba(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle 0,1\rangle$) THEN  casillerosArriba(c$+\langle 0,1\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
-        \tadAxioma{casillerosAbajo(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle 0,1\rangle$) THEN  casillerosArriba(c$-\langle 0,1\rangle$, m)
+        \tadAxioma{casillerosAbajo(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle 0,1\rangle$) THEN  casillerosAbajo(c$-\langle 0,1\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
-        \tadAxioma{consecutivosYSeguros?($\alpha$,paredes, fantasmas, dim, vert)}{\IF vacía?($\alpha$) THEN 
-            True 
-                ELSE {\IF long($\alpha$)=1
-                THEN 
-                    prim($\alpha$)$\not\in$paredes$\\ \wedge\emptyset$?(ADistanciaMenosDeN(prim($\alpha$),3)$\cap$fantasmas)$\wedge$\\
-                     dentroDeLasDimensiones(dim,vert,prim($\alpha$))
-                ELSE     prim($\alpha$)$\in$ADistanciaMenosDeN(prim(fin($\alpha$)),1)\ $\wedge$prim($\alpha$)$\not\in$paredes$\\ \wedge\emptyset$?(ADistanciaMenosDeN(prim($\alpha$),3)$\cap$fantasmas)$\wedge$\\
-                dentroDeLasDimensiones(dim,vert,prim($\alpha$))$\wedge$\\
-                consecutivosYSeguros?(fin($\alpha$),paredes,fantasmas) FI} 
-            FI}
-        \tadAxioma{soluciónVálida?($\alpha$, inicio, fin, paredes, fantasmas, dim, vert)}{prim($\alpha$)=inicio\ $\wedge$\ ult($\alpha$)=fin\ $\wedge$\\ consecutivosYSeguros?($\alpha$, paredes, fantasmas, dim, vert)}
 \end{tad}
 
 
@@ -333,7 +332,7 @@
 \begin{tad}{\tadNombre{Pacalgo2}}
 
 
-    \tadUsa {Mapa}
+    \tadUsa {Mapa} 
     \tadGeneros{pacalgo2}
     \tadExporta{pacalgo2, observadores, generadores}
     \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ trayectoria($p_1$)$\igobs$trayectoria($p_2$)}
@@ -341,7 +340,7 @@
 \tadObservadores
     \tadAlinearFunciones{historialMovimientos}{pacalgo2}
     \tadOperacion{verMapa}{pacalgo2}{mapa}{}
-    \tadOperacion{trayectoria}{pacalgo2}{sec(casillero)}{}
+    \tadOperacion{trayectoria\footnote[9]{}}{pacalgo2}{sec(casillero)}{}
 
 \tadGeneradores
     \tadAlinearFunciones{inicializarJuego}{mapa\text{ } m}
@@ -356,7 +355,7 @@
     \tadOperacion{direccionesPosibles}{pacalgo2}{conj(casillero)}{}
     \tadOperacion{perdió?}{pacalgo2}{bool}{}
     \tadOperacion{ganó?}{pacalgo2}{bool}{}
-    \tadOperacion{posicionActual}{pacalgo2}{casillero}{}
+    \tadOperacion{posiciónActual}{pacalgo2}{casillero}{}
 
 \tadAxiomas
 \tadAlinearAxiomas{trayectoria(InicializarJuego $m$)}
@@ -370,12 +369,17 @@
     \tadAxioma{trayectoria(abajo($p$))}{(posiciónActual($p$) - $\langle 0,1\rangle$)\ $\bullet$ trayectoria($p$)}
     \tadAxioma{trayectoria(izquierda($p$))}{(posiciónActual($p$) - $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
     \tadAxioma{trayectoria(derecha($p$))}{(posiciónActual($p$) + $\langle 1,0\rangle$)\ $\bullet$ trayectoria($p$)}
-    \tadAxioma{perdió?($p$)}{ $\emptyset$?(conjFantasmas(verMapa($p$)) $\cap$ aDistanciaMenosDeN(posicionActual($p$), 3)) }
+    \tadAxioma{perdió?($p$)}{ $\emptyset$?(conjFantasmas(verMapa($p$)) $\cap$ aDistanciaMenosDeN(posiciónActual($p$), 3)) }
     \tadAxioma{ganó?($p$)}{posiciónActual($p$)=casilleroDeLlegada(verMapa($p$))}
+
+    \footnotetext[9]{Seguimiento de casilleros del jugador}
+    
     \tadAxioma{posiciónActual($p$)}{prim(trayectoria($p$))}
-    \tadAxioma{direccionesPosibles($p$)}{aDistanciaMenosDeN(posiciónActual($p$),1)$\cap$casillerosLibres(verMapa($p$))\\
-        - posiciónActual($p$)}
+    \tadAxioma{direccionesPosibles\footnote[10]{}($p$)}{aDistanciaMenosDeN(posiciónActual($p$),1)$\cap$casillerosLibres(verMapa($p$))\\
+    - posiciónActual($p$)}
 \end{tad}
+
+    \footnotetext[10]{Devuelve los casilleros a distancia 1 del mapa sin fantasmas ni paredes}
 
 \newpage
 
@@ -421,7 +425,7 @@
         conjChocolates($m_1$)$\igobs$conjChocolates($m_2$)\ $\wedge$\\
         dimensiones($m_1$)$\igobs$dimensiones($m_2$)\ $\wedge$\\
         casilleroInicial($m_1$)$\igobs$casilleroInicial($m_2$)\ $\wedge$\\
-        vertice($m_1$)$\igobs$vertice($m_2$)\ $\wedge$\\
+        vértice($m_1$)$\igobs$vértice($m_2$)\ $\wedge$\\
         casilleroDeLlegada($m_1$)$\igobs$casilleroDeLlegada($m_2$)}
 
     \tadObservadores
@@ -429,71 +433,61 @@
         \tadOperacion{conjParedes}{mapa}{conj(casillero)}{}
         \tadOperacion{conjChocolates}{mapa}{conj(casillero)}{}
         \tadOperacion{dimensiones}{mapa}{tupla(nat,nat)}{}
-        \tadOperacion{vertice}{mapa}{casillero}{}
+        \tadOperacion{vértice}{mapa}{casillero}{}
         \tadOperacion{casilleroInicial}{mapa}{casillero}{}
         \tadOperacion{casilleroDeLlegada}{mapa}{casillero}{}
 
     \tadGeneradores
-            \quad nuevoMapa : tupla(nat, nat)\ $dimensi\acute{o}n$ $\times$ casillero\ $vertice$ $\times$ casillero\ $inicio$ $\times$ casillero\ $fin$ $\times$ 
+            \quad nuevoMapa : tupla(nat, nat)\ $dimensi\acute{o}n$ $\times$ casillero\ $v\acute{e}rtice$ $\times$ casillero\ $inicio$ $\times$ casillero\ $fin$ $\times$ 
 
-            \qquad $ $ conj(casillero)\ $fantasmas$ $\times$ conj(casillero)\ $paredes$  $\longrightarrow$ mapa
+            \qquad $ $ conj(casillero)\ $fantasmas$ $\times$ conj(casillero)\ $paredes$ $\times$ conj(casillero)\ $chocolates$ $\longrightarrow$ mapa
             \begin{equation*}
             \begin{rcases}
             \begin{dcases}
             \emptyset?(fantasmas \cap paredes)\wedge (inicio \neq fin)\ \wedge \\
-            dentroDeLasDimensiones(dimensi\acute{o}n, vertice, inicio)\ \wedge\\
-            dentroDeLasDimensiones(dimensi\acute{o}n, vertice, fin)\ \wedge\\
-            (\forall f \in fantasmas)(dentroDeLasDimensiones(dimensi\acute{o}n, vertice, f))\ \wedge \\
-            (\forall p \in paredes)(dentroDeLasDimensiones(dimensi\acute{o}n, vertice, p))\ \wedge\\
-            \exists\alpha\in sec(casillero)(soluci\acute{o}nV\acute{a}lida?(\alpha, inicio, fin, paredes, fantasmas, dimensi\acute{o}n, v\acute{e}rtice))
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, inicio)\ \wedge\\
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, fin)\ \wedge\\
+            (\forall f \in fantasmas)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, f)\ \wedge \\
+            \quad (f \not \in aDistanciaMenosDeN(inicio, f, 3) \vee (inicio \in chocolates)))\ \wedge \\
+            (\forall c \in chocolates)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, c))\ \wedge \\
+            (\forall p \in paredes)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, p))
             \end{dcases}
             \end{rcases}
             \end{equation*}
     \tadOtrasOperaciones
       \tadOperacion{casillerosLibres}{mapa}{conj(casillero)}{}
       \tadOperacion{dentroDeLasDimensiones}{tupla(int, int), casillero, casillero}{bool}{}
-      \tadOperacion{casillerosADerecha}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosIzquierda}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosHorizontales}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosArriba}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosAbajo}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
-      \tadOperacion{casillerosVerticales}{casillero\ c, mapa\ m}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
+      \tadOperacion{casillerosADerecha}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosIzquierda}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosHorizontales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosArriba}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
       \newpage
-      \tadOperacion{generarcasillerosHorizontales}{mapa\ m, conj(casillero)\ C}{conj(casillero)}{$\forall\ c\in C$(dentroDeLasDimensiones(dimensión($m$), vértice($m$), c))}
+      \tadOperacion{casillerosAbajo}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosVerticales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
+      \tadOperacion{generarCasillerosHorizontales}{mapa\ $m$, conj(casillero)\ $C$}{conj(casillero)}{($\forall\ c\in C$)(dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$))}
+
     \tadAxiomas[]
-        \tadAxioma{conjFantasmas(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fantasmas$}
-        \tadAxioma{conjParedes(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$paredes$}
-        \tadAxioma{conjChocolates(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$chocolates$}
-        \tadAxioma{dimensiones(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$dimensi\acute{o}n$}
-        \tadAxioma{casilleroInicial(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$inicio$}
-        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$fin$}
-        \tadAxioma{vertice(nuevoMapa($dimensi\acute{o}n$, $vertice$, $inicio$, $fin$, $fantasmas$, $paredes$))}{$vertice$}
-        \tadAxioma{dentroDeLasDimensiones($dimensi\acute{o}n$, $vertice$, $casilla$)}{($0 \leq \pi_1(casilla) - \pi_1(vertice) < \pi_1(dimensi\acute{o}n)) \wedge \\
-            (0 \leq \pi_2(casilla) - \pi_2(vertice) < \pi_2(dimensi\acute{o}n)$)}
+        \tadAxioma{conjFantasmas(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$fantasmas$}
+        \tadAxioma{conjParedes(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$paredes$}
+        \tadAxioma{conjChocolates(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$chocolates$}
+        \tadAxioma{dimensiones(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$dimensi\acute{o}n$}
+        \tadAxioma{casilleroInicial(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$inicio$}
+        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$fin$}
+        \tadAxioma{vértice(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$v\acute{e}rtice$}
+        \tadAxioma{dentroDeLasDimensiones($dimensi\acute{o}n$, $v\acute{e}rtice$, $casilla$)}{($0 \leq \pi_1(casilla) - \pi_1(v\acute{e}rtice) < \pi_1(dimensi\acute{o}n)) \wedge \\
+            (0 \leq \pi_2(casilla) - \pi_2(v\acute{e}rtice) < \pi_2(dimensi\acute{o}n)$)}
         \tadAxioma{casillerosLibres($m$)}{generarCasillerosHorizontales($m$,casillerosVerticales(vértice($m$),$m$))$-$(conjFantasmas($m$) $\cup$ conjParedes($m$))}
         \tadAxioma{generarCasillerosHorizontales($m$, casilleros)}{\IF casilleros =  $\emptyset$ THEN $\emptyset$ ELSE casillerosHorizontales(dameUno(casilleros, $m$))$\cup$\\ generarCasillerosHorizontales($m$, sinUno(casilleros))FI}
-        \tadAxioma{casillerosHorizontales(c,m)}{casillerosADerecha(c,m)$\cup$casillerosAIzquierda(c, m)}
+        \tadAxioma{casillerosHorizontales(c,m)}{casillerosADerecha(c,m) $\cup$ casillerosAIzquierda(c, m)}
         \tadAxioma{casillerosADerecha(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle1,0\rangle$) THEN  casillerosADerecha(c$+\langle 1,0\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
         \tadAxioma{casillerosAIzquierda(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle1,0\rangle$) THEN  casillerosAIzquierda(c$-\langle 1,0\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
-        
         \tadAxioma{casillerosVerticales(c,m)}{casillerosArriba(c,m)$\cup$casillerosAbajo(c, m)}
         \tadAxioma{casillerosArriba(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle 0,1\rangle$) THEN  casillerosArriba(c$+\langle 0,1\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
-        \tadAxioma{casillerosAbajo(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle 0,1\rangle$) THEN  casillerosArriba(c$-\langle 0,1\rangle$, m)
+        \tadAxioma{casillerosAbajo(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle 0,1\rangle$) THEN  casillerosAbajo(c$-\langle 0,1\rangle$, m)
         ELSE $\emptyset$ FI)$\cup\{c\}$}
-        \tadAxioma{consecutivosYSeguros?($\alpha$,paredes, fantasmas, dim, vert)}{\IF vacía?($\alpha$) THEN 
-            True 
-                ELSE {\IF long($\alpha$)=1
-                THEN 
-                    prim($\alpha$)$\not\in$paredes$\\ \wedge\emptyset$?(ADistanciaMenosDeN(prim($\alpha$),3)$\cap$fantasmas)$\wedge$\\
-                     dentroDeLasDimensiones(dim,vert,prim($\alpha$))
-                ELSE     prim($\alpha$)$\in$ADistanciaMenosDeN(prim(fin($\alpha$)),1)\ $\wedge$prim($\alpha$)$\not\in$paredes$\\ \wedge\emptyset$?(ADistanciaMenosDeN(prim($\alpha$),3)$\cap$fantasmas)$\wedge$\\
-                dentroDeLasDimensiones(dim,vert,prim($\alpha$))$\wedge$\\
-                consecutivosYSeguros?(fin($\alpha$),paredes,fantasmas) FI} 
-            FI}
-        \tadAxioma{soluciónVálida?($\alpha$, inicio, fin, paredes, fantasmas, dim, vert)}{prim($\alpha$)=inicio\ $\wedge$\ ult($\alpha$)=fin\ $\wedge$\\ consecutivosYSeguros?($\alpha$, paredes, fantasmas, dim, vert)}
 \end{tad}
 
 
@@ -503,15 +497,12 @@
     \tadUsa {Mapa}
     \tadGeneros{pacalgo2}
     \tadExporta{pacalgo2, observadores, generadores}
-    \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ trayectoria($p_1$)$\igobs$trayectoria($p_2$)\ $\wedge$ \\
-        chocolatesRestantes($p_1$)$\igobs$ \\
-        chocolatesRestantes($p_2$)}
+    \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ trayectoria($p_1$)$\igobs$trayectoria($p_2$)}
 
 \tadObservadores
     \tadAlinearFunciones{historialMovimientos}{pacalgo2}
     \tadOperacion{verMapa}{pacalgo2}{mapa}{}
     \tadOperacion{trayectoria}{pacalgo2}{sec(casillero)}{}
-    \tadOperacion{chocolatesRestantes}{pacalgo2}{conj(casillero)}{}
 
 \tadGeneradores
     \tadAlinearFunciones{inicializarJuego}{mapa\text{ } m}
@@ -526,13 +517,14 @@
     \tadOperacion{direccionesPosibles}{pacalgo2}{conj(casillero)}{}
     \tadOperacion{perdió?}{pacalgo2}{bool}{}
     \tadOperacion{ganó?}{pacalgo2}{bool}{}
-    \tadOperacion{posicionActual}{pacalgo2}{casillero}{}
+    \tadOperacion{posiciónActual}{pacalgo2}{casillero}{}
     \tadOperacion{puntaje}{pacalgo2}{nat}{ganó?($p$)}
     \tadOperacion{nivelDeChocolate}{pacalgo2}{nat}{}
+    \tadOperacion{chocolatesRestantes}{pacalgo2}{conj(casillero)}{}
 
 \tadAxiomas
 \tadAlinearAxiomas{chocolatesRestantes(inicializarJuego($m$))}
-    \tadAxioma{verMapa(inicializarJuego($m$)}{$m$}
+    \tadAxioma{verMapa(inicializarJuego($m$))}{$m$}
     \tadAxioma{verMapa(arriba($p$))}{verMapa($p$)}
     \tadAxioma{verMapa(abajo($p$))}{verMapa($p$)}
     \tadAxioma{verMapa(izquierda($p$))}{verMapa($p$)}
@@ -549,20 +541,16 @@
     \tadAxioma{nivelDeChocolate(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
     \tadAxioma{nivelDeChocolate(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
     \tadAxioma{chocolatesRestantes(inicializarJuego($m$))}{\IF casilleroInicial($m$) $\in$ conjChocolates($m$) THEN conjChocolates($m$) - \{ casilleroInicial($m$) \} ELSE conjChocolates($m$) FI}
-    \tadAxioma{chocolatesRestantes(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 0,1\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
-    \tadAxioma{chocolatesRestantes(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 0,1\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
-    \tadAxioma{chocolatesRestantes(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 1,0\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
-    \tadAxioma{chocolatesRestantes(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 1,0\rangle$) \} ELSE chocolatesRestantesEnElMapa($p$) FI}
-    \tadAxioma{perdió?($p$)}{ $\emptyset$?(conjFantasmas(verMapa($p$)) $\cap$ aDistanciaMenosDeN(posicionActual($p$), 3)) $\wedge$ 0?(nivelDeChocolate($p$)) }
+    \tadAxioma{chocolatesRestantes(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 0,1\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 0,1\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 1,0\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 1,0\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{perdió?($p$)}{ $\emptyset$?(conjFantasmas(verMapa($p$)) $\cap$ \\ aDistanciaMenosDeN(posiciónActual($p$),3))$\wedge$ 0?(nivelDeChocolate($p$)) }
     \tadAxioma{ganó?($p$)}{posiciónActual($p$)=casilleroDeLlegada(verMapa($p$))}
     \tadAxioma{posiciónActual($p$)}{prim(trayectoria($p$))}
-    \tadAxioma{direccionesPosibles($p$)}{\IF 0?(nivelDeChocolate($p$)) THEN (aDistanciaMenosDeN(posiciónActual($p$),1) - posiciónActual($p$))\ $\cap$ \\ casillerosLibres(verMapa($p$)) ELSE (aDistanciaMenosDeN(posiciónActual($p$),1) - posiciónActual($p$))\ $\cap$ \\ (casillerosLibres(verMapa($p$))\ $\cup$ conjFantasmas(verMapa($p$)))FI}
+    \tadAxioma{direccionesPosibles($p$)}{\IF 0?(nivelDeChocolate($p$)) THEN (aDistanciaMenosDeN(posiciónActual($p$),1)$-$posiciónActual($p$))\ $\cap$ \\ casillerosLibres(verMapa($p$)) ELSE (aDistanciaMenosDeN(posiciónActual($p$),1)$-$posiciónActual($p$))\ $\cap$ \\ (casillerosLibres(verMapa($p$))\ $\cup$ conjFantasmas(verMapa($p$)))FI}
     \tadAxioma{puntaje($p$)}{long(trayectoria($p$))}
 
 \end{tad}
-
-\section{Conclusiones}
-
-    Cosa
 
 \end{document}
