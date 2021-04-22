@@ -1,0 +1,432 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage{framed}
+\usepackage{amsmath}
+\usepackage{todonotes} % para dejar notitas de to-do!
+\usepackage{aed2-symb,aed2-itef,aed2-tad}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{calc}
+\usepackage{relsize}
+\usepackage{tikz}
+\usepackage{textcomp}
+\usetikzlibrary{cd}
+\usepackage{verbatim}
+\usepackage{mathtools}
+
+%
+
+% ========== Para escribir pseudo ==========
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}  % "noend" es para no mostrar los endfor, endif
+\algrenewcommand\alglinenumber[1]{\tiny #1:}  % Para que los numeros de linea del pseudo sean pequeños
+\renewcommand{\thealgorithm}{}  % Que no aparezca el numero luego de "Algorithm"
+\floatname{algorithm}{ }    % Entre {  } que quiero que aparezca en vez de "Algorithm"
+
+% traducciones
+\algrenewcommand\algorithmicwhile{\textbf{mientras}}
+\algrenewcommand\algorithmicdo{\textbf{hacer}}
+\algrenewcommand\algorithmicreturn{\textbf{devolver}}
+\algrenewcommand\algorithmicif{\textbf{si}}
+\algrenewcommand\algorithmicthen{\textbf{entonces}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+%=========================================================
+
+
+\newcommand{\f}[1]{\text{#1}}
+\renewcommand{\paratodo}[2]{$\forall~#2$: #1}
+\newcommand{\numeroEjercicio}[1]{\textbf{\large{Ejercicio #1:}}\\}
+\newcommand{\tituloSubEjercicio}[1]{$\newline$\tadNombre{#1:}}
+
+\sloppy
+
+\hypersetup{%
+ % Para que el PDF se abra a página completa.
+ pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+ pdfauthor={Cátedra de Algoritmos y Estructuras de Datos II - DC - UBA},
+ pdfkeywords={Template TADs básicos},
+ pdfsubject={Template TADs básicos}
+}
+
+\parskip=5pt % 10pt es el tamaño de fuente
+
+% Pongo en 0 la distancia extra entre ítemes.
+\let\olditemize\itemize
+\def\itemize{\olditemize\itemsep=0pt}
+
+% Acomodo fancyhdr.
+\pagestyle{fancy}
+\thispagestyle{fancy}
+\addtolength{\headheight}{1pt}
+\lhead{Algoritmos y Estructuras de Datos II}
+\rhead{$1^{\mathrm{er}}$ cuatrimestre de 2021}
+\cfoot{\thepage /\pageref{LastPage}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\author{Algoritmos y Estructuras de Datos II, DC, UBA.}
+\date{}
+\title{Trabajo Pr\'actico de Algoritmos y Estructuras de Datos II}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{caratula}[2003/4/13 v0.1 Para componer caratulas de TPs del DC]
+
+
+% ----- Imprimir un mensajito al procesar un .tex que use este package -----
+
+\typeout{Cargando package 'caratula' v0.2 (21/4/2003)}
+
+
+% ----- Algunas variables --------------------------------------------------
+
+\let\Materia\relax
+\let\Submateria\relax
+\let\Titulo\relax
+\let\Subtitulo\relax
+\let\Grupo\relax
+
+
+% ----- Comandos para que el usuario defina las variables ------------------
+
+\def\materia#1{\def\Materia{#1}}
+\def\submateria#1{\def\Submateria{#1}}
+\def\titulo#1{\def\Titulo{#1}}
+\def\subtitulo#1{\def\Subtitulo{#1}}
+\def\grupo#1{\def\Grupo{#1}}
+
+
+% ----- Token list para los integrantes ------------------------------------
+
+\newtoks\intlist\intlist={}
+
+
+% ----- Comando para que el usuario agregue integrantes
+
+\def\integrante#1#2#3{\intlist=\expandafter{\the\intlist
+    \rule{0pt}{1.2em}#1&#2&\tt #3\\[0.2em]}}
+
+
+% ----- Macro para generar la tabla de integrantes -------------------------
+
+%\integrante{Church, Alonso}{1/20}{alonso@iglesia.com}
+%\integrante{Lovelace, Ada}{10/19}{ada\_de\_los\_dientes@tatooine.com}
+%\integrante{Null, Linda}{100/18}{null@null.null}
+%\integrante{Turing, Alan}{314/16}{halting@problem.com}
+
+\def\tablaints{
+    \begin{tabular}{|l@{\hspace{4ex}}c@{\hspace{4ex}}l|}
+        \hline
+        \rule{0pt}{1.2em}Integrante & LU & Correo electr\'onico\\[0.2em]
+        \hline
+        \the\intlist
+        \hline
+    \end{tabular}}
+
+% ----- Macro para generar la parte reservada para la c�tedra -------------------------
+
+\def\tablacatedra{%
+    \\
+    \textbf{Reservado para la c\'atedra}\par\bigskip
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \rule{0pt}{1.2em}Instancia & Docente & Nota\\[0.2em]
+        \hline
+        \rule{0pt}{1.2em}Primera entrega & \phantom{mmmmmmmmmmmmmmmmmm} & \phantom{mmmmmm} \\
+        \hline
+        \rule{0pt}{1.2em}Segunda entrega & & \\
+        \hline
+    \end{tabular}}
+
+% ----- Codigo para manejo de errores --------------------------------------
+
+\def\se{\let\ifsetuperror\iftrue}
+\def\ifsetuperror{%
+    \let\ifsetuperror\iffalse
+    \ifx\Materia\relax\se\errhelp={Te olvidaste de proveer una \materia{}.}\fi
+    \ifx\Titulo\relax\se\errhelp={Te olvidaste de proveer un \titulo{}.}\fi
+    \edef\mlist{\the\intlist}\ifx\mlist\empty\se%
+    \errhelp={Tenes que proveer al menos un \integrante{nombre}{lu}{email}.}\fi
+    \expandafter\ifsetuperror}
+
+
+% ----- Reemplazamos el comando \maketitle de LaTeX con el nuestro ---------
+
+\def\maketitle{%
+    \ifsetuperror\errmessage{Faltan datos de la caratula! Ingresar 'h' para mas informacion.}\fi
+    \thispagestyle{empty}
+    \begin{center}
+    \vspace*{\stretch{2}}
+    \materia{Algoritmos y Estructuras de Datos II}
+
+    {\LARGE\textbf{\Materia}}\\[1em]
+    \submateria{Trabajo Pr\'actico 1}
+    \ifx\Submateria\relax\else{\Large \Submateria}\\[0.5em]\fi
+
+%\def\titulo#1{\def\Titulo{#1}}
+%\def\subtitulo#1{\def\Subtitulo{#1}}
+%\def\grupo#1{\def\Grupo{#1}}
+    \par\vspace{\stretch{1}}
+    \titulo{Pacalgo2}
+    \subtitulo{Los inertes}
+    {\large Departamento de Computaci\'on}\\[0.5em]
+    {\large Facultad de Ciencias Exactas y Naturales}\\[0.5em]
+    {\large Universidad de Buenos Aires}
+    \par\vspace{\stretch{3}}
+    {\Large \textbf{\Titulo}}\\[0.8em]
+    {\Large \Subtitulo}
+    \par\vspace{\stretch{3}}
+    \grupo
+    \ifx\Grupo\relax\else\textbf{\Grupo}\par\bigskip\fi
+    \tablaints
+    \vspace*{\stretch{3}}
+    \medskip
+    \tablacatedra
+    \end{center}
+    \vspace*{\stretch{3}}
+    \newpage
+    }
+
+% Comandos para cositas de complejidad
+
+\newcommand{\bigO}{\mathcal{O}} 
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\eqdef}{\overset{\mathrm{def}}{=}}
+\newcommand{\eqprop}{\overset{\mathrm{prop}}{=}}
+%\newcommand{\ssi}{\leftrightarrow}
+
+
+\begin{document}
+
+\materia{Coso}
+\titulo{asdad}
+\integrante{Bruno Robbio}{480/09}{brobbio@hotmail.com}
+\integrante{Nicolas Andres Kinaschuk}{248/15}{nicolaskinaschuk@gmail.com}
+\integrante{Pedro Joel Burgos}{804/18}{facultadburgospedrojoel@hotmail.com}
+\integrante{Valentina Madelaine Saravia Ruiz}{257/18}{valentina.saraviaruiz@gmail.com}
+\maketitle
+
+\section{Introducción}
+\subsection{Consideraciones}
+
+    \begin{itemize}
+       \item No se puede arrancar el mapa ganando o perdiendo 
+       \item El mapa puede no tener un camino ganador o perdedor
+       \item El vértice del mapa es la esquina inferior izquierda
+    \end{itemize}
+
+\section{Desarrollo}
+\subsection{TP 1}
+
+\begin{tad}{\tadNombre{Casillero}}
+
+    \tadExtiende{Tupla(int, int)}
+    \tadUsa{Int}
+    \tadGeneros{casillero}
+    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
+
+    \tadOtrasOperaciones
+    \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{$\bullet$ - $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{aDistanciaMenosDeN}{casillero, nat}{conj(casillero)}{}
+
+    \tadAxiomas[]
+    \tadAlinearAxiomas{aDistanciaMenosDeN($c$,\ $n$)}
+    \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
+    \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
+    \tadAxioma{$\pi_1$($c1$ - $c2$)}{$\pi_1$($c_1$) - $\pi_1$($c_2$)}
+    \tadAxioma{$\pi_2$($c1$ - $c2$)}{$\pi_2$($c_1$) - $\pi_2$($c_2$)}
+    \tadAxioma{aDistanciaMenosDeN($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$,\ $n-1$)) FI} 
+
+\end{tad}
+
+\newpage
+
+\begin{tad}{\tadNombre{Mapa}} 
+
+    \tadUsa{Casillero, Conjunto, Bool}
+    \tadGeneros{mapa}
+    \tadExporta{mapa, observadores, generadores, casillerosLibres}
+    \tadIgualdadObservacional{m_1}{m_2}{mapa}{conjFantasmas($m_1$)$\igobs$conjFantasmas($m_2$)$\ \wedge$\\
+        conjParedes($m_1$)$\igobs$conjParedes($m_2$)\ $\wedge$\\
+        conjChocolates($m_1$)$\igobs$conjChocolates($m_2$)\ $\wedge$\\
+        dimensiones($m_1$)$\igobs$dimensiones($m_2$)\ $\wedge$\\
+        casilleroInicial($m_1$)$\igobs$casilleroInicial($m_2$)\ $\wedge$\\
+        vértice($m_1$)$\igobs$vértice($m_2$)\ $\wedge$\\
+        casilleroDeLlegada($m_1$)$\igobs$casilleroDeLlegada($m_2$)}
+
+    \tadObservadores
+        \tadOperacion{conjFantasmas}{mapa}{conj(casillero)}{}
+        \tadOperacion{conjParedes}{mapa}{conj(casillero)}{}
+        \tadOperacion{conjChocolates}{mapa}{conj(casillero)}{}
+        \tadOperacion{dimensiones}{mapa}{tupla(nat,nat)}{}
+        \tadOperacion{vértice}{mapa}{casillero}{}
+        \tadOperacion{casilleroInicial}{mapa}{casillero}{}
+        \tadOperacion{casilleroDeLlegada}{mapa}{casillero}{}
+
+    \tadGeneradores
+            \quad nuevoMapa : tupla(nat, nat)\ $dimensi\acute{o}n$ $\times$ casillero\ $v\acute{e}rtice$ $\times$ casillero\ $inicio$ $\times$ casillero\ $fin$ $\times$ 
+
+            \qquad $ $ conj(casillero)\ $fantasmas$ $\times$ conj(casillero)\ $paredes$ $\times$ conj(casillero)\ $chocolates$ $\longrightarrow$ mapa
+            \begin{equation*}
+            \begin{rcases}
+            \begin{dcases}
+            \emptyset?(fantasmas \cap paredes)\ \wedge \emptyset?(chocolates \cap paredes)\wedge \\ 
+            \emptyset?(fantasmas \cap chocolates)\ \wedge (inicio \neq fin)\ \wedge \\
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, inicio)\ \wedge\\
+            dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, fin)\ \wedge\\
+            (\forall f \in fantasmas)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, f)\ \wedge \\
+            \quad (f \not \in aDistanciaMenosDeN(inicio, f, 3) \vee (inicio \in chocolates)))\ \wedge \\
+            (\forall c \in chocolates)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, c))\ \wedge \\
+            (\forall p \in paredes)(dentroDeLasDimensiones(dimensi\acute{o}n, v\acute{e}rtice, p))
+            \end{dcases}
+            \end{rcases}
+            \end{equation*}
+    \tadOtrasOperaciones
+      \tadOperacion{casillerosLibres}{mapa}{conj(casillero)}{}
+      \tadOperacion{dentroDeLasDimensiones}{tupla(int, int), casillero, casillero}{bool}{}
+      \tadOperacion{casillerosADerecha}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosIzquierda}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosHorizontales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosArriba}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \newpage
+      \tadOperacion{casillerosAbajo}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$)}
+      \tadOperacion{casillerosVerticales}{casillero\ $c$, mapa\ $m$}{conj(casillero)}{dentroDeLasDimensiones(dimensión($m$), vértice($m$), c)}
+      \tadOperacion{generarCasillerosHorizontales}{mapa\ $m$, conj(casillero)\ $C$}{conj(casillero)}{($\forall\ c\in C$)(dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c$))}
+
+    \tadAxiomas[]
+        \tadAxioma{conjFantasmas(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$fantasmas$}
+        \tadAxioma{conjParedes(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$paredes$}
+        \tadAxioma{conjChocolates(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$chocolates$}
+        \tadAxioma{dimensiones(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$dimensi\acute{o}n$}
+        \tadAxioma{casilleroInicial(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$inicio$}
+        \tadAxioma{casilleroDeLlegada(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$fin$}
+        \tadAxioma{vértice(nuevoMapa($dimensi\acute{o}n$, $v\acute{e}rtice$, $inicio$, $fin$, $fantasmas$, $paredes$, $chocolates$))}{$v\acute{e}rtice$}
+        \tadAxioma{dentroDeLasDimensiones($dimensi\acute{o}n$, $v\acute{e}rtice$, $casilla$)}{($0 \leq \pi_1(casilla) - \pi_1(v\acute{e}rtice) < \pi_1(dimensi\acute{o}n)) \wedge \\
+            (0 \leq \pi_2(casilla) - \pi_2(v\acute{e}rtice) < \pi_2(dimensi\acute{o}n)$)}
+        \tadAxioma{casillerosLibres($m$)}{generarCasillerosHorizontales($m$,casillerosVerticales(vértice($m$),$m$))$-$(conjFantasmas($m$) $\cup$ conjParedes($m$))}
+        \tadAxioma{generarCasillerosHorizontales($m$, casilleros)}{\IF casilleros =  $\emptyset$ THEN $\emptyset$ ELSE casillerosHorizontales(dameUno(casilleros, $m$))$\cup$\\ generarCasillerosHorizontales($m$, sinUno(casilleros))FI}
+        \tadAxioma{casillerosHorizontales(c,m)}{casillerosADerecha(c,m) $\cup$ casillerosAIzquierda(c, m)}
+        \tadAxioma{casillerosADerecha(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle1,0\rangle$) THEN  casillerosADerecha(c$+\langle 1,0\rangle$, m)
+        ELSE $\emptyset$ FI)$\cup\{c\}$}
+        \tadAxioma{casillerosAIzquierda(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle1,0\rangle$) THEN  casillerosAIzquierda(c$-\langle 1,0\rangle$, m)
+        ELSE $\emptyset$ FI)$\cup\{c\}$}
+        \tadAxioma{casillerosVerticales(c,m)}{casillerosArriba(c,m)$\cup$casillerosAbajo(c, m)}
+        \tadAxioma{casillerosArriba(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c+\langle 0,1\rangle$) THEN  casillerosArriba(c$+\langle 0,1\rangle$, m)
+        ELSE $\emptyset$ FI)$\cup\{c\}$}
+        \tadAxioma{casillerosAbajo(c,m)}{(\IF dentroDeLasDimensiones(dimensión($m$), vértice($m$), $c-\langle 0,1\rangle$) THEN  casillerosAbajo(c$-\langle 0,1\rangle$, m)
+        ELSE $\emptyset$ FI)$\cup\{c\}$}
+\end{tad}
+
+
+\newpage
+\begin{tad}{\tadNombre{Pacalgo2}}
+
+    \tadUsa {Mapa}
+    \tadGeneros{pacalgo2}
+    \tadExporta{pacalgo2, observadores, generadores}
+    \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ 
+        posiciónActual($p_1$)$\igobs$posiciónActual($p_2$)$\ \wedge$ \\
+        nivelDeChocolate($p_1$)$\igobs$nivelDeChocolate($p_2$)$\ \wedge$ \\
+        chocolatesRestantes($p_1$)$\igobs$chocolatesRestantes($p_2$)$\ \wedge$ \\
+        ganó?($p_1$)$\igobs$ ganó?($p_2$) $\wedge$ \\
+        (ganó?($p_1$) $\implies_L$ puntaje($p_1$)$\igobs$puntaje($p_2$))}
+
+\tadObservadores
+    \tadAlinearFunciones{historialMovimientos}{pacalgo2}
+    \tadOperacion{verMapa}{pacalgo2}{mapa}{}
+    \tadOperacion{posiciónActual}{pacalgo2}{casillero}{}
+    \tadOperacion{puntaje}{pacalgo2}{nat}{ganó?($p$)}
+    \tadOperacion{nivelDeChocolate}{pacalgo2}{nat}{}
+    \tadOperacion{chocolatesRestantes}{pacalgo2}{conj(casillero)}{}
+
+\tadGeneradores
+    \tadAlinearFunciones{inicializarJuego}{mapa\text{ } m}
+    \tadOperacion{inicializarJuego}{mapa}{pacalgo2}{}
+    \tadOperacion{arriba}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) + $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{abajo}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) - $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{derecha}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) + $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+    \tadOperacion{izquierda}{pacalgo2 \text{ }$p$}{pacalgo2}{(posiciónActual($p$) - $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles($p$)\ $\wedge\ \lnot$ganó?($p$) $\wedge\ \lnot$perdió?($p$)}
+
+\tadOtrasOperaciones
+    \tadAlinearFunciones{direccionesPosibles}{pacalgo2}
+    \tadOperacion{direccionesPosibles}{pacalgo2}{conj(casillero)}{}
+    \tadOperacion{perdió?}{pacalgo2}{bool}{}
+    \tadOperacion{ganó?}{pacalgo2}{bool}{}
+    \tadOperacion{pasos}{pacalgo2}{nat}{}
+
+\tadAxiomas
+\tadAlinearAxiomas{chocolatesRestantes(inicializarJuego($m$))}
+    \tadAxioma{verMapa(inicializarJuego($m$))}{$m$}
+    \tadAxioma{verMapa(arriba($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(abajo($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(izquierda($p$))}{verMapa($p$)}
+    \tadAxioma{verMapa(derecha($p$))}{verMapa($p$)}
+    \tadAxioma{posiciónActual(inicializarJuego $m$)}{casilleroInicial($m$)}
+    \tadAxioma{posiciónActual(arriba($p$))}{posiciónActual($p$) + $\langle 0,1\rangle$}
+    \tadAxioma{posiciónActual(abajo($p$))}{posiciónActual($p$) - $\langle 0,1\rangle$}
+    \tadAxioma{posiciónActual(izquierda($p$))}{posiciónActual($p$) - $\langle 1,0\rangle$}
+    \tadAxioma{posiciónActual(derecha($p$))}{posiciónActual($p$) + $\langle 1,0\rangle$}
+    \tadAxioma{pasos(inicializarJuego $m$)}{0}
+    \tadAxioma{pasos(arriba($p$))}{1 + pasos($p$)}
+    \tadAxioma{pasos(abajo($p$))}{1 + pasos($p$)}
+    \tadAxioma{pasos(izquierda($p$))}{1 + pasos($p$)}
+    \tadAxioma{pasos(derecha($p$))}{1 + pasos($p$)}
+    \tadAxioma{puntaje($p$)}{pasos($p$)}
+    \tadAxioma{nivelDeChocolate(inicializarJuego($m$))}{\IF casilleroInicial($m$) $\in$ conjChocolates($m$) THEN 10 ELSE 0 FI}
+    \tadAxioma{nivelDeChocolate(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
+    \tadAxioma{nivelDeChocolate(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
+    \tadAxioma{nivelDeChocolate(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
+    \tadAxioma{nivelDeChocolate(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN 10 ELSE {\IF 0?(nivelDeChocolate($p$)) THEN nivelDeChocolate($p$) ELSE nivelDeChocolate($p$) - 1 FI} FI}
+    \tadAxioma{chocolatesRestantes(inicializarJuego($m$))}{\IF casilleroInicial($m$) $\in$ conjChocolates($m$) THEN conjChocolates($m$) - \{ casilleroInicial($m$) \} ELSE conjChocolates($m$) FI}
+    \tadAxioma{chocolatesRestantes(arriba($p$))}{\IF (posiciónActual($p$) + $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 0,1\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(abajo($p$))}{\IF (posiciónActual($p$) - $\langle 0,1\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 0,1\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(izquierda($p$))}{\IF (posiciónActual($p$) - $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) - $\langle 1,0\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{chocolatesRestantes(derecha($p$))}{\IF (posiciónActual($p$) + $\langle 1,0\rangle$) $\in$ chocolatesRestantes($p$) THEN chocolatesRestantes($p$) - \{ (posiciónActual($p$) + $\langle 1,0\rangle$) \} ELSE chocolatesRestantes($p$) FI}
+    \tadAxioma{perdió?($p$)}{ $\neg\emptyset$?(conjFantasmas(verMapa($p$)) $\cap$ \\ aDistanciaMenosDeN(posiciónActual($p$),3))$\wedge$ 0?(nivelDeChocolate($p$)) }
+    \tadAxioma{ganó?($p$)}{posiciónActual($p$)=casilleroDeLlegada(verMapa($p$))}
+    \tadAxioma{direccionesPosibles($p$)}{\IF 0?(nivelDeChocolate($p$)) THEN (aDistanciaMenosDeN(posiciónActual($p$),1)$-$posiciónActual($p$))\ $\cap$ \\ casillerosLibres(verMapa($p$)) ELSE (aDistanciaMenosDeN(posiciónActual($p$),1)$-$posiciónActual($p$))\ $\cap$ \\ (casillerosLibres(verMapa($p$))\ $\cup$ conjFantasmas(verMapa($p$)))FI}
+
+\end{tad}
+
+\newpage
+
+\subsection{TP 2}
+
+\begin{tad}{\tadNombre{Partida}}
+
+    \tadExtiende{Tupla(int, int)}
+    \tadUsa{Int}
+    \tadGeneros{partida}
+    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
+
+    \tadOtrasOperaciones
+    \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{$\bullet$ - $\bullet$}{casillero, casillero}{casillero}{}
+    \tadOperacion{aDistanciaMenosDeN}{casillero, nat}{conj(casillero)}{}
+
+    \tadAxiomas[]
+    \tadAlinearAxiomas{aDistanciaMenosDeN($c$,\ $n$)}
+    \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
+    \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
+    \tadAxioma{$\pi_1$($c1$ - $c2$)}{$\pi_1$($c_1$) - $\pi_1$($c_2$)}
+    \tadAxioma{$\pi_2$($c1$ - $c2$)}{$\pi_2$($c_1$) - $\pi_2$($c_2$)}
+    \tadAxioma{aDistanciaMenosDeN($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
+          aDistanciaMenosDeN($c$,\ $n-1$)) FI} 
+
+\end{tad}
+
+\end{document}
