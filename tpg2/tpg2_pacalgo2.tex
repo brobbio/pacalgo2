@@ -403,29 +403,60 @@
 
 \subsection{TP 2}
 
-\begin{tad}{\tadNombre{Partida}}
+\begin{tad}{\tadNombre{Ranking}}
 
-    \tadExtiende{Tupla(int, int)}
     \tadUsa{Int}
-    \tadGeneros{partida}
+    \tadGeneros{ranking}
     \tadExporta{casillero, +, -, aDistanciaMenosDeN}
 
-    \tadOtrasOperaciones
-    \tadOperacion{$\bullet$ + $\bullet$}{casillero, casillero}{casillero}{}
-    \tadOperacion{$\bullet$ - $\bullet$}{casillero, casillero}{casillero}{}
-    \tadOperacion{aDistanciaMenosDeN}{casillero, nat}{conj(casillero)}{}
+    \tadObservadores
+    \tadAlinearFunciones{ver}{ranking}
+        \tadOperacion{ver}{ranking}{dicc(string, nat)}{}
 
-    \tadAxiomas[]
-    \tadAlinearAxiomas{aDistanciaMenosDeN($c$,\ $n$)}
-    \tadAxioma{$\pi_1$($c1$ + $c2$)}{$\pi_1$($c_1$) + $\pi_1$($c_2$)}
-    \tadAxioma{$\pi_2$($c1$ + $c2$)}{$\pi_2$($c_1$) + $\pi_2$($c_2$)}
-    \tadAxioma{$\pi_1$($c1$ - $c2$)}{$\pi_1$($c_1$) - $\pi_1$($c_2$)}
-    \tadAxioma{$\pi_2$($c1$ - $c2$)}{$\pi_2$($c_1$) - $\pi_2$($c_2$)}
-    \tadAxioma{aDistanciaMenosDeN($c$,\ $n$)}{\IF $n$=0? THEN $\{c\}$ ELSE (aDistanciaMenosDeN($c$ + $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ - $\langle$1,0$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ + $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$ - $\langle$0,1$\rangle$,\ $n-1$)\ $\cup$ \\
-          aDistanciaMenosDeN($c$,\ $n-1$)) FI} 
+    \tadGeneradores
+    \tadAlinearFunciones{cargarPuntaje}{ranking, string, nat}
+        \tadOperacion{iniciar}{}{ranking}{}
+        \tadOperacion{cargarPuntaje}{ranking, string, nat}{ranking}{}
+
+    \tadOtrasOperaciones
+    \tadAlinearFunciones{laOtraFunciónQueHayQueHacer}{ranking\ $r$, conj($string$)\ $claves$, string\ $p$}
+        \tadOperacion{contrincante}{ranking\ $r$, string\ $j$}{tupla(string, nat)}{def?($j$, ver($r$))}
+        \tadOperacion{superioresInmediatos}{ranking\ $r$, string\ $j$}{conj(string)}{$\neg\emptyset$($claves$) $\wedge$ def?($j$, ver($r$))}
+        \tadOperacion{elMaximoEntreMenores}{conj($nat$)\ $puntajes$, nat\ $p$}{nat}{}
+        \tadOperacion{todosLosPuntajes}{ranking}{conj(nat)}{}
+        \tadOperacion{jugadoresConPuntajeIgual}{ranking, conj(string), nat}{conj(string)}{}
+
+    
+
+    \tadAxiomas
+    \tadAlinearAxiomas{superioresInmediatos($ranking$, $claves$, $jugador$)}
+        \tadAxioma{ver(iniciar())}{vacío}
+        \tadAxioma{ver(cargarPuntaje($ranking$, $nombre$, $puntaje$))}{definir(ver($ranking$), ($nombre$, $puntaje$))}
+        \tadAxioma{contrincante($r$,$j$)}{(dameUno(superioresInmediatos($r$,$j$)), obtener(ver($r$), dameUno(superioresInmediatos($r$,$j$))))}
+        \tadAxioma{superioresInmediatos($r$, $j$)}{jugadoresConPuntajeIgual($r$, claves(ver($r$)), elMaximoEntreMenores(todosLosPuntajes($r$), obtener(ver($r$),$j$))}
+        \tadAxioma{elMaximoEntreMenores($puntajes$, $p$)}{\IF $\emptyset$?(sinUno($puntajes$)) THEN 
+                $p$ 
+            ELSE 
+                {\IF dameUno($puntajes$) $\geq$ $p$ THEN
+                    elMaximoEntreMenores(sinUno($puntajes$),$p$)
+                ELSE
+                    max\{dameUno($puntajes$), elMaximoEntreMenores(sinUno($puntajes$),$p$)\}
+                FI}
+            FI}
+        \tadAxioma{todosLosPuntajes($r$)}{\IF $\emptyset$?(ver($r$)) THEN
+                $\emptyset$
+            ELSE
+                Ag(obtener(ver($r$), dameUno(claves(ver($r$)))), todosLosPuntajes($r$))
+            FI}
+        \tadAxioma{jugadoresConPuntajeIgual($r$, $claves$, $puntaje$)}{\IF $\emptyset$?($claves$) $\vee$ $\emptyset$?(claves(ver($r$))) THEN
+                $\emptyset$
+            ELSE
+                {\IF obtener(ver($r$), dameUno($claves$)) = $puntaje$ THEN
+                    Ag(dameUno($claves$), jugadorConPuntajeIgual($r$, sinUno($claves$), $puntaje$))
+                ELSE
+                    jugadorConPuntajeIgual($r$, sinUno($claves$), $puntaje$)
+                FI}
+            FI}
 
 \end{tad}
 
