@@ -407,7 +407,7 @@
 
     \tadUsa{Int}
     \tadGeneros{ranking}
-    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
+    \tadExporta{ranking, generadores, contrincante, superioresInmediatos}
 
     \tadObservadores
     \tadAlinearFunciones{ver}{ranking}
@@ -421,10 +421,12 @@
     \tadOtrasOperaciones
     \tadAlinearFunciones{laOtraFunciónQueHayQueHacer}{ranking\ $r$, conj($string$)\ $claves$, string\ $p$}
         \tadOperacion{contrincante}{ranking\ $r$, string\ $j$}{tupla(string, nat)}{def?($j$, ver($r$))}
-        \tadOperacion{superioresInmediatos}{ranking\ $r$, string\ $j$}{conj(string)}{$\neg\emptyset$($claves$) $\wedge$ def?($j$, ver($r$))}
+        \tadOperacion{superioresInmediatos}{ranking\ $r$, string\ $j$}{conj(string)}{def?($j$, ver($r$))}
         \tadOperacion{elMaximoEntreMenores}{conj($nat$)\ $puntajes$, nat\ $p$}{nat}{}
-        \tadOperacion{todosLosPuntajes}{ranking}{conj(nat)}{}
-        \tadOperacion{jugadoresConPuntajeIgual}{ranking, conj(string), nat}{conj(string)}{}
+        \tadOperacion{todosLosPuntajes}{ranking\ $r$, conj(string)\ $claves$}{conj(nat)}{$claves\subseteq claves(ver(r))$}
+        \tadOperacion{jugadoresConPuntajeIgual}{ranking\ $r$, conj(string)\ $claves$, nat}{conj(string)}{$claves\subseteq claves(ver(r))$}
+        \tadOperacion{menoresQueP}{conj(nat), nat}{conj(nat)}{}
+        \tadOperacion{maximoConj}{conj(nat)\ $C$}{nat}{$\lnot\emptyset$?($C$)}
 
     
 
@@ -432,32 +434,53 @@
     \tadAlinearAxiomas{superioresInmediatos($ranking$, $claves$, $jugador$)}
         \tadAxioma{ver(iniciar())}{vacío}
         \tadAxioma{ver(cargarPuntaje($ranking$, $nombre$, $puntaje$))}{definir(ver($ranking$), ($nombre$, $puntaje$))}
-        \tadAxioma{contrincante($r$,$j$)}{(dameUno(superioresInmediatos($r$,$j$)), obtener(ver($r$), dameUno(superioresInmediatos($r$,$j$))))}
-        \tadAxioma{superioresInmediatos($r$, $j$)}{jugadoresConPuntajeIgual($r$, claves(ver($r$)), elMaximoEntreMenores(todosLosPuntajes($r$), obtener(ver($r$),$j$))}
-        \tadAxioma{elMaximoEntreMenores($puntajes$, $p$)}{\IF $\emptyset$?(sinUno($puntajes$)) THEN 
-                $p$ 
-            ELSE 
-                {\IF dameUno($puntajes$) $\geq$ $p$ THEN
-                    elMaximoEntreMenores(sinUno($puntajes$),$p$)
-                ELSE
-                    max\{dameUno($puntajes$), elMaximoEntreMenores(sinUno($puntajes$),$p$)\}
-                FI}
-            FI}
-        \tadAxioma{todosLosPuntajes($r$)}{\IF $\emptyset$?(ver($r$)) THEN
-                $\emptyset$
-            ELSE
-                Ag(obtener(ver($r$), dameUno(claves(ver($r$)))), todosLosPuntajes($r$))
-            FI}
+        \tadAxioma{contrincante($r$,$j$)}{dameUno(superioresInmediatos($r$,$j$))}
+        \tadAxioma{superioresInmediatos($r$, $j$)}{jugadoresConPuntajeIgual($r$,claves(ver($r$)), elMaximoEntreMenores(todosLosPuntajes($r$), obtener(ver($r$),$j$)))}
+        
+        \tadAxioma{elMaximoEntreMenores($puntajes$, $p$)}{\IF $\emptyset$?(menoresQueP($puntajes$, $p$)) THEN $p$ ELSE maximoConj(menoresQueP($puntajes$, $p$)) FI}
+            
+        \tadAxioma{menoresQueP($puntajes$, $p$)}{\IF $\emptyset$?($puntajes$) THEN $\emptyset$ ELSE {\IF dameUno($puntajes$)<p THEN Ag(dameUno($puntajes$), menoresQueP(sinUno($puntajes$), $p$)) ELSE menoresQueP(sinUno($puntajes$), $p$) FI} FI}    
+            
+        \tadAxioma{maximoConj($C$)}{\IF $\emptyset$?(sinUno($C$)) THEN dameUno($C$) ELSE $\max$(dameUno($C$), maximoConj(sinUno($C$))) FI}    
         \tadAxioma{jugadoresConPuntajeIgual($r$, $claves$, $puntaje$)}{\IF $\emptyset$?($claves$) $\vee$ $\emptyset$?(claves(ver($r$))) THEN
                 $\emptyset$
             ELSE
                 {\IF obtener(ver($r$), dameUno($claves$)) = $puntaje$ THEN
                     Ag(dameUno($claves$), jugadorConPuntajeIgual($r$, sinUno($claves$), $puntaje$))
                 ELSE
-                    jugadorConPuntajeIgual($r$, sinUno($claves$), $puntaje$)
+                    jugadorConPuntajeIgual($r$,sinUno($claves$),$puntaje$)
                 FI}
             FI}
 
+\end{tad}
+
+\begin{tad}{\tadNombre{Fichín}}
+
+    \tadUsa{Int, Ranking, Paclgo2}
+    \tadGeneros{fichin}
+    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
+
+    \tadObservadores
+        \tadOperacion{conocerRanking}{Fichin}{Ranking}{}
+        \tadOperacion{verJuegoActual}{Fichin}{paclgo2}{}
+        \tadOperacion{jugadorActual}{Fichin}{persona}{}
+    \tadGeneradores
+        \tadOperacion{nuevoFichin}{}{Fichin}{}
+        \tadOperacion{nuevaPartida}{Fichin,  jugador\ $string$}{Fichin}{}
+        \tadOperacion{jugar}{Fichin\ $f$}{Fichin}{$\lnot$ganó?(verJuegoActual($f$))$\wedge$ $\lnot$perdió?(verJuegoActual($f$))}
+
+    \tadOtrasOperaciones
+        \tadOperacion{nuevoRecord}{Fichin\ $f$, jugador\ $string$}{Fichin}{ganó?(verJuegoActual($f$))}
+        \tadOperacion{verContrincante}{Fichin\ $f$}{jugador}{jugadorActual($f$)$\in$$claves(ver(conocerRanking(f)))$}
+        
+    \tadAxiomas
+        \tadAxioma{nuevoRecord($fichin$, $pac$, $jugador$)}{\IF  def?($jugador$, ver(conocerRanking($fichin$))) THEN {\IF $puntaje(pac)$<obtener(ver(conocerRanking($fichin$), $jugador$) THEN cargarPuntaje(conocerRanking($fichin$),$jugador$,$puntaje(pac)$) ELSE FI}
+        ELSE
+            cargarPuntaje(conocerRanking($fichin$), $jugador$, $puntaje(pac)$)    
+        FI}
+
+
+    
 \end{tad}
 
 \end{document}
