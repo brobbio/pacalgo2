@@ -458,7 +458,7 @@
 
     \tadUsa{Int, Ranking, Paclgo2}
     \tadGeneros{fichin}
-    \tadExporta{casillero, +, -, aDistanciaMenosDeN}
+    \tadExporta{observadores, generadores, otras operaciones}
 
     \tadObservadores
         \tadOperacion{conocerRanking}{Fichin}{Ranking}{}
@@ -466,18 +466,21 @@
         \tadOperacion{jugadorActual}{Fichin}{persona}{}
     \tadGeneradores
         \tadOperacion{nuevoFichin}{}{Fichin}{}
-        \tadOperacion{nuevaPartida}{Fichin,  jugador\ $string$}{Fichin}{}
+        \tadOperacion{nuevaPartida}{Fichin\ $f$,  jugador\ $j$}{Fichin}{estáLibre?($f$)}
         \tadOperacion{jugar}{Fichin\ $f$}{Fichin}{$\lnot$ganó?(verJuegoActual($f$))$\wedge$ $\lnot$perdió?(verJuegoActual($f$))}
 
     \tadOtrasOperaciones
         \tadOperacion{nuevoRecord}{Fichin\ $f$, jugador\ $string$}{Fichin}{ganó?(verJuegoActual($f$))}
         \tadOperacion{verContrincante}{Fichin\ $f$}{jugador}{jugadorActual($f$)$\in$$claves(ver(conocerRanking(f)))$}
         
+        \tadOperacion{estáLibre?}{Fichin}{Bool}{}
+        
     \tadAxiomas
-        \tadAxioma{nuevoRecord($fichin$, $pac$, $jugador$)}{\IF  def?($jugador$, ver(conocerRanking($fichin$))) THEN {\IF $puntaje(pac)$<obtener(ver(conocerRanking($fichin$), $jugador$) THEN cargarPuntaje(conocerRanking($fichin$),$jugador$,$puntaje(pac)$) ELSE FI}
+        \tadAxioma{nuevoRecord($fichin$, $pac$, $jugador$)}{\IF  def?($jugador$, ver(conocerRanking($fichin$))) THEN {\IF $puntaje(pac)$<obtener(ver(conocerRanking($fichin$), $jugador$) THEN cargarPuntaje(conocerRanking($fichin$),$jugador$,$puntaje(pac)$) ELSE ??? FI}
         ELSE
             cargarPuntaje(conocerRanking($fichin$), $jugador$, $puntaje(pac)$)    
         FI}
+    \tadAxioma{estáLibre?($f$)}{ganó?(verJuegoActual($f$))$\vee$ perdió?(verJuegoActual($f$))}
 
 
     
