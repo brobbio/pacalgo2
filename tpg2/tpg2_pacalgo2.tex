@@ -213,12 +213,20 @@
 \maketitle
 
 \section{Introducción}
-\subsection{Consideraciones}
+\subsection{Consideraciones TP1}
 
     \begin{itemize}
        \item No se puede arrancar el mapa ganando o perdiendo 
        \item El mapa puede no tener un camino ganador o perdedor
        \item El vértice del mapa es la esquina inferior izquierda
+    \end{itemize}
+
+\subsection{Consideraciones TP2}
+
+    \begin{itemize}
+       \item Puede haber más de un jugador en una posición del ranking
+       \item Si el jugador actual está en el primer puesto, el contrincante a superar puede ser él mismo
+       \item No todos los jugadores juegan el mismo mapa
     \end{itemize}
 
 \section{Desarrollo}
@@ -334,7 +342,7 @@
 
     \tadUsa {Mapa}
     \tadGeneros{pacalgo2}
-    \tadExporta{pacalgo2, observadores, generadores}
+    \tadExporta{pacalgo2, observadores, generadores, direccionesPosibles, perdió?, ganó?}
     \tadIgualdadObservacional{p_1}{p_2}{pacalgo2}{verMapa($p_1$)$\igobs$verMapa($p_2$)$\ \wedge$\\ 
         posiciónActual($p_1$)$\igobs$posiciónActual($p_2$)$\ \wedge$ \\
         nivelDeChocolate($p_1$)$\igobs$nivelDeChocolate($p_2$)$\ \wedge$ \\
@@ -377,7 +385,7 @@
     \tadAxioma{posiciónActual(abajo($p$))}{posiciónActual($p$) - $\langle 0,1\rangle$}
     \tadAxioma{posiciónActual(izquierda($p$))}{posiciónActual($p$) - $\langle 1,0\rangle$}
     \tadAxioma{posiciónActual(derecha($p$))}{posiciónActual($p$) + $\langle 1,0\rangle$}
-    \tadAxioma{pasos(inicializarJuego $m$)}{0}
+    \tadAxioma{pasos(inicializarJuego($m$))}{0}
     \tadAxioma{pasos(arriba($p$))}{1 + pasos($p$)}
     \tadAxioma{pasos(abajo($p$))}{1 + pasos($p$)}
     \tadAxioma{pasos(izquierda($p$))}{1 + pasos($p$)}
@@ -407,9 +415,10 @@ TAD persona es String
 
 \begin{tad}{\tadNombre{Ranking}}
 
-    \tadUsa{Int}
+    \tadUsa{Nat, persona}
     \tadGeneros{ranking}
-    \tadExporta{ranking, generadores, contrincante, superioresInmediatos}
+    \tadExporta{observadores, generadores, contrincante}
+    \tadIgualdadObservacional{r_1}{r_2}{ranking}{ver($r_1$)$\igobs$ver($r_2$)}
 
     \tadObservadores
     \tadAlinearFunciones{ver}{ranking}
@@ -417,22 +426,24 @@ TAD persona es String
 
     \tadGeneradores
     \tadAlinearFunciones{cargarPuntaje}{ranking, persona, nat}
-        \tadOperacion{iniciar}{}{ranking}{}
+        \tadOperacion{iniciarRanking}{}{ranking}{}
         \tadOperacion{cargarPuntaje}{ranking, persona, nat}{ranking}{}
 
     \tadOtrasOperaciones
     \tadAlinearFunciones{laOtraFunciónQueHayQueHacer}{ranking\ $r$, conj(persona)\ $nombres$, persona\ $p$}
         \tadOperacion{contrincante}{ranking\ $r$, persona\ $j$}{tupla(persona, nat)}{def?($j$, ver($r$))}
         \tadOperacion{superioresInmediatos}{ranking\ $r$, persona\ $j$}{conj(persona)}{def?($j$, ver($r$))}
-        \tadOperacion{elMaximoEntreMenores}{conj($nat$)\ $puntajes$, nat\ $p$}{nat}{}
+        \tadOperacion{elMaximoEntreMenores\footnotemark[1]}{conj($nat$)\ $conjunto$, nat\ $p$}{nat}{}
         \tadOperacion{todosLosPuntajes}{ranking\ $r$, conj(persona)\ $nombres$}{conj(nat)}{$nombres\subseteq$ claves(ver($r$))}
         \tadOperacion{jugadoresConPuntajeIgual}{ranking\ $r$, conj(persona)\ $nombres$, nat}{conj(persona)}{$nombres\subseteq$ claves(ver($r$))}
         \tadOperacion{menoresQueP}{conj(nat), nat}{conj(nat)}{}
-        \tadOperacion{maximoConj}{conj(nat)\ $C$}{nat}{$\lnot\emptyset$?($C$)}
+        \tadOperacion{máximoDeConjunto}{conj(nat)\ $C$}{nat}{$\lnot\emptyset$?($C$)}
+
+    \footnotetext[1]{Si no hay un menor que $p$ en el $conjunto$, devuelve $p$}
 
     \tadAxiomas
     \tadAlinearAxiomas{jugadoresConPuntajeIgual($r$, $nombres$, $puntaje$)}
-        \tadAxioma{ver(iniciar())}{vacío}
+        \tadAxioma{ver(iniciarRanking())}{vacío}
         \tadAxioma{ver(cargarPuntaje($ranking$, $nombre$, $puntaje$))}{\IF  def?($nombre$, ver($ranking$)) THEN
                 {\IF $puntaje$ < obtener(ver($r$), $nombre$) THEN
                     definir(ver($ranking$), ($nombre$, $puntaje$))
@@ -442,95 +453,110 @@ TAD persona es String
             ELSE
                 definir(ver($ranking$), ($nombre$, $puntaje$))
             FI}
-        \tadAxioma{contrincante($r$,$j$)}{(dameUno(superioresInmediatos($r$,$j$)), elMaximoEntreMenores(todosLosPuntajes($r$),\\ obtener(ver($r$,$j$))))}
-        \tadAxioma{superioresInmediatos($r$, $j$)}{jugadoresConPuntajeIgual($r$,claves(ver($r$)), elMaximoEntreMenores(todosLosPuntajes($r$), obtener(ver($r$),$j$)))}
-        \tadAxioma{elMaximoEntreMenores($puntajes$, $p$)}{\IF $\emptyset$?(menoresQueP($puntajes$, $p$)) THEN $p$ ELSE maximoConj(menoresQueP($puntajes$, $p$)) FI}
-        \tadAxioma{menoresQueP($puntajes$, $p$)}{\IF $\emptyset$?($puntajes$) THEN $\emptyset$ ELSE {\IF dameUno($puntajes$)<p THEN Ag(dameUno($puntajes$), menoresQueP(sinUno($puntajes$), $p$)) ELSE menoresQueP(sinUno($puntajes$), $p$) FI} FI}
-        \tadAxioma{maximoConj($C$)}{\IF $\emptyset$?(sinUno($C$)) THEN dameUno($C$) ELSE $\max$(dameUno($C$), maximoConj(sinUno($C$))) FI}    
         \tadAxioma{todosLosPuntajes($r$)}{\IF $\emptyset$?(ver($r$)) THEN
-                $\emptyset$
+            $\emptyset$
             ELSE
-                Ag(obtener(ver($r$), dameUno(claves(ver($r$)))), todosLosPuntajes($r$))
+            Ag(obtener(ver($r$), dameUno(claves(ver($r$)))), todosLosPuntajes($r$))
             FI}
         \tadAxioma{jugadoresConPuntajeIgual($r$, $nombres$, $puntaje$)}{\IF $\emptyset$?($nombres$) $\vee$ $\emptyset$?(claves(ver($r$))) THEN
-                $\emptyset$
+            $\emptyset$
             ELSE
-                {\IF obtener(ver($r$), dameUno($nombres$)) = $puntaje$ THEN
-                    Ag(dameUno($nombres$), jugadorConPuntajeIgual($r$, sinUno($nombres$), $puntaje$))
-                ELSE
-                    jugadorConPuntajeIgual($r$,sinUno($nombres$),$puntaje$)
-                FI}
+            {\IF obtener(ver($r$), dameUno($nombres$)) = $puntaje$ THEN
+            Ag(dameUno($nombres$), jugadorConPuntajeIgual($r$, sinUno($nombres$), $puntaje$))
+            ELSE
+            jugadorConPuntajeIgual($r$,sinUno($nombres$),$puntaje$)
             FI}
+            FI}
+        \tadAxioma{superioresInmediatos($r$, $j$)}{jugadoresConPuntajeIgual($r$,claves(ver($r$)), elMaximoEntreMenores(todosLosPuntajes($r$), obtener(ver($r$),$j$)))}
+        \tadAxioma{elMaximoEntreMenores($puntajes$, $p$)}{\IF $\emptyset$?(menoresQueP($puntajes$, $p$)) THEN $p$ ELSE máximoDeConjunto(menoresQueP($puntajes$, $p$)) FI}
+        \tadAxioma{menoresQueP($puntajes$, $p$)}{\IF $\emptyset$?($puntajes$) THEN $\emptyset$ ELSE {\IF dameUno($puntajes$)<p THEN Ag(dameUno($puntajes$), menoresQueP(sinUno($puntajes$), $p$)) ELSE menoresQueP(sinUno($puntajes$), $p$) FI} FI}
+        \tadAxioma{máximoDeConjunto($C$)}{\IF $\emptyset$?(sinUno($C$)) THEN dameUno($C$) ELSE $\max$(dameUno($C$), máximoDeConjunto(sinUno($C$))) FI}    
+        \tadAxioma{contrincante($r$,$j$)}{(dameUno(superioresInmediatos($r$,$j$)), obtener(ver($r$), dameUno(superioresInmediatos($r$,$j$))))}
 
 \end{tad}
 
+\newpage
 
 \begin{tad}{\tadNombre{Fichín}}
 
-    \tadUsa{Int, Ranking, Paclgo2}
-    \tadGeneros{fichin}
+    \tadUsa{Ranking, Pacalgo2}
+    \tadGeneros{fichín}
     \tadExporta{observadores, generadores, otras operaciones}
+    \tadIgualdadObservacional{f_1}{f_2}{fichín}{conocerRanking($f_1$)$\igobs$conocerRanking($f_2$) $\wedge$ \\
+            estáLibre?($f_1$)$\igobs$ estáLibre?($f_2$) $\wedge$ \\
+            ($\neg$estáLibre?($f_1$) $\implies_L$ \\
+                verJuegoActual($f_1$)$\igobs$verJuegoActual($f_2$) $\wedge$ \\
+                jugadorActual($f_1$)$\igobs$jugadorActual($f_2$))}
 
     \tadObservadores
-        \tadOperacion{conocerRanking}{fichin}{ranking}{}
-        \tadOperacion{verJuegoActual}{fichin\ $f$}{paclgo2}{$\neg$estáLibre?($f$)}
-        \tadOperacion{jugadorActual}{fichin\ $f$}{persona}{$\neg$estáLibre?($f$)}
+    \tadAlinearFunciones{conocerRanking}{fichín\ $f$}
+        \tadOperacion{conocerRanking}{fichín}{ranking}{}
+        \tadOperacion{verJuegoActual}{fichín\ $f$}{pacalgo2}{$\neg$estáLibre?($f$)}
+        \tadOperacion{jugadorActual}{fichín\ $f$}{persona}{$\neg$estáLibre?($f$)}
 
     \tadGeneradores
-        \tadOperacion{nuevoFichin}{}{fichin}{}
-        \tadOperacion{nuevaPartida}{fichin\ $f$, pacalgo2\ $p$, persona\ $j$}{fichin}{estáLibre?($f$)}
-        \tadOperacion{palancaArriba}{fichin\ $f$}{fichin}{(posiciónActual(verJuegoActual($f$)) + $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))\ $\wedge$\\
-        $\neg$estáLibre?($f$)}
-        \tadOperacion{palancaAbajo}{fichin\ $f$}{fichin}{(posiciónActual(verJuegoActual($f$)) + $\langle 0,-1\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))\ $\wedge$\\
-        $\neg$estáLibre?($f$)}
-        \tadOperacion{palancaDerecha}{fichin\ $f$}{fichin}{(posiciónActual(verJuegoActual($f$)) + $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))\ $\wedge$\\
-        $\neg$estáLibre?($f$)}
-        \tadOperacion{palancaIzquierda}{fichin\ $f$}{fichin}{(posiciónActual(verJuegoActual($f$)) + $\langle -1,0\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))\ $\wedge$\\
-        $\neg$estáLibre?($f$)}
+    \tadAlinearFunciones{palancaIzquierda}{fichín\ $f$, pacalgo2\ $p$, persona\ $j$}
+        \tadOperacion{nuevoFichin}{}{fichín}{}
+        \tadOperacion{nuevaPartida}{fichín\ $f$, pacalgo2\ $p$, persona\ $j$}{fichín}{estáLibre?($f$)}
+        \tadOperacion{palancaArriba}{fichín\ $f$}{fichín}{$\neg$estáLibre?($f$)$\wedge_L$\qquad\qquad\qquad\qquad\qquad\qquad\qquad\\
+            (posiciónActual(verJuegoActual($f$)) + $\langle 0,1\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))}
+        \tadOperacion{palancaAbajo}{fichín\ $f$}{fichín}{$\neg$estáLibre?($f$)$\wedge_L$\qquad\qquad\qquad\qquad\qquad\qquad\qquad\\
+            (posiciónActual(verJuegoActual($f$)) + $\langle 0,-1\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))}
+        \tadOperacion{palancaDerecha}{fichín\ $f$}{fichín}{$\neg$estáLibre?($f$)$\wedge_L$\qquad\qquad\qquad\qquad\qquad\qquad\qquad\\
+            (posiciónActual(verJuegoActual($f$)) + $\langle 1,0\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))}
+        \tadOperacion{palancaIzquierda}{fichín\ $f$}{fichín}{$\neg$estáLibre?($f$)$\wedge_L$\qquad\qquad\qquad\qquad\qquad\qquad\qquad\\
+            (posiciónActual(verJuegoActual($f$)) + $\langle -1,0\rangle$)\ $\in$\ direccionesPosibles(verJuegoActual($f$))}
 
     \tadOtrasOperaciones
-        \tadOperacion{puntajeDeJugadorActual}{fichin\ $f$}{nat}{$\neg$estálibre?($f$)\ $\wedge_L$jugadorActual($f$)$\in$claves(ver(conocerRanking($f$)))}
-        \tadOperacion{verContrincante}{fichin\ $f$}{persona}{$\neg$estáLibre?($f$)$\wedge_L$jugadorActual($f$)$\in$claves(ver(conocerRanking($f$)))}
-        \tadOperacion{estáLibre?}{fichin}{Bool}{}
+    \tadAlinearFunciones{puntajeDeJugadorActual}{fichín\ $f$}
+        \tadOperacion{puntajeDeJugadorActual}{fichín\ $f$}{nat}{$\neg$estálibre?($f$)\ $\wedge_L$jugadorActual($f$)$\in$claves(ver(conocerRanking($f$)))}
+        \tadOperacion{verContrincante}{fichín\ $f$}{tupla(persona, nat)}{$\neg$estáLibre?($f$)$\wedge_L$jugadorActual($f$)$\in$claves(ver(conocerRanking($f$)))}
+        \tadOperacion{estáLibre?}{fichín}{Bool}{}
+        \tadOperacion{puntajeParaMejorar}{fichín\ $f$}{nat}{$\neg$estálibre?($f$)\ $\wedge_L$jugadorActual($f$)$\in$claves(ver(conocerRanking($f$)))}
 
     \tadAxiomas
-    \tadAlinearAxiomas{verJuegoActual(palancaIzquierda($f$))}
+    \tadAlinearAxiomas{verJuegoActual(nuevaPartida($f$, $p$, $j$))}
         \tadAxioma{estáLibre?(nuevoFichin())}{True}
         \tadAxioma{estáLibre?(nuevaPartida($f$,$p$,$j$))}{False}
-        \tadAxioma{estáLibre?(palancaArriba($f$))}{\IF ganó?(arriba(verJuegoActual($f$)))$\vee$perdió?(arriba(verJuegoActual($f$))) THEN True ELSE False FI}
-        \tadAxioma{estáLibre?(palancaAbajo($f$))}{\IF ganó?(abajo(verJuegoActual($f$)))$\vee$perdió?(abajo(verJuegoActual($f$))) THEN True ELSE False FI}
-        \tadAxioma{estáLibre?(palancaDerecha($f$))}{\IF ganó?(derecha(verJuegoActual($f$)))$\vee$perdió?(derecha(verJuegoActual($f$))) THEN True ELSE False FI}
-        \tadAxioma{estáLibre?(palancaIzquierda($f$))}{\IF ganó?(izquierda(verJuegoActual($f$)))$\vee$perdió?(izquierda(verJuegoActual($f$))) THEN True ELSE False FI}
-        \tadAxioma{conocerRanking(nuevoFichin())}{iniciar()}
-        \tadAxioma{conocerRanking(nuevaPartida($f$,$p$,$j$))}{conocerRanking($f$)}
-        \tadAxioma{conocerRanking(palancaArriba($f$)}{\IF ganó?(arriba(verJuegoActual($f$))) THEN
+        \tadAxioma{estáLibre?(palancaArriba($f$))}{ganó?(arriba(verJuegoActual($f$)))$\vee$perdió?(arriba(verJuegoActual($f$)))}
+        \tadAxioma{estáLibre?(palancaAbajo($f$))}{ganó?(abajo(verJuegoActual($f$)))$\vee$perdió?(abajo(verJuegoActual($f$)))}
+        \tadAxioma{estáLibre?(palancaDerecha($f$))}{ganó?(derecha(verJuegoActual($f$)))$\vee$perdió?(derecha(verJuegoActual($f$)))}
+        \tadAxioma{estáLibre?(palancaIzquierda($f$))}{ganó?(izquierda(verJuegoActual($f$)))$\vee$perdió?(izquierda(verJuegoActual($f$)))}
+        \tadAxioma{jugadorActual(nuevaPartida($f$,$p$,$j$))}{$j$}
+        \tadAxioma{jugadorActual(palancaArriba($f$))}{jugadorActual($f$)}
+        \tadAxioma{jugadorActual(palancaAbajo($f$))}{jugadorActual($f$)}
+        \tadAxioma{jugadorActual(palancaDerecha($f$))}{jugadorActual($f$)}
+        \tadAxioma{jugadorActual(palancaIzquierda($f$))}{jugadorActual($f$)}
+        \tadAxioma{conocerRanking(nuevoFichin())}{iniciarRanking()}
+        \tadAxioma{conocerRanking(nuevaPartida($f$,$p$,$j$))}{conocerRanking($f$)} 
+        \tadAxioma{conocerRanking(palancaArriba($f$))}{\IF ganó?(arriba(verJuegoActual($f$))) THEN
                 cargarPuntaje(conocerRanking($f$), puntaje(verJuegoActual(palancaArriba($f$))))
             ELSE 
                 conocerRanking($f$)
             FI}
-        \tadAxioma{conocerRanking(palancaAbajo($f$)}{\IF ganó?(abajo(verJuegoActual($f$))) THEN
+        \tadAxioma{conocerRanking(palancaAbajo($f$))}{\IF ganó?(abajo(verJuegoActual($f$))) THEN
                 cargarPuntaje(conocerRanking($f$), puntaje(verJuegoActual(palancaAbajo($f$))))
             ELSE 
                 conocerRanking($f$)
             FI}
-        \tadAxioma{conocerRanking(palancaDerecha($f$)}{\IF ganó?(derecha(verJuegoActual($f$))) THEN
+        \tadAxioma{conocerRanking(palancaDerecha($f$))}{\IF ganó?(derecha(verJuegoActual($f$))) THEN
                 cargarPuntaje(conocerRanking($f$), puntaje(verJuegoActual(palancaDerecha($f$))))
             ELSE 
                 conocerRanking($f$)
             FI}
-        \tadAxioma{conocerRanking(palancaIzquierda($f$)}{\IF ganó?(izquierda(verJuegoActual($f$))) THEN
+        \tadAxioma{conocerRanking(palancaIzquierda($f$))}{\IF ganó?(izquierda(verJuegoActual($f$))) THEN
                 cargarPuntaje(conocerRanking($f$), puntaje(verJuegoActual(palancaIzquierda($f$))))
             ELSE 
                 conocerRanking($f$)
             FI}
-
-        \tadAxioma{verJuegoActual(nuevaPartida($f$, $p$, $j$)}{$p$}
+        \tadAxioma{verJuegoActual(nuevaPartida($f$, $p$, $j$))}{$p$}
         \tadAxioma{verJuegoActual(palancaArriba($f$))}{arriba(verJuegoActual($f$))}
         \tadAxioma{verJuegoActual(palancaAbajo($f$))}{abajo(verJuegoActual($f$))}
         \tadAxioma{verJuegoActual(palancaDerecha($f$))}{derecha(verJuegoActual($f$))}
         \tadAxioma{verJuegoActual(palancaIzquierda($f$))}{izquierda(verJuegoActual($f$))}
         \tadAxioma{verContrincante($f$)}{contrincante(conocerRanking($f$),jugadorActual($f$))}
         \tadAxioma{puntajeDeJugadorActual($f$)}{obtener(ver(conocerRanking($f$)),jugadorActual($f$))}
+        \tadAxioma{puntajeParaMejorar($f$)}{pred($\pi_2$(verContrincante($f$)))}
 \end{tad}
 
 \end{document}
