@@ -1,0 +1,194 @@
+\documentclass{book}
+\usepackage{subfiles}
+\usepackage{amsmath,thmtools}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{selinput}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage{aed2-symb,aed2-itef,aed2-tad,aed2-diseno}
+\usepackage{algorithmicx, algpseudocode, algorithm}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{calc}
+
+%% ========== Para escribir pseudo ==========
+%\usepackage{algorithm}
+%\usepackage[noend]{algpseudocode}  % "noend" es para no mostrar los endfor, endif
+\algrenewcommand\alglinenumber[1]{\tiny #1:}  % Para que los numeros de linea del pseudo sean pequeños
+\renewcommand{\thealgorithm}{}  % Que no aparezca el numero luego de "Algorithm"
+\floatname{algorithm}{ }    % Entre {  } que quiero que aparezca en vez de "Algorithm"
+
+% traducciones
+% \algrenewcommand\algorithmicwhile{\textbf{mientras}}
+% \algrenewcommand\algorithmicdo{\textbf{hacer}}
+% \algrenewcommand\algorithmicreturn{\textbf{devolver}}
+% \algrenewcommand\algorithmicif{\textbf{si}}
+% \algrenewcommand\algorithmicthen{\textbf{entonces}}
+% \algrenewcommand\algorithmicfor{\textbf{para}}
+%%=========================================================
+
+% Comandos para cositas de complejidad
+
+\newcommand{\bigO}{\mathcal{O}} 
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\eqdef}{\overset{\mathrm{def}}{=}}
+\newcommand{\eqprop}{\overset{\mathrm{prop}}{=}}
+
+\newcommand{\asignar}[2]{$#1 \gets #2$}
+
+\begin{document}
+
+    \pagestyle{plain}
+
+    \begin{Interfaz}
+
+        \textbf{se explica con}: \tadNombre{Mapa}
+
+        \textbf{géneros}: \TipoVariable{mapa}.
+
+        \Titulo{Operaciones básicas de mapa}
+
+            \InterfazFuncion{NuevoMapa}{\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}, \Out{m}{mapa}}{bool}%
+            {$ (res = (inicio \neq llegada \wedge todosEnRango(paredes \cup fantasmas \cup chocolates \cup \{inicio, llegada\}, largo, alto) \wedge \{inicio, llegada\} \cap (fantasmas \cup paredes) = \emptyset \wedge disjuntosDeAPares(paredes, fantasmas, chocolates))) \wedge_L res \implies_{L} m \igobs nuevoMapa(largo, alto,inicio,llegada,paredes,fantasmas,chocolates)$ )}%
+            [$O(chocolates + fantasmas + paredes)$]
+            [Genera un nuevo mapa]
+            [-]
+
+            \InterfazFuncion{distConFantasmasMásCercano}{\In{m}{mapa}, \In{posición}{coordenada}}{nat}%
+            { res = distConFantasmasMásCercano(fantasmas(m), posición) }%
+            [$O(n)$]
+            [Devuelve la distancia con el fantasma más cercano]
+            [-]
+
+            \InterfazFuncion{enRango}{\In{m}{mapa}, \In{posición}{coordenada}}{bool}%
+            {$res$ = enRango(posición, largo(m), alto(m))}%
+            [$O(n)$]
+            [Devuelve true si la posición se encuentra en rango]
+            [-]
+
+            \InterfazFuncion{chocolates}{\In{map}{mapa}}{conj(coordenada)}%
+            {$res$ = chocolates(map)}%
+            [$O(n)$]
+            [Devuelve el conjunto de chocolates del mapa]
+            [-]
+
+            \InterfazFuncion{paredes}{\In{map}{mapa}}{conj(coordenada)}%
+            {$res$ = paredes(map)}%
+            [$O(n)$]
+            [Devuelve el conjunto de paredes]
+            [-]
+
+            \InterfazFuncion{inicio}{\In{map}{mapa}}{coordenada}%
+            {$res$ = inicio(map)}%
+            [$O(1)$]
+            [Devuelve la coordenada de inicio del mapa]
+            [-]
+
+            \InterfazFuncion{llegada}{\In{map}{mapa}}{coordenada}%
+            {$res$ = llegada(map)}%
+            [$O(1)$]
+            [Devuelve la coordenada de llegada del mapa]
+            [-]
+
+    \end{Interfaz}
+
+    \newpage
+
+    \begin{Interfaz}
+
+        \textbf{se explica con}: \tadNombre{Partida}
+
+        \textbf{géneros}: \TipoVariable{partida}.
+
+        \Titulo{Operaciones básicas de partida}
+
+            \InterfazFuncion{nuevaPartida}{\In{m}{mapa}}{partida}%
+            {$res$ = nuevaPartida(m)}%
+            [$O(n)$]
+            [Genera una nueva partida]
+            [-]
+
+            \InterfazFuncion{mover}{\Inout{p}{partida}, \In{d}{dirección}}{}%
+            [$p_0$ = $p$]
+            {$p$ = mover($p_0$, $d$)}%
+            [$O(n)$]
+            [Mueva la posición del jugador un casillero]
+            [-]
+
+            \InterfazFuncion{ganó?}{\In{p}{partida}}{bool}%
+            {$res$ = ganó?($p$)}%
+            [$O(n)$]
+            [Devuelve true si el jugador gano la partida]
+            [-]
+
+            \InterfazFuncion{perdió?}{\In{p}{partida}}{bool}%
+            {$res$ = perdió?($p$)}%
+            [$O(n)$]
+            [Devuelve true si el jugador perdio la partida]
+            [-]
+
+            \InterfazFuncion{jugador}{\In{p}{partida}}{coordenada}%
+            {$res$ = perdió?($p$)}%
+            [$O(n)$]
+            [Devuelve la posición del jugador]
+            [-]
+
+            \InterfazFuncion{cantMov}{\In{p}{partida}}{nat}%
+            {$res$ = cantMov($p$)}%
+            [$O(n)$]
+            [Devuelve la cantidad de movimientos del jugador]
+            [-]
+
+    \end{Interfaz}
+
+    \newpage
+
+    \begin{Interfaz}
+
+        \textbf{se explica con}: \tadNombre{Fichín}
+
+        \textbf{géneros}: \TipoVariable{fichin}.
+
+        \Titulo{Operaciones básicas de fichin}
+
+        \InterfazFuncion{nuevoFichin}{\In{m}{mapa}}{fichin}%
+        {$res$ = nuevoFichin($m$)}%
+        [$O(n)$]
+        [Genera un fichín]
+        [-]
+
+        \InterfazFuncion{nuevaPartida}{\Inout{f}{fichin}, \In{j}{jugador}}{bool}%
+        [$f_0$ = $f$]
+        {$res$ = $\neg$alguienJugando?($f$) $\wedge_L$ $res$ $\implies_L$ $f$ = nuevaPartida($f_0$, $j$) }%
+        [$O(n)$]
+        [Inicia una nueva partida]
+        [-]
+
+        \InterfazFuncion{mover}{\Inout{f}{fichin}, \In{d}{dirección}}{bool}%
+        [$f_0$ = $f$]
+        {$res$ = alguienJugando?($f$) $\wedge_L$ $res$ $\implies_L$ $f$ = mover($f_0$, $d$) }%
+        [$O(n)$]
+        [Mueve en la dirrección indicada]
+        [-]
+
+        \InterfazFuncion{verRanking}{\In{f}{fichin}}{ranking}%
+        {$res$ = ranking($f$)}%
+        [$O(n)$]
+        [Devuelve el ranking del fichin]
+        [-]
+
+        \InterfazFuncion{objetivo}{\In{f}{fichin}, \Out{o}{tupla<jugador, nat>}}{res}%
+        {($res$ = alguienJugando?($f$) $\wedge$ def?(jugadorActual($f$), ranking($f$))) $\wedge_L$ $res$ $\implies_L$ $o$ = objetivo($f$) }%
+        [$O(n)$]
+        [Devuelve una tupla con el oponente y su puntaje]
+        [-]
+
+    \end{Interfaz}
+
+\end{document}
