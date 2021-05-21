@@ -98,6 +98,75 @@
 
     \end{Interfaz}
 
+    \textbf{Representación}
+
+    mapa se representa con $mp$
+
+    %donde $mp$ es tupla($matriz$: secu(secu(tupla($fantasma$: bool, $peligrosa$: bool, $pared$: bool, $inicio$: bool, $llegada$: bool))), $chocolates$: conj(coordenada))
+
+    donde $casillero$ es tupla($fantasma$: bool, $peligrosa$: bool, $pared$: bool, $inicio$: bool, $llegada$: bool)
+
+    donde $columna$ es array[0...$ancho$] de casillero
+
+    donde $mp$ es tupla($matriz$: array[0...$alto$] de columna, $chocolates$: conj(coordenada), $alto$: nat, $ancho$: nat)
+
+    %donde $mp$ es tupla($matriz$: array[0...$alto$] de (array[0...$ancho$] de laCosa), $chocolates$: conj(coordenada))
+
+    %donde $mp$ es tupla($matriz$: array[array[0...$ancho$], array[0...$ancho$] ... $alto$]  de (array[0...$ancho$] de laCosa), $chocolates$: conj(coordenada))
+
+    \textbf{Invariante de representación}
+
+        \tadOperacion{Rep}{mp}{boolean}{}
+
+        \tadAxioma{Rep($e$)}{True $\iff$ 
+            ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.alto$) $\implies_L$ ( \\
+                \qquad \text{} ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.ancho$) $\implies_L$ ( \\
+                        \text{}\qquad\qquad ($\beta$($e.matriz[i][j].inicio$) $+$ \\
+                        \text{}\qquad\qquad $\beta$($e.matriz[i][j].llegada$) $+$ \\
+                        \text{}\qquad\qquad $\beta$($e.matriz[i][j].pared$) $+$ \\
+                        \text{}\qquad\qquad $\beta$($e.matriz[i][j].fantasma$) $+$ \\
+                        \text{}\qquad\qquad $\beta$($\langle$ $i$, $j$ $\rangle$ $\in$ $e.chocolates$) $=$ $1$) $\wedge$ \\
+                        \text{}\qquad\quad ($e.matriz[i][j].peligrosa$ $\implies_L$ ($\exists$ $n$,$m$: nat)($0$ $\leq$ $n$ $\leq$ $e.alto$ $\wedge$ $0$ $\leq$ $m$ $\leq$ $e.ancho$) $\wedge_L$ \\
+                        \text{}\qquad\qquad ($e.matriz[n][m].fantasma$ $\wedge$ distancia($\langle$$i$,$j$$\rangle$, $\langle$$n$,$m$$\rangle$) $\leq$ $3$)) $\wedge$ \\
+                        \text{}\qquad\quad (($\forall$ $n$,$m$ : nat) (0 $\leq$ $n$ $\leq$ $alto$ $\wedge$ 0 $\leq$ $m$ $\leq$ $ancho$ ) $\implies_L$ \\ 
+                        \text{}\qquad\qquad (($e.matriz[n][m].inicio$ $\wedge$ $e.matriz[i][j].inicio$) $\implies$ $n=i$ $\wedge$ $m=j$ )) $\wedge$ \\ 
+                        \text{}\qquad\quad (($\forall$ $n$,$m$ : nat) (0 $\leq$ $n$ $\leq$ $alto$ $\wedge$ 0 $\leq$ $m$ $\leq$ $ancho$ ) $\implies_L$ \\ 
+                        \text{}\qquad\qquad (($e.matriz[n][m].llegada$ $\wedge$ $e.matriz[i][j].llegada$) $\implies$ $n=i$ $\wedge$ $m=j$ ))
+                )
+            )  }
+
+        $ $
+
+    \textbf{Función de abstracción}
+
+        \tadOperacion{Abs}{mp $e$}{Mapa}{Rep($e$)}
+
+        ($\forall$ $e$ : mp) Abs($e$) $\igobs$ $m$: mapa | largo($m$) = $e.largo$ $\wedge$ \\
+            \text{}\qquad ancho($m$) = $e.ancho$ $\wedge$ \\
+            
+            \text{}\qquad chocolates($m$) = $e.chocolates$ $\wedge$ \\
+            \text{}\qquad ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.alto$) $\implies_L$ ( \\
+                \text{}\qquad\quad ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.ancho$) $\implies_L$ ( \\
+                \text{}\qquad\quad $e.matriz[i][j].inicio = inicio(m)$ $\wedge$ \\
+                \text{}\qquad\quad $e.matriz[i][j].llegada = llegada(m)$ $\wedge$ \\
+                \text{}\qquad\quad $e.matriz[i][j].fantasma \iff \langle i,j \rangle \in fantasmas(m) \wedge $ \\
+                \text{}\qquad\quad $e.matriz[i][j].paredes \iff \langle i,j \rangle \in paredes(m) \wedge $ \\
+                \text{}\qquad\quad $e.matriz[i][j].peligrosa \iff distConFantasmasMásCercano(fantasmas(m), \langle i,j \rangle) \leq 3$))
+
+
+            % long(e.elem) = capacidad($c$) $\wedge$ \\
+            % tamaño(verCola($c$)) $\igobs$ \IF e.fin $\geq$ e.inicio THEN e.fin-e.inicio ELSE e.inicio + (long(e.elem) - e.fin) FI $\wedge$ \\
+            % \IF e.fin $\geq$ e.inicio THEN
+            %     ($\forall$ i: nat)(e.inicio $\leq$ i $\leq$ e.fin) $\implies_L$ e.elem[i] = proximo(desencolarNveces(verCola($c$,e.fin - i))) $\wedge$ \\
+            %     ($\forall$ i: nat)(0 $\leq$ i $\leq$ e.inicio $\vee$ e.fin $\leq$ i $<$ long(e.elem)) $\implies_L$ (e.elem[$i$] = 0?) $\wedge$
+            % ELSE 
+            %     ($\forall$ i: nat)(e.inicio $\leq$ i $\leq$ e.fin) $\implies_L$ (e.elem[$i$] = 0?) $\wedge$ \\
+            %     ($\forall$ i: nat)(0 $\leq$ i $\leq$ e.inicio $\vee$ e.fin $\leq$ i $<$ long(e.elem)) $\implies_L$ (e.elem[$i$] = proximo(desencolarNveces(verCola($c$, {\IF e.fin $leq$ i < long(e.elem) THEN (i - e.fin) ELSE (long(e.elem) - e.fin) + i FI}))))
+            % FI
+
+        % \tadOperacion{desencolarNveces}{cola $c$, nat $n$}{ColaAcotada}{$n$ < tamaño($c$)}
+        % \tadAxioma{desencolarNveces($c$,$n$)}{ \IF pred($n$)=0? THEN $c$ ELSE desencolarNveces(desencolar($c$), pred($n$)) FI }
+
     \newpage
 
     \begin{Interfaz}
@@ -147,6 +216,12 @@
 
     \end{Interfaz}
 
+    \textbf{Representación}
+
+    partida se representa con $pt$
+
+    donde $pt$ es tupla($mapa$: mp, $jugador$: coordenada, $chocolates$: conj(chocolates), $cantMov$: nat, $inmunidad$: nat)
+
     \newpage
 
     \begin{Interfaz}
@@ -190,5 +265,11 @@
         [-]
 
     \end{Interfaz}
+
+    \textbf{Representación}
+
+    partida se representa con $fch$
+
+    donde $fch$ es tupla($mapa$: mp, $alguienJugando$: bool, $jugadorActual$: string, $partidaActual$: pt, $ranking$: dicc(string, nat))
 
 \end{document}
