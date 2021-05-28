@@ -72,10 +72,10 @@
             [Devuelve true si la posición se encuentra en rango]
             [-]
 
-            \InterfazFuncion{chocolates}{\In{map}{mapa}}{conj(coordenada)}%
-            {$res$ = chocolates(map)}%
+            \InterfazFuncion{cantChocolates}{\In{map}{mapa}}{nat}%
+            {$res$ = \#(chocolates(map))}%
             [$O(c)$]
-            [Devuelve el conjunto de chocolates del mapa]
+            [Devuelve la cantidad de chocolates en el mapa]
             [-]
 
             \InterfazFuncion{esPared}{\In{map}{mapa}, \In{posición}{coordenada}}{bool}%
@@ -108,7 +108,8 @@
 
     donde $casillero$ es tupla($fantasma$: bool, \\
         \text{}\qquad\quad $peligrosa$: bool, \\
-        \text{}\qquad\quad $pared$: bool)
+        \text{}\qquad\quad $pared$: bool, \\
+        \text{}\qquad\quad $idChocolate$: int)
 
     $ $
 
@@ -117,11 +118,11 @@
     $ $
 
     donde $mp$ es tupla($matriz$: array[0...$alto$] de columna, \\
-        \text{}\qquad\quad $chocolates$: conj(coordenada), \\
+        \text{}\qquad\quad \#$chocolates$: nat, \\
         \text{}\qquad\quad $alto$: nat, \\
         \text{}\qquad\quad $largo$: nat, \\
-        \text{}\qquad\quad $inicio$: bool, \\
-        \text{}\qquad\quad $llegada$: bool))
+        \text{}\qquad\quad $inicio$: coordenada, \\
+        \text{}\qquad\quad $llegada$: coordenada)
 
     $ $
 
@@ -135,9 +136,12 @@
             ($e.inicio$ $\neq$ $e.llegada$) $\wedge$ \\
             ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.largo$) $\implies_L$ ( \\
                 \qquad \text{} ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.alto$) $\implies_L$ ( \\
-                        \text{}\qquad\quad ($\beta$($e.matriz[i][j].pared$) $+$ 
-                                $\beta$($e.matriz[i][j].fantasma$) $+$ 
-                                $\beta$($\langle$ $i$, $j$ $\rangle$ $\in$ $e.chocolates$) $\leq$ $1$) $\wedge$ \\
+                        \text{}\qquad\quad ($\beta$($e.matriz[i][j].pared$) $+$ \\
+                            \text{}\qquad\qquad $\beta$($e.matriz[i][j].fantasma$) $+$ \\
+                            \text{}\qquad\qquad $\beta$($0$ $\leq$ $e.matriz[i][j].idChocolate$ $<$ $e.\#chocolates$) $\leq$ $1$) $\wedge$ \\
+                        \text{}\qquad\quad (($\forall$ $n$: $\Nat$)($0$ $\leq$ $n$ $<$ $e.\#chocolates$)\\ 
+                        \text{}\qquad\qquad    ($\exists!$ $i$,$j$: $nat$ )( $0$ $\leq$ $i$ $\leq$ $e.largo$ $\wedge$ $0$ $\leq$ $j$ $\leq$ $e.alto$ ) $\wedge_L$ \\
+                        \text{}\qquad\qquad\quad    ( $e.matriz[i][j].chocolates$ $=$ $n$ )) $\wedge$ \\
                         \text{}\qquad ($e.matriz[i][j].peligrosa$ $\implies_L$ ($\exists$ $n$,$m$: nat)($0$ $\leq$ $n$ $\leq$ $e.largo$ $\wedge$ $0$ $\leq$ $m$ $\leq$ $e.alto$) $\wedge_L$ \\
                         \text{}\qquad\quad ($e.matriz[n][m].fantasma$ $\wedge$ distancia($\langle$$i$,$j$$\rangle$, $\langle$$n$,$m$$\rangle$) $\leq$ $3$)))\\
                 )}
@@ -146,17 +150,18 @@
 
     \textbf{Función de abstracción}
 
-        \tadOperacion{Abs}{mp $e$}{Mapa}{Rep($e$)}
+        \tadOperacion{Abs}{mp\ $e$}{Mapa}{Rep($e$)}
 
         ($\forall$ $e$ : mp) Abs($e$) $\igobs$ $m$: mapa | largo($m$) = $e.largo$ $\wedge$ \\
             \text{}\qquad alto($m$) = $e.alto$ $\wedge$ \\
-            \text{}\qquad chocolates($m$) = $e.chocolates$ $\wedge$ \\
+            \text{}\qquad \#(chocolates($m$)) = $e.\#chocolates$ $\wedge$ \\
             \text{}\qquad $e.inicio = inicio(m)$ $\wedge$ \\
             \text{}\qquad $e.llegada = llegada(m)$ $\wedge$ \\
             \text{}\qquad ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.largo$) $\implies_L$ ( \\
                 \text{}\qquad\quad ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.alto$) $\implies_L$ ( \\
                 \text{}\qquad\quad $e.matriz[i][j].fantasma \iff \langle i,j \rangle \in fantasmas(m) \wedge $ \\
                 \text{}\qquad\quad $e.matriz[i][j].paredes \iff \langle i,j \rangle \in paredes(m) \wedge $ \\
+                \text{}\qquad\quad $0 \leq e.matriz[i][j].chocolate < e.\#chocolates \iff \langle i,j \rangle \in chocolates(m) \wedge $ \\
                 \text{}\qquad\quad $e.matriz[i][j].peligrosa \iff distConFantasmasMásCercano(fantasmas(m), \langle i,j \rangle) \leq 3$))
 
     \newpage
@@ -216,7 +221,7 @@
 
     donde $pt$ es tupla($mapa$: mp, \\
         \text{}\qquad\quad$jugador$: coordenada, \\
-        \text{}\qquad\quad$chocolates$: conj(coordenada), \\
+        \text{}\qquad\quad$chocolates$: array[0...c] de bool, \\
         \text{}\qquad\quad$cantMov$: nat, \\
         \text{}\qquad\quad$inmunidad$: nat, \\
         \text{}\qquad\quad$gano$: bool, \\
@@ -228,11 +233,13 @@
 
     \tadOperacion{distancia}{coordenada, coordenada}{nat}{}
     \tadOperacion{distanciaMinima}{coordenada, conj(coordenada)}{bool}{}
+    \tadOperacion{chocolatesSinComer}{pt}{conj(coordenada)}{}
 
     $ $
 
     \tadAxioma{distancia($x$, $y$)}{|$+x_1$ - $+y_1$| $+$ |$+x_2$ - $+y_2$|}
     \tadAxioma{distanciaMinima($j$, $c$)}{\IF \#($c$) = 1 THEN distancia($j$, dameUno($c$)) ELSE mín(distancia($j$, dameUno($c$)),distanciaMinima($j$, sinUno($c$))) FI}
+    \tadAxioma{distanciaMinima($e$)}{Esta función devuelve el conjunto de coordenadas de chocolates en la $e.mapa.matriz$ cuyo Id en el array de la partida ($e.chocolates$) aun estan en true}
 
     $ $
 
@@ -241,14 +248,14 @@
     \tadOperacion{Rep}{pt}{boolean}{}
 
     \tadAxioma{Rep($e$)}{True $\iff$ 
-            $e.mapa.EnRango$($e.mapa$,$e.jugador$) $\wedge_L$ \\
+            ($e.mapa.EnRango$($e.mapa$,$e.jugador$) $\wedge$ \\
+            \text{}\quad $long(e.chocolates) = e.mapa.\#chocolates $) $\wedge_L$ \\
             \text{}\quad $e.cantMov$ $=$ $0$ $\implies$ \\
             \text{}\qquad $e.mapa.inicio$ $=$ $jugador$ $\wedge$ $e.chocolates$ $=$ $e.mapa.chocolates$ $-$ $jugador$ $\wedge$ \\
-            \text{}\qquad\quad \IF $jugador$ $\in$ $e.mapa.chocolates$ THEN $e.inmunidad$ $=$ 10 ELSE $e.inmunidad$ $=$ $0$ FI $\wedge$\\
-            \text{}\quad $e.chocolates$ $\subseteq$ $e.mapa.chocolates$ $\wedge$ \\
-            \text{}\quad $\neg$($e.jugador$ $\in$ $e.chocolates$) $\wedge$ \\
-            \text{}\quad $e.inmunidad$ $=$ $10$ $\implies$ $e.jugador$ $\in$ $e.mapa.chocolates$ $\wedge$ \\
-            \text{}\quad $e.inmunidad$ $\leq$ 10 - distanciaMinima($jugador$, $e.mapa.chocolates$ - $e.chocolates$) $\wedge$ \\
+            \text{}\qquad\quad \IF $e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate]$ THEN $e.inmunidad$ $=$ 10 ELSE $e.inmunidad$ $=$ $0$ FI $\wedge$\\
+            \text{}\quad $\neg$($e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate]$) $\wedge$ \\
+            \text{}\quad $e.inmunidad$ $=$ $10$ $\implies$ $0 \leq e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate < e.mapa.\#chocolates$ $\wedge$ \\
+            \text{}\quad $e.inmunidad$ $\leq$ 10 - distanciaMinima($jugador$, chocolatesSinComer($e$)) $\wedge$ \\
             \text{}\quad $e.gano$ $\iff$ $jugador$ = $e.mapa.llegada$ $\wedge$ \\
             \text{}\quad $e.perdio$ $\iff$ $e.inmunidad$ $=$ $0$ $\wedge$ $e.mapa.distConFantasmasM\acute{a}sCercano$($e.mapa$, $e,jugador$) $\leq$ $3$ \\
         }
@@ -261,7 +268,7 @@
 
         ($\forall$ $e$ : pt) Abs($e$) $\igobs$ $p$: partida | mapa(p) = $e.mapa$ $\wedge$ \\
             \text{}\quad\qquad jugador($p$) = $e.jugador$ $\wedge$ \\
-            \text{}\quad\qquad chocolates($p$) = $e.chocolates$ $\wedge$ \\
+            \text{}\quad\qquad chocolates($p$) = chocolatesSinComer($e$) $\wedge$ \\
             \text{}\quad\qquad cantMov($p$) = $e.cantMov$ $\wedge$ \\
             \text{}\quad\qquad inmunidad($p$) = $e.inmunidad$ $\wedge$ \\
             \text{}\quad\qquad ganó?($p$) = $e.gano$ $\wedge$ \\
