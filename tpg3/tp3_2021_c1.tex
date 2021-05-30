@@ -343,7 +343,7 @@
 
         \begin{Algoritmos}
 
-        \begin{algorithm}[H]{\textbf{iNuevoMapa}({\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}}) $\to$ $res$ : $mapa$}
+        \begin{algorithm}[H]{\textbf{NuevoMapa}({\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}}) $\to$ $res$ : $mapa$}
             \begin{algorithmic}[1]
                 \State $int\ contadorDeChocolate \gets 0$                               \Comment $\bigO(1)$
                 \State $mapa \gets <>$                               \Comment $\bigO(1)$
@@ -599,7 +599,7 @@
             \text{}\quad\qquad perdió?($p$) = $e.perdio$
 
     \begin{Algoritmos}
-        \begin{algorithm}[H]{\textbf{iNuevaPartida}(\In{m}{mapa}) $\to$ $res$ : $partida$}
+        \begin{algorithm}[H]{\textbf{NuevaPartida}(\In{m}{mapa}) $\to$ $res$ : $partida$}
             \begin{algorithmic}[1]
                 \State $partida \gets <>$                               \Comment $\bigO(1)$
                 \State $partida.mapa \gets m$                           \Comment $\bigO(1)$
@@ -678,7 +678,7 @@
         \end{algorithm}
             
 
-        \begin{algorithm}[H]{\textbf{iGanó?}(\In{p}{partida}) $\to$ $res$ : $bool$}
+        \begin{algorithm}[H]{\textbf{Ganó?}(\In{p}{partida}) $\to$ $res$ : $bool$}
             \begin{algorithmic}[1]
                     \State $res \gets p.gano$                                                                   \Comment $\Theta(1)$
 
@@ -823,7 +823,7 @@
 	       \If{$\neg f.alguienJugando$}
 			 \State $f.jugadorActual \gets a$ 				\Comment $\Theta(1)$
 			 \State $f.alguienJugando \gets True$ 				\Comment $\Theta(1)$
-             \State $f.partidaActual \gets partida.iNuevaPartida(f.mapa)$ 				\Comment $\bigO(c)$
+             \State $f.partidaActual \gets partida.NuevaPartida(f.mapa)$ 				\Comment $\bigO(c)$
              \State $res\gets True$
              \EndIf
 			\medskip
@@ -838,13 +838,13 @@
 \begin{algorithm}[H]{\textbf{iMover}(\Inout{f}{fichin}, \In{d}{direccion}) $\to$ $res$ : $bool$}
 	\begin{algorithmic}[1]
 	        \If{$f.alguienJugando$}
-			 \State partida.iMover(f.partidaActual, d)	\Comment $\Theta(1)$
+			 \State partida.Mover(f.partidaActual, d)	\Comment $\Theta(1)$
 			 \State $res\gets True$
-			 \If{partida.iGanó?(f.partidaActual)}	\Comment $\bigO(1)$
+			 \If{partida.Ganó?(f.partidaActual)}	\Comment $\bigO(1)$
 			 \If{def?(f.jugadorActual, f.ranking)}\Comment{$\bigO(|J|)$}
-			 \If{obtener(f.jugadorActual, f.ranking) $>$ partida.iCantMov(f.partidaActual)} \Comment{$\bigO(|J|)$} \\
-			 \qquad\qquad definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$} \EndIf
-		   \Else\hspace{0.05cm} definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$}\EndIf
+			 \If{obtener(f.jugadorActual, f.ranking) $>$ partida.CantMov(f.partidaActual)} \Comment{$\bigO(|J|)$} \\
+			 \qquad\qquad definir(f.jugadorActual, partida.CantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$} \EndIf
+		   \Else\hspace{0.05cm} definir(f.jugadorActual, partida.CantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$}\EndIf
 		     \EndIf
 			 \Else
 			 \State $res\gets False$	\Comment $\Theta(1)$
