@@ -54,51 +54,63 @@
 
         \Titulo{Operaciones básicas de mapa}
 
-            \InterfazFuncion{NuevoMapa}{\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}, \Out{m}{mapa}}{bool}%
-            {$ (res = (inicio \neq llegada \wedge todosEnRango(paredes \cup fantasmas \cup chocolates \cup \{inicio, llegada\}, largo, alto) \wedge \{inicio, llegada\} \cap (fantasmas \cup paredes) = \emptyset \wedge disjuntosDeAPares(paredes, fantasmas, chocolates))) \wedge_L res \implies_{L} m \igobs nuevoMapa(largo, alto,inicio,llegada,paredes,fantasmas,chocolates)$ )}%
-            [$O(chocolates + fantasmas + paredes)$]
+            \InterfazFuncion{NuevoMapa}{\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}}{mapa}%
+            [$(inicio \neq llegada \wedge todosEnRango(paredes \cup fantasmas \cup chocolates \cup \{inicio, llegada\}, largo, alto) \wedge \{inicio, llegada\} \cap (fantasmas \cup paredes) = \emptyset \wedge disjuntosDeAPares(paredes, fantasmas, chocolates))$]
+            {$ res = nuevoMapa(largo, alto,inicio,llegada,paredes,fantasmas,chocolates)$ )}%
+            [$O(alto \cdot largo \cdot (\#chocolates + \#fantasmas + \#paredes + 1))$]
             [Genera un nuevo mapa]
-            [-]
+            [Para construir el mapa hacemos copia de todos los conjuntos]
 
-            \InterfazFuncion{esCasilleroPeligroso}{\In{m}{mapa}, \In{posición}{coordenada}}{res}%
-            { res = distConFantasmasMásCercano(fantasmas(m), posición) $\leq$ 3 }%
+            \InterfazFuncion{esCasilleroPeligroso}{\In{m}{mapa}, \In{posicion}{coordenada}}{bool}%
+            { res = distConFantasmasMasCercano(fantasmas(m), posicion) $\leq$ 3 }%
             [$O(1)$]
             [Devuelve true si el casillero es peligroso, es peligroso si existe un fantasma con distancia $\leq 3$ respecto a la posción]
-            [-]
+            % [-]
 
-            \InterfazFuncion{enRango}{\In{m}{mapa}, \In{posición}{coordenada}}{bool}%
-            {$res$ = enRango(posición, largo(m), alto(m))}%
+            \InterfazFuncion{enRango}{\In{m}{mapa}, \In{posicion}{coordenada}}{bool}%
+            {$res$ = enRango(posicion, largo(m), alto(m))}%
             [$O(1)$]
-            [Devuelve true si la posición se encuentra en rango]
-            [-]
+            [Devuelve true si la posicion se encuentra en rango]
+            % [-]
 
             \InterfazFuncion{cantChocolates}{\In{map}{mapa}}{nat}%
             {$res$ = \#(chocolates(map))}%
             [$O(c)$]
             [Devuelve la cantidad de chocolates en el mapa]
-            [-]
+            % [-]
 
-            \InterfazFuncion{esPared}{\In{map}{mapa}, \In{posición}{coordenada}}{bool}%
-            {$res$ = true $\iff$ $posición$ $\in$ paredes(map)}%
+            \InterfazFuncion{esPared}{\In{map}{mapa}, \In{posicion}{coordenada}}{bool}%
+            {$res$ = true $\iff$ $posicion$ $\in$ paredes(map)}%
             [$O(1)$]
             [Devuelve el conjunto de paredes]
-            [-]
+            % [-]
 
             \InterfazFuncion{inicio}{\In{map}{mapa}}{coordenada}%
             {$res$ = inicio(map)}%
             [$O(1)$]
             [Devuelve la coordenada de inicio del mapa]
-            [-]
+            % [-]
 
             \InterfazFuncion{llegada}{\In{map}{mapa}}{coordenada}%
             {$res$ = llegada(map)}%
             [$O(1)$]
             [Devuelve la coordenada de llegada del mapa]
-            [-]
+            % [-]
+
+            \newpage
+
+            \InterfazFuncion{idChocolate}{\In{m}{mapa}, \In{posicion}{coordenada}}{nat}%
+            [enRango($posicion$)]
+            {$posicion$ $\in$ chocolates($m$) $\iff$ $0$ $\leq$ $res$ $<$ \#chocolates($m$)}%
+            [$O(1)$]
+            [Devuelve el id del chocolate en el mapa]
+            % [-]
 
     \end{Interfaz}
 
-    \newpage
+    % \newpage
+
+    $ $
 
     \textbf{Representación}
 
@@ -131,18 +143,18 @@
         \tadOperacion{Rep}{mp}{boolean}{}
 
         \tadAxioma{Rep($e$)}{True $\iff$
-            (0 $\leq$ $e.inicio_1$ $\leq$ $e.largo$ $\wedge$ 0 $\leq$ $e.inicio_2$ $\leq$ $e.alto$ ) $\wedge$ \\
-            (0 $\leq$ $e.llegada_1$ $\leq$ $e.largo$ $\wedge$ 0 $\leq$ $e.llegada_2$ $\leq$ $e.alto$ ) $\wedge$ \\
+            (0 $\leq$ $e.inicio_1$ $<$ $e.largo$ $\wedge$ 0 $\leq$ $e.inicio_2$ $<$ $e.alto$ ) $\wedge$ \\
+            (0 $\leq$ $e.llegada_1$ $<$ $e.largo$ $\wedge$ 0 $\leq$ $e.llegada_2$ $<$ $e.alto$ ) $\wedge$ \\
             ($e.inicio$ $\neq$ $e.llegada$) $\wedge$ \\
-            ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.largo$) $\implies_L$ ( \\
-                \qquad \text{} ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.alto$) $\implies_L$ ( \\
+            ($\forall$ i: nat)(0 $\leq$ i $<$ $e.largo$) $\implies_L$ ( \\
+                \qquad \text{} ($\forall$ j: nat)(0 $\leq$ j $<$ $e.alto$) $\implies_L$ ( \\
                         \text{}\qquad\quad ($\beta$($e.matriz[i][j].pared$) $+$ \\
                             \text{}\qquad\qquad $\beta$($e.matriz[i][j].fantasma$) $+$ \\
                             \text{}\qquad\qquad $\beta$($0$ $\leq$ $e.matriz[i][j].idChocolate$ $<$ $e.\#chocolates$) $\leq$ $1$) $\wedge$ \\
-                        \text{}\qquad\quad (($\forall$ $n$: $\Nat$)($0$ $\leq$ $n$ $<$ $e.\#chocolates$)\\ 
-                        \text{}\qquad\qquad    ($\exists!$ $i$,$j$: $nat$ )( $0$ $\leq$ $i$ $\leq$ $e.largo$ $\wedge$ $0$ $\leq$ $j$ $\leq$ $e.alto$ ) $\wedge_L$ \\
+                        \text{}\qquad\quad (($\forall$ $n$: $\Nat$)($0$ $\leq$ $n$ $<$ $e.\#chocolates$) $\implies$\\ 
+                        \text{}\qquad\qquad    ($\exists!$ $i$,$j$: $nat$ )( $0$ $\leq$ $i$ $<$ $e.largo$ $\wedge$ $0$ $\leq$ $j$ $<$ $e.alto$ ) $\wedge_L$ \\
                         \text{}\qquad\qquad\quad    ( $e.matriz[i][j].chocolates$ $=$ $n$ )) $\wedge$ \\
-                        \text{}\qquad ($e.matriz[i][j].peligrosa$ $\implies_L$ ($\exists$ $n$,$m$: nat)($0$ $\leq$ $n$ $\leq$ $e.largo$ $\wedge$ $0$ $\leq$ $m$ $\leq$ $e.alto$) $\wedge_L$ \\
+                        \text{}\qquad ($e.matriz[i][j].peligrosa$ $\implies_L$ ($\exists$ $n$,$m$: nat)($0$ $\leq$ $n$ $<$ $e.largo$ $\wedge$ $0$ $\leq$ $m$ $<$ $e.alto$) $\wedge_L$ \\
                         \text{}\qquad\quad ($e.matriz[n][m].fantasma$ $\wedge$ distancia($\langle$$i$,$j$$\rangle$, $\langle$$n$,$m$$\rangle$) $\leq$ $3$)))\\
                 )}
 
@@ -157,12 +169,12 @@
             \text{}\qquad \#(chocolates($m$)) = $e.\#chocolates$ $\wedge$ \\
             \text{}\qquad $e.inicio = inicio(m)$ $\wedge$ \\
             \text{}\qquad $e.llegada = llegada(m)$ $\wedge$ \\
-            \text{}\qquad ($\forall$ i: nat)(0 $\leq$ i $\leq$ $e.largo$) $\implies_L$ ( \\
-                \text{}\qquad\quad ($\forall$ j: nat)(0 $\leq$ j $\leq$ $e.alto$) $\implies_L$ ( \\
+            \text{}\qquad ($\forall$ i: nat)(0 $\leq$ i $<$ $e.largo$) $\implies_L$ ( \\
+                \text{}\qquad\quad ($\forall$ j: nat)(0 $\leq$ j $<$ $e.alto$) $\implies_L$ ( \\
                 \text{}\qquad\quad $e.matriz[i][j].fantasma \iff \langle i,j \rangle \in fantasmas(m) \wedge $ \\
                 \text{}\qquad\quad $e.matriz[i][j].paredes \iff \langle i,j \rangle \in paredes(m) \wedge $ \\
-                \text{}\qquad\quad $0 \leq e.matriz[i][j].chocolate < e.\#chocolates \iff \langle i,j \rangle \in chocolates(m) \wedge $ \\
-                \text{}\qquad\quad $e.matriz[i][j].peligrosa \iff distConFantasmasMásCercano(fantasmas(m), \langle i,j \rangle) \leq 3$))
+                \text{}\qquad\quad $0 \leq e.matriz[i][j].idChocolate < e.\#chocolates \iff \langle i,j \rangle \in chocolates(m) \wedge $ \\
+                \text{}\qquad\quad $e.matriz[i][j].peligrosa \iff distConFantasmasMasCercano(fantasmas(m), \langle i,j \rangle) \leq 3$))
 
     \newpage
 
@@ -176,40 +188,40 @@
 
             \InterfazFuncion{nuevaPartida}{\In{m}{mapa}}{partida}%
             {$res$ = nuevaPartida(m)}%
-            [$O(c)$, c = \#chocolates]
+            [$O(c)$, c es la cantidad de chocolates que contiene el mapa]
             [Genera una nueva partida]
-            [-]
+            [El mapa se recibe por referencia]
 
             \InterfazFuncion{mover}{\Inout{p}{partida}, \In{d}{dirección}}{}%
             [$p_0$ = $p$]
             {$p$ = mover($p_0$, $d$)}%
             [$O(1)$]
             [Mueva la posición del jugador un casillero]
-            [-]
+            [Se modifica $p$ internamente]
 
             \InterfazFuncion{ganó?}{\In{p}{partida}}{bool}%
             {$res$ = ganó?($p$)}%
             [$O(1)$]
             [Devuelve true si el jugador gano la partida]
-            [-]
+            % [-]
 
             \InterfazFuncion{perdió?}{\In{p}{partida}}{bool}%
             {$res$ = perdió?($p$)}%
             [$O(1)$]
             [Devuelve true si el jugador perdio la partida]
-            [-]
+            % [-]
 
             \InterfazFuncion{jugador}{\In{p}{partida}}{coordenada}%
             {$res$ = perdió?($p$)}%
             [$O(1)$]
-            [Devuelve la posición del jugador]
-            [-]
+            [Devuelve la posicion del jugador]
+            % [-]
 
             \InterfazFuncion{cantMov}{\In{p}{partida}}{nat}%
             {$res$ = cantMov($p$)}%
             [$O(1)$]
             [Devuelve la cantidad de movimientos del jugador]
-            [-]
+            % [-]
 
     \end{Interfaz}
 
@@ -239,7 +251,7 @@
 
     \tadAxioma{distancia($x$, $y$)}{|$+x_1$ - $+y_1$| $+$ |$+x_2$ - $+y_2$|}
     \tadAxioma{distanciaMinima($j$, $c$)}{\IF \#($c$) = 1 THEN distancia($j$, dameUno($c$)) ELSE mín(distancia($j$, dameUno($c$)),distanciaMinima($j$, sinUno($c$))) FI}
-    \tadAxioma{distanciaMinima($e$)}{Esta función devuelve el conjunto de coordenadas de chocolates en la $e.mapa.matriz$ cuyo Id en el array de la partida ($e.chocolates$) aun estan en true}
+    \tadAxioma{chocolatesSinComer($e$)}{Esta función devuelve el conjunto de coordenadas de chocolates en la $e.mapa.matriz$ cuyo Id en el array de la partida ($e.chocolates$) aun estan en true}
 
     $ $
 
@@ -248,13 +260,18 @@
     \tadOperacion{Rep}{pt}{boolean}{}
 
     \tadAxioma{Rep($e$)}{True $\iff$ 
-            ($e.mapa.EnRango$($e.mapa$,$e.jugador$) $\wedge$ \\
+            ($mapa.EnRango$($e.mapa$,$e.jugador$) $\wedge$ \\
             \text{}\quad $long(e.chocolates) = e.mapa.\#chocolates $) $\wedge_L$ \\
             \text{}\quad $e.cantMov$ $=$ $0$ $\implies$ \\
-            \text{}\qquad $e.mapa.inicio$ $=$ $jugador$ $\wedge$ $e.chocolates$ $=$ $e.mapa.chocolates$ $-$ $jugador$ $\wedge$ \\
-            \text{}\qquad\quad \IF $e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate]$ THEN $e.inmunidad$ $=$ 10 ELSE $e.inmunidad$ $=$ $0$ FI $\wedge$\\
-            \text{}\quad $\neg$($e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate]$) $\wedge$ \\
-            \text{}\quad $e.inmunidad$ $=$ $10$ $\implies$ $0 \leq e.mapa.matriz[e.jugador_1][e.jugador_2].chocolate < e.mapa.\#chocolates$ $\wedge$ \\
+            \text{}\qquad $e.mapa.inicio$ $=$ $jugador$ $\wedge$ \\ 
+            \text{}\qquad\quad \IF $0\leq e.mapa.matriz[jugador_1][jugador_2].idChocolate < e.mapa.\#chocolates$ THEN
+            \text{}\qquad   $e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].idChocolate] = false$ $\wedge$ \\
+            \text{}\qquad   $e.inmunidad$ $=$ $10$ $\wedge$ \\
+            \text{}\qquad   $(\forall i: \Nat) (0 \leq i < mapa.\#chocolates \wedge i \neq e.mapa.matriz[e.jugador_1][e.jugador_2].idChocolate)$ \\ 
+            \text{}\qquad\quad   $\implies_L(e.chocolates[i] = true)$ ELSE
+            \text{}\qquad $e.inmunidad$ $=$ $0$ $\wedge$ $(\forall i: \Nat) (0 \leq i < mapa.\#chocolates) \implies_L (e.chocolates[i] = true) $ FI $\wedge$\\
+            \text{}\quad ($e.chocolates[e.mapa.matriz[e.jugador_1][e.jugador_2].idChocolate]$ $=$ $false$) $\wedge$ \\
+            \text{}\quad $e.inmunidad$$=$$10$$\implies$$0 \leq e.mapa.matriz[e.jugador_1][e.jugador_2].idChocolate < e.mapa.\#chocolates$ $\wedge$ \\
             \text{}\quad $e.inmunidad$ $\leq$ 10 - distanciaMinima($jugador$, chocolatesSinComer($e$)) $\wedge$ \\
             \text{}\quad $e.gano$ $\iff$ $jugador$ = $e.mapa.llegada$ $\wedge$ \\
             \text{}\quad $e.perdio$ $\iff$ $e.inmunidad$ $=$ $0$ $\wedge$ $e.mapa.distConFantasmasM\acute{a}sCercano$($e.mapa$, $e,jugador$) $\leq$ $3$ \\
@@ -286,35 +303,36 @@
 
         \InterfazFuncion{nuevoFichin}{\In{m}{mapa}}{fichin}%
         {$res$ = nuevoFichin($m$)}%
-        [$O(?)$]
+        [$O(1)$]
         [Genera un fichín]
-        [-]
+        [Recibe el mapa por referencia]
 
         \InterfazFuncion{nuevaPartida}{\Inout{f}{fichin}, \In{j}{jugador}}{bool}%
         [$f_0$ = $f$]
         {$res$ = $\neg$alguienJugando?($f$) $\wedge_L$ $res$ $\implies_L$ $f$ = nuevaPartida($f_0$, $j$) }%
         [$O(c)$]
         [Inicia una nueva partida]
-        [-]
+        % [-]
 
         \InterfazFuncion{mover}{\Inout{f}{fichin}, \In{d}{dirección}}{bool}%
         [$f_0$ = $f$]
         {$res$ = alguienJugando?($f$) $\wedge_L$ $res$ $\implies_L$ $f$ = mover($f_0$, $d$) }%
-        [$O(|J|)$]
+        [$O(|J|)$ donde $|J|$ es el más largo de los nombres de los jugadores]
         [Mueve en la dirrección indicada]
-        [-]
+        % [-]
 
         \InterfazFuncion{verRanking}{\In{f}{fichin}}{ranking}%
         {$res$ = ranking($f$)}%
         [$O(1)$]
-        [Devuelve el ranking del fichin]
-        [-]
+        [Devuelve el ranking del fichín]
+        [Devuelve el ranking por referencia]
 
-        \InterfazFuncion{objetivo}{\In{f}{fichin}, \Out{o}{tupla<jugador, nat>}}{res}%
-        {($res$ = alguienJugando?($f$) $\wedge$ def?(jugadorActual($f$), ranking($f$))) $\wedge_L$ $res$ $\implies_L$ $o$ = objetivo($f$) }%
-        [$O(log_2\ n)$]
+        \InterfazFuncion{objetivo}{\In{f}{fichin}}{tupla<jugador, nat>}%
+        [alguienJugando?($f$) $\wedge$ def?(jugadorActual($f$), ranking($f$))]
+        {$res$ = objetivo($f$) }%
+        [$O(J \cdot |J|)$ donde $J$ es la cantidad de jugadores y $|J|$ es el más largo de los nombres de los jugadores]
         [Devuelve una tupla con el oponente y su puntaje]
-        [-]
+        % [-]
 
     \end{Interfaz}
 
