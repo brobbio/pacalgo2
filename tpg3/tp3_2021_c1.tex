@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[10pt, a4paper]{article}
 \usepackage{subfiles}
 \usepackage{amsmath,thmtools}
 \usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
@@ -11,25 +11,186 @@
 \usepackage{latexsym}
 \usepackage{lastpage}
 \usepackage{aed2-symb,aed2-itef,aed2-tad,aed2-diseno}
-\usepackage{algorithmicx, algpseudocode, algorithm}
+\usepackage{algorithmicx, algorithm}
 \usepackage[colorlinks=true, linkcolor=blue]{hyperref}
 \usepackage{calc}
+\usepackage{relsize}
+\usepackage{tikz}
+\usepackage{textcomp}
+\usetikzlibrary{cd}
+\usepackage{verbatim}
+\usepackage{mathtools}
 
-%% ========== Para escribir pseudo ==========
-%\usepackage{algorithm}
-%\usepackage[noend]{algpseudocode}  % "noend" es para no mostrar los endfor, endif
+%
+
+% ========== Para escribir pseudo ==========
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}  % "noend" es para no mostrar los endfor, endif
 \algrenewcommand\alglinenumber[1]{\tiny #1:}  % Para que los numeros de linea del pseudo sean pequeños
 \renewcommand{\thealgorithm}{}  % Que no aparezca el numero luego de "Algorithm"
 \floatname{algorithm}{ }    % Entre {  } que quiero que aparezca en vez de "Algorithm"
 
 % traducciones
-% \algrenewcommand\algorithmicwhile{\textbf{mientras}}
-% \algrenewcommand\algorithmicdo{\textbf{hacer}}
-% \algrenewcommand\algorithmicreturn{\textbf{devolver}}
-% \algrenewcommand\algorithmicif{\textbf{si}}
-% \algrenewcommand\algorithmicthen{\textbf{entonces}}
-% \algrenewcommand\algorithmicfor{\textbf{para}}
-%%=========================================================
+\algrenewcommand\algorithmicwhile{\textbf{mientras}}
+\algrenewcommand\algorithmicdo{\textbf{hacer}}
+\algrenewcommand\algorithmicreturn{\textbf{devolver}}
+\algrenewcommand\algorithmicif{\textbf{si}}
+\algrenewcommand\algorithmicthen{\textbf{entonces}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+%=========================================================
+
+
+\newcommand{\f}[1]{\text{#1}}
+\renewcommand{\paratodo}[2]{$\forall~#2$: #1}
+\newcommand{\numeroEjercicio}[1]{\textbf{\large{Ejercicio #1:}}\\}
+\newcommand{\tituloSubEjercicio}[1]{$\newline$\tadNombre{#1:}}
+
+\sloppy
+
+\hypersetup{%
+ % Para que el PDF se abra a página completa.
+ pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+ pdfauthor={Cátedra de Algoritmos y Estructuras de Datos II - DC - UBA},
+ pdfkeywords={Template TADs básicos},
+ pdfsubject={Template TADs básicos}
+}
+
+\parskip=5pt % 10pt es el tamaño de fuente
+
+% Pongo en 0 la distancia extra entre ítemes.
+\let\olditemize\itemize
+\def\itemize{\olditemize\itemsep=0pt}
+
+% Acomodo fancyhdr.
+\pagestyle{fancy}
+\thispagestyle{fancy}
+\addtolength{\headheight}{1pt}
+\lhead{Algoritmos y Estructuras de Datos II}
+\rhead{$1^{\mathrm{er}}$ cuatrimestre de 2021}
+\cfoot{\thepage /\pageref{LastPage}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\author{Algoritmos y Estructuras de Datos II, DC, UBA.}
+\date{}
+\title{Trabajo Pr\'actico de Algoritmos y Estructuras de Datos II}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{caratula}[2003/4/13 v0.1 Para componer caratulas de TPs del DC]
+
+
+% ----- Imprimir un mensajito al procesar un .tex que use este package -----
+
+\typeout{Cargando package 'caratula' v0.2 (21/4/2003)}
+
+
+% ----- Algunas variables --------------------------------------------------
+
+\let\Materia\relax
+\let\Submateria\relax
+\let\Titulo\relax
+\let\Subtitulo\relax
+\let\Grupo\relax
+
+
+% ----- Comandos para que el usuario defina las variables ------------------
+
+\def\materia#1{\def\Materia{#1}}
+\def\submateria#1{\def\Submateria{#1}}
+\def\titulo#1{\def\Titulo{#1}}
+\def\subtitulo#1{\def\Subtitulo{#1}}
+\def\grupo#1{\def\Grupo{#1}}
+
+
+% ----- Token list para los integrantes ------------------------------------
+
+\newtoks\intlist\intlist={}
+
+
+% ----- Comando para que el usuario agregue integrantes
+
+\def\integrante#1#2#3{\intlist=\expandafter{\the\intlist
+    \rule{0pt}{1.2em}#1&#2&\tt #3\\[0.2em]}}
+
+
+% ----- Macro para generar la tabla de integrantes -------------------------
+
+%\integrante{Church, Alonso}{1/20}{alonso@iglesia.com}
+%\integrante{Lovelace, Ada}{10/19}{ada\_de\_los\_dientes@tatooine.com}
+%\integrante{Null, Linda}{100/18}{null@null.null}
+%\integrante{Turing, Alan}{314/16}{halting@problem.com}
+
+\def\tablaints{
+    \begin{tabular}{|l@{\hspace{4ex}}c@{\hspace{4ex}}l|}
+        \hline
+        \rule{0pt}{1.2em}Integrante & LU & Correo electr\'onico\\[0.2em]
+        \hline
+        \the\intlist
+        \hline
+    \end{tabular}}
+
+% ----- Macro para generar la parte reservada para la c�tedra -------------------------
+
+\def\tablacatedra{%
+    \\
+    \textbf{Reservado para la c\'atedra}\par\bigskip
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \rule{0pt}{1.2em}Instancia & Docente & Nota\\[0.2em]
+        \hline
+        \rule{0pt}{1.2em}Primera entrega & \phantom{mmmmmmmmmmmmmmmmmm} & \phantom{mmmmmm} \\
+        \hline
+        \rule{0pt}{1.2em}Segunda entrega & & \\
+        \hline
+    \end{tabular}}
+
+% ----- Codigo para manejo de errores --------------------------------------
+
+\def\se{\let\ifsetuperror\iftrue}
+\def\ifsetuperror{%
+    \let\ifsetuperror\iffalse
+    \ifx\Materia\relax\se\errhelp={Te olvidaste de proveer una \materia{}.}\fi
+    \ifx\Titulo\relax\se\errhelp={Te olvidaste de proveer un \titulo{}.}\fi
+    \edef\mlist{\the\intlist}\ifx\mlist\empty\se%
+    \errhelp={Tenes que proveer al menos un \integrante{nombre}{lu}{email}.}\fi
+    \expandafter\ifsetuperror}
+
+
+% ----- Reemplazamos el comando \maketitle de LaTeX con el nuestro ---------
+
+\def\maketitle{%
+    \ifsetuperror\errmessage{Faltan datos de la caratula! Ingresar 'h' para mas informacion.}\fi
+    \thispagestyle{empty}
+    \begin{center}
+    \vspace*{\stretch{2}}
+    \materia{Algoritmos y Estructuras de Datos II}
+
+    {\LARGE\textbf{\Materia}}\\[1em]
+    \submateria{Trabajo Pr\'actico 3}
+    \ifx\Submateria\relax\else{\Large \Submateria}\\[0.5em]\fi
+
+%\def\titulo#1{\def\Titulo{#1}}
+%\def\subtitulo#1{\def\Subtitulo{#1}}
+%\def\grupo#1{\def\Grupo{#1}}
+    \par\vspace{\stretch{1}}
+    \titulo{Pacalgo2}
+    \subtitulo{Los inertes}
+    {\large Departamento de Computaci\'on}\\[0.5em]
+    {\large Facultad de Ciencias Exactas y Naturales}\\[0.5em]
+    {\large Universidad de Buenos Aires}
+    \par\vspace{\stretch{3}}
+    {\Large \textbf{\Titulo}}\\[0.8em]
+    {\Large \Subtitulo}
+    \par\vspace{\stretch{3}}
+    \grupo
+    \ifx\Grupo\relax\else\textbf{\Grupo}\par\bigskip\fi
+    \tablaints
+    \vspace*{\stretch{3}}
+    \medskip
+    \tablacatedra
+    \end{center}
+    \vspace*{\stretch{3}}
+    \newpage
+    }
 
 % Comandos para cositas de complejidad
 
@@ -39,12 +200,22 @@
 \newcommand{\Rpos}{\mathbb{R}_{>0}}
 \newcommand{\eqdef}{\overset{\mathrm{def}}{=}}
 \newcommand{\eqprop}{\overset{\mathrm{prop}}{=}}
+%\newcommand{\ssi}{\leftrightarrow}
 
-\newcommand{\asignar}[2]{$#1 \gets #2$}
 
 \begin{document}
 
+\materia{Coso}
+\titulo{asdad}
+\integrante{Bruno Robbio}{480/09}{brobbio@hotmail.com}
+\integrante{Nicolas Andres Kinaschuk}{248/15}{nicolaskinaschuk@gmail.com}
+\integrante{Pedro Joel Burgos}{804/18}{facultadburgospedrojoel@hotmail.com}
+\integrante{Valentina Madelaine Saravia Ruiz}{257/18}{valentina.saraviaruiz@gmail.com}
+\maketitle
+
     \pagestyle{plain}
+
+    \section*{Modulo Mapa}
 
     \begin{Interfaz}
 
@@ -52,7 +223,7 @@
 
         \textbf{géneros}: \TipoVariable{mapa}.
 
-        \Titulo{Operaciones básicas de mapa}
+        \textbf{Operaciones básicas de mapa}
 
             \InterfazFuncion{NuevoMapa}{\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}}{mapa}%
             [$(inicio \neq llegada \wedge todosEnRango(paredes \cup fantasmas \cup chocolates \cup \{inicio, llegada\}, largo, alto) \wedge \{inicio, llegada\} \cap (fantasmas \cup paredes) = \emptyset \wedge disjuntosDeAPares(paredes, fantasmas, chocolates))$]
@@ -99,7 +270,7 @@
 
             \newpage
 
-            \InterfazFuncion{idChocolate}{\In{m}{mapa}, \In{posicion}{coordenada}}{nat}%
+            \InterfazFuncion{idChocolate}{\In{m}{mapa}, \In{posicion}{coordenada}}{int}%
             [enRango($posicion$)]
             {$posicion$ $\in$ chocolates($m$) $\iff$ $0$ $\leq$ $res$ $<$ \#chocolates($m$)}%
             [$O(1)$]
@@ -108,28 +279,22 @@
 
     \end{Interfaz}
 
-    % \newpage
+    \newpage
 
-    $ $
+    \subsection*{Implementación}
 
     \textbf{Representación}
 
     mapa se representa con $mp$
-
-    $ $
 
     donde $casillero$ es tupla($fantasma$: bool, \\
         \text{}\qquad\quad $peligrosa$: bool, \\
         \text{}\qquad\quad $pared$: bool, \\
         \text{}\qquad\quad $idChocolate$: int)
 
-    $ $
+    donde $columna$ es array[0...$largo$] de $casillero$
 
-    donde $columna$ es array[0...$largo$] de casillero
-
-    $ $
-
-    donde $mp$ es tupla($matriz$: array[0...$alto$] de columna, \\
+    donde $mp$ es tupla($matriz$: array[0...$alto$] de $columna$, \\
         \text{}\qquad\quad \#$chocolates$: nat, \\
         \text{}\qquad\quad $alto$: nat, \\
         \text{}\qquad\quad $largo$: nat, \\
@@ -158,7 +323,7 @@
                         \text{}\qquad\quad ($e.matriz[n][m].fantasma$ $\wedge$ distancia($\langle$$i$,$j$$\rangle$, $\langle$$n$,$m$$\rangle$) $\leq$ $3$)))\\
                 )}
 
-        $ $
+    \newpage
 
     \textbf{Función de abstracción}
 
@@ -176,7 +341,147 @@
                 \text{}\qquad\quad $0 \leq e.matriz[i][j].idChocolate < e.\#chocolates \iff \langle i,j \rangle \in chocolates(m) \wedge $ \\
                 \text{}\qquad\quad $e.matriz[i][j].peligrosa \iff distConFantasmasMasCercano(fantasmas(m), \langle i,j \rangle) \leq 3$))
 
+        \begin{Algoritmos}
+
+        \begin{algorithm}[H]{\textbf{iNuevoMapa}({\In{largo}{nat}, \In{alto}{nat}, \In{inicio}{coordenada}, \In{llegada}{coordenada}, \In{fantasmas}{conj(coordenada)}, \In{paredes}{conj(coordenada)}, \In{chocolates}{conj(coordenada)}}) $\to$ $res$ : $mapa$}
+            \begin{algorithmic}[1]
+                \State $int\ contadorDeChocolate \gets 0$                               \Comment $\bigO(1)$
+                \State $mapa \gets <>$                               \Comment $\bigO(1)$
+                \State $mapa.inicio  \gets inicio$                           \Comment $\bigO(1)$
+                \State $mapa.llegada \gets llegada$           \Comment $\bigO(1)$
+                \State $mapa.largo \gets largo$                               \Comment $\bigO(1)$
+                \State $mapa.alto  \gets alto$                           \Comment $\bigO(1)$
+                \State $mapa.\#chocolates \gets chocolates.longitud$           \Comment $\bigO(1)$
+                \For{$int \ x = 0 ; x<mapa.largo ;x++$}                    \Comment $\bigO(largo)$
+                    \For{$int \ y = 0 ; y<mapa.alto;y++$}                    \Comment $\bigO(largo*alto)$
+                    \State $mapa.matriz[x][y].pared = (x,y) \ in \ paredes$                                        \Comment $\bigO(largo*alto*|P|)$
+                        \State $mapa.matriz[x][y].fantasma = (x,y) \ in \ fantasmas$                                        \Comment $\bigO(largo*alto*|F|)$
+                        \State $mapa.matriz[x][y].peligorsa = seAsusta((x,y),fantasmas)$                                        \Comment $\bigO(largo*alto*|F|)$
+                        \If{$(x,y) \ in \ chocolates$}                                                       \Comment $\bigO(largo*alto*|C|	)$
+                        \State $mapa.matriz[x][y].idChocolate \gets contadorDeChocolate$                    \Comment $\bigO(largo*alto*|C|)$
+                        \State $contadorDeChocolate++ $                                     \Comment $\bigO(largo*alto*|C|)$
+                        \Else
+                        \State $mapa.matriz[x][y].idChocolate \gets -1$                                      \Comment $\bigO(largo*alto*|C|)$
+                        \EndIf
+                    \EndFor
+                \EndFor                                            
+                \State $res \gets mapa$                              \Comment $O(1)$
+    
+                \medskip
+                \Statex
+                \underline{Complejdad:} $\bigO((alto \cdot largo \cdot (\#chocolates + \#fantasmas + \#paredes + 1))$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \newpage
+
+        \begin{algorithm}[H]{\textbf{seAsusta}(\In{c}{coordenada}, \In{fantasmas}{conj(coordenada)}\Out{res}{bool})}
+            \begin{algorithmic}[1]
+                    \State $res\gets False$
+                    \State $int\ i \gets 0$                               \Comment $\bigO(1)$
+                    \While{$i<fantasma.longitud$}                    \Comment $\bigO(|f|)$
+                    \If{$distancia(c,fantasma[i]) \leq 3$}                                                           \Comment $\bigO(|f|)$
+                    \State $res\gets true$                                     \Comment $si\ es \ el \ peor\ caso \ no \ entra$
+                    \Else
+                    \State $i++ $ 
+                    \Comment $\bigO(|f|)$
+                    \EndIf
+                    \EndWhile
+                    
+                
+                
+                \medskip
+                \Statex \underline{Complejidad:} $\bigO(|f|)$
+            \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{algorithm}[H]{\textbf{distancia}(\In{c}{coordenada}, \In{f}{coordenada}\Out{res}{nat})}
+            \begin{algorithmic}[1]
+                \State $res \gets valorAbsoluto(c_1 - f_1) +  valorAbsoluto(c_2 - f_2)$                                                                 \Comment $\Theta(1)$
+                
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{algorithm}[H]{\textbf{iesCasilleroPeligroso}(\In{m}{mapa}, \In{posicion}{coordenada}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                \If{$enRango(m,posicion) \wedge_L m.matriz.[posicion_1][posicion_2].peligrosa$}                                                           \Comment $\Theta(1)$
+                \State $res\gets true$                                     \Comment $\Theta(1)$
+                \Else
+                \State $res\gets false $ 
+                \Comment $\Theta(1)$
+                \EndIf
+            
+            \medskip
+            \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{ienRango}(\In{m}{mapa},\In{posicion}{coordenada}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                \State $res \gets (0\leq posicion_1< m.alto \wedge_L  0\leq posicion_2<m.largo)$                                                                 \Comment $\Theta(1)$
+                
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iCantChocolates}(\In{map}{mapa}) $\to$ $res$ : $nat$}
+            \begin{algorithmic}[1]
+                    \State $res \gets map.\#chocolates$                                                                   \Comment $\Theta(1)$
+    
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{algorithm}[H]{\textbf{iEsPared}(\In{map}{mapa}, \In{posicion}{coordenada}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                    \State $res \gets map.matriz.[posicion_1][posicion_2].pared$                                                                 \Comment $\Theta(1)$
+    
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{algorithm}[H]{\textbf{iInicio}(\In{map}{mapa}) $\to$ $res$ : $coordenada$}
+            \begin{algorithmic}[1]
+                    \State $res \gets map.inicio$                                                               \Comment $\Theta(1)$
+    
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{algorithm}[H]{\textbf{iLlegada}(\In{map}{mapa}) $\to$ $res$ : $coordenada$}
+            \begin{algorithmic}[1]
+                    \State $res \gets map.llegada$                                                                \Comment $\Theta(1)$
+    
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+        
+        
+        \begin{algorithm}[H]{\textbf{iIdChocolate}(\In{m}{mapa}, \In{posicion}{coordenada}) $\to$ $res$ : $int$}
+            \begin{algorithmic}[1]
+                \State $res \gets m.matriz.[posicion_1][posicion_2].idChocolate$                                    \Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+    \end{Algoritmos}
+
+    \subsection*{Servicios usados}
+
+        -
+
     \newpage
+
+    \section*{Modulo Partida}
 
     \begin{Interfaz}
 
@@ -184,7 +489,7 @@
 
         \textbf{géneros}: \TipoVariable{partida}.
 
-        \Titulo{Operaciones básicas de partida}
+        \textbf{Operaciones básicas de partida}
 
             \InterfazFuncion{nuevaPartida}{\In{m}{mapa}}{partida}%
             {$res$ = nuevaPartida(m)}%
@@ -226,6 +531,8 @@
     \end{Interfaz}
 
     \newpage
+
+    \subsection*{Implementación}
 
     \textbf{Representación}
 
@@ -277,7 +584,7 @@
             \text{}\quad $e.perdio$ $\iff$ $e.inmunidad$ $=$ $0$ $\wedge$ $e.mapa.distConFantasmasM\acute{a}sCercano$($e.mapa$, $e,jugador$) $\leq$ $3$ \\
         }
 
-    $ $
+    \newpage
 
     \textbf{Función de abstracción}
 
@@ -291,7 +598,133 @@
             \text{}\quad\qquad ganó?($p$) = $e.gano$ $\wedge$ \\
             \text{}\quad\qquad perdió?($p$) = $e.perdio$
 
+    \begin{Algoritmos}
+        \begin{algorithm}[H]{\textbf{iNuevaPartida}(\In{m}{mapa}) $\to$ $res$ : $partida$}
+            \begin{algorithmic}[1]
+                \State $partida \gets <>$                               \Comment $\bigO(1)$
+                \State $partida.mapa \gets m$                           \Comment $\bigO(1)$
+                \State $partida.jugador \gets mapa.inicio(m)$           \Comment $\bigO(1)$
+                \State $i \gets 0$                                      \Comment $\bigO(1)$
+                \While{$i < mapa.cantChocolates(m)$}                    \Comment $\bigO(c)$
+                    \State $partida.chocolates[i] \gets true$           \Comment $\bigO(c)$
+                    \State $i++$                                        \Comment $\bigO(c)$
+                \EndWhile
+                \State $partida.cantMov \gets 0$                        \Comment $\bigO(1)$
+
+                \State $idChocolate \gets mapa.idChocolate(m, partida.jugador)$             \Comment $\bigO(1)$
+                \State $hayUnChocolate \gets 0 \leq idChocolate < mapa.cantChocolates(m)$   \Comment $\bigO(1)$
+                \If{$hayUnChocolate$}                                                       \Comment $\bigO(1)$
+                    \State $partida.chocolates[idChocolate] \gets false$                    \Comment $\bigO(1)$
+                    \State $partida.inmunidad \gets 10$                                     \Comment $\bigO(1)$
+                \Else
+                    \State $partida.inmunidad \gets 0$                                      \Comment $\bigO(1)$
+                \EndIf
+
+                \State $partida.perdio \gets mapa.esCasilleroPeligroso(m, partida.jugador) \wedge partida.inmunidad = 0$    \Comment $O(1)$
+                \State $partida.gano \gets false$                                               \Comment $O(1)$
+
+                \State $res \gets partida$                              \Comment $O(1)$
+
+                \medskip
+                \Statex
+                \underline{Complejdad:} $\bigO(c)$
+                \Statex
+                \underline{Justificación:} La complejidad de este algoritmo es igual a recorrer el array $partida.chocolates$, que tiene longitud $c$, que es igual a la cantida de chocolates que contiene el mapa, para inicializar sus valores en $true$
+                \end{algorithmic}
+        \end{algorithm}
+
+        \newpage
+
+        \begin{algorithm}[H]{\textbf{iMover}(\Inout{p}{partida}, \In{d}{direccion})}
+            \begin{algorithmic}[1]
+                    \If{$d = ARRIBA$}                                                           \Comment $\bigO(1)$
+                        \State $desplazamiento \gets (0,1)$                                     \Comment $\bigO(1)$
+                    \EndIf
+                    \If{$d = ABAJO$}                                                            \Comment $\bigO(1)$
+                        \State $desplazamiento \gets (0,-1)$                                    \Comment $\bigO(1)$
+                    \EndIf
+                    \If{$d = IZQUIERDA$}                                                        \Comment $\bigO(1)$
+                        \State $desplazamiento \gets (-1,0)$                                    \Comment $\bigO(1)$
+                    \EndIf
+                    \If{$d = DERECHA$}                                                          \Comment $\bigO(1)$
+                        \State $desplazamiento \gets (1,0)$                                     \Comment $\bigO(1)$
+                    \EndIf
+
+                    \State $nuevaPosicion \gets p.jugador + desplazamiento$                     \Comment $\bigO(1)$
+
+                    \If{$\neg mapa.esPared(p.mapa, nuevaPosicion) \wedge mapa.enRango(p.mapa, nuevaPosicion)$}  \Comment $\bigO(1)$
+                        \State $p.jugador \gets nuevaPosicion$                                                     \Comment $\bigO(1)$
+                        \State $p.cantMov++$                                                                    \Comment $\bigO(1)$
+
+                        \State $idChocolate \gets mapa.idChocolate(p.mapa, p.jugador)$                          \Comment $\bigO(1)$
+                        \State $hayUnChocolate \gets 0 \leq idChocolate < mapa.cantChocolates(p.mapa)$          \Comment $\bigO(1)$
+
+                        \If{$hayUnChocolate \wedge_L p.chocolates[idChocolate]$}                                \Comment $\bigO(1)$
+                            \State $p.chocolates[idChocolate] \gets false$                                      \Comment $\bigO(1)$
+                            \State $p.inmunidad \gets 10$                                                       \Comment $\bigO(1)$
+                        \Else
+                            \State $p.inmunidad \gets max(p.inmunidad - 1, 0)$                                  \Comment $\bigO(1)$
+                        \EndIf
+
+                        \State $partida.perdio \gets mapa.esCasilleroPeligroso(m, partida.jugador) \wedge partida.inmunidad = 0$    \Comment $\bigO(1)$
+                        \State $partida.gano \gets mapa.llegada(m) = partida.jugador$                                               \Comment $\bigO(1)$
+
+                    \EndIf
+
+                    \medskip
+                    \Statex \underline{Complejidad:} $\bigO(1)$
+                    \Statex \underline{Justificación:} No se recorre ninguna array, solo se accede a indices especificios. Los datos que provee el mapa, se encuentran guardados en arrays, que se complejidad de acceso es $\bigO(1)$, igualmente el acceso y modificación del array $partida.chocolates$ es $\bigO(1)$
+                \end{algorithmic}
+        \end{algorithm}
+            
+
+        \begin{algorithm}[H]{\textbf{iGanó?}(\In{p}{partida}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                    \State $res \gets p.gano$                                                                   \Comment $\Theta(1)$
+
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iPerdió?}(\In{p}{partida}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                    \State $res \gets p.perdio$                                                                 \Comment $\Theta(1)$
+
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iJugador}(\In{p}{partida}) $\to$ $res$ : $coordenada$}
+            \begin{algorithmic}[1]
+                    \State $res \gets p.jugador$                                                               \Comment $\Theta(1)$
+
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iCantMov}(\In{p}{partida}) $\to$ $res$ : $nat$}
+            \begin{algorithmic}[1]
+                    \State $res \gets p.cantMov$                                                                \Comment $\Theta(1)$
+
+                    \medskip
+                    \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+
+    \end{Algoritmos}
+
+    \subsection*{Servicios usados}
+
+        \begin{itemize}
+            \item Modulo Mapa
+        \end{itemize}
+
     \newpage
+
+    \section*{Modulo Fichín}
 
     \begin{Interfaz}
 
@@ -299,7 +732,7 @@
 
         \textbf{géneros}: \TipoVariable{fichin}.
 
-        \Titulo{Operaciones básicas de fichin}
+        \textbf{Operaciones básicas de fichin}
 
         \InterfazFuncion{nuevoFichin}{\In{m}{mapa}}{fichin}%
         {$res$ = nuevoFichin($m$)}%
@@ -338,19 +771,17 @@
 
     \newpage
 
+    \subsection*{Implementación}
+
     \textbf{Representación}
 
-    partida se representa con $fch$
-
-    $ $
+    fichín se representa con $fch$
 
     donde $fch$ es tupla($mapa$: mp, \\
         \text{}\qquad\quad$alguienJugando$: bool, \\
         \text{}\qquad\quad$jugadorActual$: string, \\
         \text{}\qquad\quad$partidaActual$: pt, \\
         \text{}\qquad\quad$ranking$: dicc(string, nat))
-
-    $ $
 
     \textbf{Invariante de representación}
 
@@ -364,10 +795,6 @@
             \text{}\quad ($e.mapa$ = $e.pt.mapa$)
         }
 
-    $ $
-
-    $ $
-
     \textbf{Función de abstracción}
 
         \tadOperacion{Abs}{fch\ $e$}{partida}{Rep($e$)}
@@ -377,5 +804,405 @@
             \text{}\quad\qquad $e.alguienJugando$ $\implies_L$ partidaActual($f$) = $e.partidaActual$ $\wedge$ \\
             \text{}\quad\qquad $e.alguienJugando$ $\implies_L$ jugadorActual($f$) = $e.jugadorActual$
 
+        \begin{Algoritmos}
+
+            \begin{algorithm}[H]{\textbf{iNuevoFichin}(\In{m}{mapa}) $\to$ $res$ : fichin}
+                    \begin{algorithmic}[1]
+                            \State $res \gets \langle m, False, NULL, NULL, vacio \rangle$ \Comment $\Theta(1)$
+            
+                        \medskip
+                        \Statex
+                        \underline{Complejdad:} $\Theta(1)$
+                    \end{algorithmic}
+            \end{algorithm}
+        
+            \begin{algorithm}[H]{\textbf{iNuevaPartida}(\Inout{f}{fichin}, \In{a}{jugador}) $\to$ $res$ : $bool$}
+                \begin{algorithmic}
+                        \State $res\gets False$
+                        \If{$\neg f.alguienJugando$}
+                            \State $f.jugadorActual \gets jugador$ 				\Comment $\Theta(1)$
+                            \State $f.alguienJugando \gets True$ 				\Comment $\Theta(1)$
+                            \State $f.partidaActual \gets partida.iNuevaPartida(f.mapa)$ 				\Comment $\bigO(c)$
+                            \State $res\gets True$
+                            \EndIf
+                        \medskip
+                        \Statex
+                        \underline{Complejdad:} $\bigO(c)$
+                        \Statex
+                        \underline{Justificación:} La complejidad de este algoritmo es igual a la complejidad de $iNuevaPartida$, que es $\bigO(c)$, con $c = \#chocolates$. 
+                    \end{algorithmic}
+            \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iMover}(\Inout{f}{fichin}, \In{d}{direccion}) $\to$ $res$ : $bool$}
+            \begin{algorithmic}[1]
+                \If{$f.alguienJugando$}
+                    \State partida.iMover(f.partidaActual, d)	\Comment $\Theta(1)$
+                    \State $res\gets True$
+                    \If{partida.iGanó?(f.partidaActual)}	\Comment $\bigO(1)$
+                    \If{def?(f.jugadorActual, f.ranking)}\Comment{$\bigO(|J|)$}
+                    \If{obtener(f.jugadorActual, f.ranking) $>$ partida.iCantMov(f.partidaActual)} \Comment{$\bigO(|J|)$} \\
+                    \qquad\qquad definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$} \EndIf
+                \Else\hspace{0.05cm} definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$}\EndIf
+                    \EndIf
+                    \Else
+                    \State $res\gets False$	\Comment $\Theta(1)$
+                \EndIf 
+
+                \medskip
+                \Statex \underline{Complejidad:} $\bigO(|J|)$ si se realiza un movimiento que finaliza la partida
+                \Statex \underline{Justificación:} El diccionario se implementa con un trie, que tiene $\bigO(|J|)$ como complejidad de def?, acceder a significado y definir.
+            \end{algorithmic}
+        \end{algorithm}
+            
+        
+        \begin{algorithm}[H]{\textbf{iVerRanking}(\In{f}{fichin}) $\to$ $res$ : $dicc$}
+            \begin{algorithmic}[1]
+                \State $res \gets f.ranking$	 \Comment $\Theta(1)$
+            
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}	
+        
+        \begin{algorithm}[H]{\textbf{iObjetivo}(\In{f}{fichin}, \In{j}{jugador}) $\to$ $res$ : $\langle jugador, nat\rangle$}
+            \begin{algorithmic}[1]
+
+                \State $i \gets 0$\Comment $\Theta(1)$
+                \State $C \gets obtenerClavesTrie(f.ranking)$\Comment $\Theta(J)$
+                \State $S \gets \emptyset$ \Comment $\Theta(1)$
+                \While{$i < long(C)-1$}			
+                    \If{$obtener(C[i], f.ranking)<obtener(jugador, f.ranking)$}		\Comment $\bigO(|J|)$
+                    \State $Ag(C[i], S)$ \Comment{$\Theta(1)$}
+                    \EndIf
+                \State $i \gets i + 1$		\Comment $\Theta(1)$
+                \EndWhile
+                \If{$\emptyset$?($S$)}
+                \State $res \gets \langle jugador, obtener(f.ranking, jugador)\rangle$	\Comment $\Theta(1)$
+                \Else
+                \State $max \gets obtener(f.ranking, S[0])$ \Comment{$\bigO(|J|)$}
+                \State $maxJugador \gets S[0]$\Comment $\Theta(1)$
+                \State $j \gets 0$
+                \While{$j<long(S)$}
+                \If{$obtener(f.ranking,S[j])\geq max$}\Comment $\Theta(|J|)$
+                \State $max\gets obtener(f.ranking, S[j])$\Comment $\Theta(|J|)$
+                \State $maxJugador\gets S[j]$\Comment $\Theta(1)$
+                \EndIf
+                \State $j\gets j+1$
+                \EndWhile
+                \State $res \gets \langle maxJugador, max\rangle$
+                \EndIf
+            \medskip
+            \Statex \underline{Complejidad:} $\sum_{k\in J}\bigO(|J|)+\bigO(|J|)+\sum_{k\in S}\bigO(|J|)=\bigO(|J|*J)$
+            \Statex \underline{Justificación:} Los conjuntos $C,S$ son implementados con una lista enlazada para que insertar elementos sea $\bigO(1)$.
+            \end{algorithmic}
+        \end{algorithm}	
+
+        \subsection*{Servicios usados}
+
+        \begin{itemize}
+            \item Modulo Mapa
+            \item Modulo Partida
+            \item Modulo Diccionario Trie
+        \end{itemize}
+
+        \newpage
+
+        \subsection*{Módulo Diccionario Trie($\kappa$, $\sigma$)}
+        
+        El módulo Diccionario Trie provee un diccionario básico en el que se puede definir, borrar, y testear si una clave está definida en tiempo $\bigO(|J|)$, donde $J$ es la cantidad de elementos del diccionario y $|J|=\max_{n\in J}{|n|}$. 
+        
+        Para describir la complejidad de las operaciones, vamos a llamar $copy(k)$ al costo de copiar el elemento $k \in \kappa \cup \sigma$ y $equal(k_1, k_2)$ al costo de evaluar si dos elementos $k_1, k_2 \in \kappa$ son iguales (i.e., $copy$ y $equal$ son funciones de $\kappa \cup \sigma$ y $\kappa \times \kappa$ en $\mathbb{N}$, respectivamente).\footnote{Nótese que este es un abuso de notación, ya que no estamos describiendo $copy$ y $equal$ en función del tamaño de $k$.  A la hora de usarlo, habrá que realizar la traducción.}
+        
+        \begin{Interfaz}
+        
+            \textbf{parámetros formales}\hangindent=2\parindent\\
+            \parbox{1.7cm}{\textbf{géneros}}$\kappa,\sigma$\\
+            \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+            \InterfazFuncion{$\bullet = \bullet$}{\In{k_1}{$\kappa$}, \In{k_2}{$\kappa$}}{bool}
+            {$res \igobs (k_1 = k_2)$}
+            [$\Theta(equal(k_1, k_2))$]
+            [función de igualdad de $\kappa$'s]
+            }%
+            \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+            \InterfazFuncion{Copiar}{\In{k}{$\kappa$}}{$\kappa$}
+            {$res \igobs k$}
+            [$\Theta(copy(k))$]
+            [función de copia de $\kappa$'s]
+            }\\[2ex]
+            \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+            \InterfazFuncion{Copiar}{\In{s}{$\sigma$}}{$\sigma$}
+            {$res \igobs s$}
+            [$\Theta(copy(s))$]
+            [función de copia de $\sigma$'s]
+            }
+        
+            \textbf{se explica con}: \tadNombre{Diccionario$(\kappa, \sigma)$}, \tadNombre{Iterador Bidireccional(tupla($\kappa,\sigma$))}.
+        
+            \textbf{géneros}: \TipoVariable{dicc$(\kappa, \sigma)$}, \TipoVariable{itDicc($\kappa, \sigma$)}.
+        
+            \textbf{Operaciones básicas de diccionario}
+        
+            \InterfazFuncion{Vacío}{}{dicc$(\kappa,\sigma)$}%
+            {$res$ $\igobs$ vacio}%
+            [$\Theta(1)$]
+            [genera un diccionario vacío.]
+        
+            \InterfazFuncion{Definir}{\Inout{d}{dicc($\kappa,\sigma$)}, \In{k}{$\kappa$}, \In{s}{$\sigma$}}{}
+            [$d \igobs d_0$]
+            {$d$ $\igobs$ definir($d, k, s$)}
+            [$\bigO(|J|)$, donde $|J|$ es el nombre más largo entre los jugadores]
+            [define la clave $k$ con el significado $s$ en el diccionario.]
+        
+            \InterfazFuncion{Definido?}{\In{d}{dicc($\kappa,\sigma$)}, \In{k}{$\kappa$}}{bool}
+            {$res$ $\igobs$ def?($d$, $k$)}
+            [$\bigO(|J|)$, donde $|J|$ es el nombre más largo entre los jugadores]
+            [devuelve \texttt{true} si y sólo $k$ está definido en el diccionario.]
+        
+            \InterfazFuncion{Significado}{\In{d}{dicc($\kappa,\sigma$)}, \In{k}{$\kappa$}}{$\sigma$}
+            [def?($d$, $k$)]
+            {alias($res$ $\igobs$ Significado($d$, $k$))}
+            [$\bigO(|J|)$, donde $|J|$ es el nombre más largo entre los jugadores]
+            [devuelve el significado de una clave en el diccionario.]
+        
+            \InterfazFuncion{Borrar}{\Inout{d}{dicc($\kappa,\sigma$)}, \In{k}{$\kappa$}}{}
+            [$d = d_0$ $\land$ def?($d$, $k$)]
+            {$d$ $\igobs$ borrar($d_0, k$)}
+            [$\bigO(|J|)$, donde $|J|$ es el nombre más largo entre los jugadores]
+            [elimina la clave $k$ y su significado de $d$.]
+        
+            \InterfazFuncion{ObtenerClavesDelTrie}{\In{d}{dicc($\kappa,\sigma$)}}{conj($\kappa$)}
+            {$res$ $\igobs$ claves($d$)}
+            [$\Theta(J)$]
+            [devuelve el conjunto de claves del diccionario.]
+        
+            \InterfazFuncion{\#Claves}{\In{d}{dicc($\kappa,\sigma$)}}{nat}
+            {$res$ $\igobs$ \#claves($d$)}
+            [$\Theta(1)$]
+            [devuelve la cantidad de claves del diccionario.]
+        
+            \InterfazFuncion{Copiar}{\In{d}{dicc($\kappa,\sigma$)}}{dicc($\kappa,\sigma$)}
+            {$res \igobs d$}
+            [$\displaystyle\Theta\left(\sum_{k \in K}\left(copy(k) + copy(\text{significado}(k,d))\right)\right)$, donde $K$ $=$ claves($d$)]
+            [genera una copia nueva del diccionario.]
+        
+            \InterfazFuncion{$\bullet = \bullet$}{\In{d_1}{dicc($\kappa,\sigma$)}, \In{d_2}{dicc($\kappa,\sigma$)}}{bool}
+            {$res \igobs c_1 = c_2$}
+            [$\displaystyle O\left(\sum_{\substack{k_1 \in K_1\\k_2\in K_2}}equal(\langle k_1,s_1\rangle, \langle k_2, s_2 \rangle)\right)$, donde $K_i$ $=$ claves($d_i$) y $s_i$ $=$ significado($d_i, k_i$), $i \in \{1,2\}$.]
+            [compara $d_1$ y $d_2$ por igualdad, cuando $\sigma$ posee operación de igualdad.]
+            []%no hay aliasing
+            [{\parbox[t]{\textwidth-3cm}{%
+            \InterfazFuncion{$\bullet = \bullet$}{\In{s_1}{$\sigma$}, \In{s_2}{$\sigma$}}{bool}
+            {$res \igobs (s_1 = s_2)$}
+            [$\Theta(equal(s_1, s_2))$]
+            [función de igualdad de $\sigma$'s]
+            }}]
+
+        \begin{comment}
+
+        \textbf{Algoritmos del iterador}	
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iCrearIt}(\In{l}{lst}) $\to$ $res$ : iter
+
+                \State $res \gets \langle l.primero, l \rangle$ 	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}	
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iCrearItUlt}(\In{l}{lst}) $\to$ $res$ : iter
+
+                \State $res \gets \langle NULL, l \rangle$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iHaySiguiente}(\In{it}{iter}) $\to$ $res$ : $bool$
+
+                \State $res \gets it.siguiente \neq NULL$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \end{algorithmic}
+        \end{algorithm}
+            
+            
+        \begin{algorithm}[H]	
+            \begin{algorithmic}[1]
+                \State \textbf{iHayAnterior}(\In{it}{iter}) $\to$ $res$ : $bool$
+
+                \State $res \gets it.siguiente \neq (it.lista\rightarrow primero)$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+            
+            
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iSiguiente}(\In{it}{iter}) $\to$ $res$ : $\alpha$
+
+                \State $res \gets (it.siguiente\rightarrow dato)$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]{\textbf{iAnterior}(\In{it}{iter}) $\to$ $res$ : $\alpha$}
+            \begin{algorithmic}[1]	
+                \State $res \gets (SiguienteReal(it)\rightarrow anterior\rightarrow dato)$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iAvanzar}(\Inout{it}{iter})
+
+                \State $it.siguiente \gets (it.siguiente\rightarrow siguiente)$	\Comment $\Theta(1)$
+                \If{$it.siguiente = it.lista\rightarrow primero$}	\Comment $\Theta(1)$
+                    \State $it.siguiente \gets NULL$	
+                \EndIf
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \Statex \underline{Justificación:}  $\Theta(1)$ + $\Theta(1)$ = $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iRetroceder}(\Inout{it}{iter})
+
+                \State $it.siguiente \gets (SiguienteReal(it)\rightarrow anterior)$	\Comment $\Theta(1)$
+
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iEliminarSiguiente}(\Inout{it}{iter})
+
+                \State $puntero(nodo) \ temp \gets it.siguiente$
+
+                \State $(tmp\rightarrow siguiente\rightarrow anterior) \gets (tmp\rightarrow anterior)$
+                \Comment{Reencadenamos los nodos // $\Theta(1)$}
+                \State $(tmp\rightarrow anterior\rightarrow siguiente) \gets (tmp\rightarrow siguiente)$
+            
+                \If{$(tmp\rightarrow siguiente) = (it.lista\rightarrow primero)$}
+                \Comment{Si borramos el último nodo, ya no hay siguiente // $\Theta(1)$}
+                    \State $it.siguiente \gets NULL$
+                \Else
+                \Comment{Sino, avanzamos al siguiente	// $\Theta(1)$}
+                    \State $it.siguiente \gets (tmp\rightarrow siguiente)$	
+                \EndIf
+                
+                \If{$tmp = (it.lista\rightarrow primero)$}
+                \Comment{Si borramos el primer nodo, hay que volver a setear el primero // $\Theta(1)$}
+                    \State $(it.lista\rightarrow primero) \gets it.siguiente$
+                \EndIf
+                
+                \State $tmp \gets NULL$	 \Comment{Se libera la memoria ocupada por el nodo // $\Theta(1)$}
+                \State $(it.lista\rightarrow longitud) \gets (it.lista\rightarrow longitud) - 1$
+    
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \Statex \underline{Justificación:} $\Theta(1)$ + $\Theta(1)$ + $\Theta(1)$ + $\Theta(1)$ + $\Theta(1)$ =  $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+        
+            
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iEliminarAnterior}(\Inout{it}{iter})
+            
+                \State $Retroceder(it)$	\Comment $\Theta(1)$
+                \State $EliminarSiguiente(it)$	\Comment $\Theta(1)$
+    
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \Statex \underline{Justificación:} $\Theta(1)$ + $\Theta(1)$ = $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+        
+        
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iAgregarComoSiguiente}(\Inout{it}{iter}, \In{a}{$\alpha$})
+                
+                \State $AgregarComoAnterior(it, a)$		\Comment $\Theta(1)$
+                \State $Retroceder(it)$	\Comment $\Theta(1)$
+    
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \Statex \underline{Justificación:} $\Theta(1)$ + $\Theta(1)$ = $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+            
+        \begin{algorithm}[H]
+            \begin{algorithmic}[1]
+                \State \textbf{iAgregarComoAnterior}(\Inout{it}{iter}, \In{a}{$\alpha$})
+                
+                \State $puntero(nodo) \ sig \gets SiguienteReal(it)$
+                \State $puntero(nodo) \ nuevo \gets $ \textbf{\&} $\langle a, NULL, NULL \rangle$ \Comment{Reservamos memoria para el nuevo nodo	// $\Theta(1)$}
+                \If{$sig = NULL$}
+                \Comment{Asignamos los punteros de acuerdo a si el nodo es el primero o no en la lista circular	// $\Theta(1)$}
+                    \State $(nuevo\rightarrow anterior) \gets nuevo$
+                    \State $(nuevo\rightarrow siguiente) \gets nuevo$
+                \Else
+                    \State $(nuevo\rightarrow anterior) \gets (sig\rightarrow anterior)$
+                    \State $(nuevo\rightarrow siguiente) \gets sig$
+                \EndIf
+                
+                \State $(nuevo\rightarrow anterior\rightarrow siguiente) \gets nuevo$ \Comment{Reencadenamos los otros nodos	// $\Theta(1)$}
+                %\State $(nuevo\rightarrow anterior\rightarrow siguiente) \gets nuevo$ \Comment{Notar que no hay problema cuando nuevo es el único nodo	// $\Theta(1)$}
+                
+                \If{$it.siguiente = (it.lista\rightarrow primero)$}
+                \Comment{Cambiamos el primero en caso de que estemos agregando el primero	// $\Theta(1)$}
+                    \State $(it.lista\rightarrow primero) \gets nuevo$
+                \EndIf
+                
+                \State $(it.lista\rightarrow longitud) \gets (it.lista\rightarrow longitud) + 1$	\Comment $\Theta(1)$
+    
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+                \Statex \underline{Justificación:} $\Theta(1)$ + $\Theta(1)$ + $\Theta(1)$ +  $\Theta(1)$ =  $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+        
+            
+        \begin{algorithm}[H]
+            \begin{algorithmic}
+                \State \textbf{iSiguienteReal}(\In{it}{iter}) $\to$ $res$ : $puntero(nodo)$ \Comment{Esta es una operación privada que}
+                    
+                \If{$it.siguiente = NULL$} \Comment{devuelve el siguiente como lista circular // $\Theta(1)$}
+                    \State $res \gets (it.lista\rightarrow siguiente)$
+                \Else
+                    \State $res \gets it.siguiente$
+                \EndIf
+                
+                \medskip
+                \Statex \underline{Complejidad:} $\Theta(1)$
+            \end{algorithmic}
+        \end{algorithm}
+        %    
+        
+        \end{comment}
+    \end{Interfaz}
+    \end{Algoritmos}
 
 \end{document}
