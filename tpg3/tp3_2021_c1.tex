@@ -806,96 +806,102 @@
 
         \begin{Algoritmos}
 
-            \begin{algorithm}[H]{\textbf{iNuevoFichin}(\In{m}{mapa}) $\to$ $res$ : fichin}
-                    \begin{algorithmic}[1]
-                            \State $res \gets \langle m, False, NULL, NULL, vacio \rangle$ \Comment $\Theta(1)$
-            
-                        \medskip
-                        \Statex
-                        \underline{Complejdad:} $\Theta(1)$
-                    \end{algorithmic}
-            \end{algorithm}
-        
-            \begin{algorithm}[H]{\textbf{iNuevaPartida}(\Inout{f}{fichin}, \In{a}{jugador}) $\to$ $res$ : $bool$}
-                \begin{algorithmic}
-                        \State $res\gets False$
-                        \If{$\neg f.alguienJugando$}
-                            \State $f.jugadorActual \gets jugador$ 				\Comment $\Theta(1)$
-                            \State $f.alguienJugando \gets True$ 				\Comment $\Theta(1)$
-                            \State $f.partidaActual \gets partida.iNuevaPartida(f.mapa)$ 				\Comment $\bigO(c)$
-                            \State $res\gets True$
-                            \EndIf
-                        \medskip
-                        \Statex
-                        \underline{Complejdad:} $\bigO(c)$
-                        \Statex
-                        \underline{Justificación:} La complejidad de este algoritmo es igual a la complejidad de $iNuevaPartida$, que es $\bigO(c)$, con $c = \#chocolates$. 
-                    \end{algorithmic}
-            \end{algorithm}
+              
+\begin{algorithm}[H]{\textbf{iNuevoFichin}(\In{m}{mapa}) $\to$ $res$ : fichin}
+    	\begin{algorithmic}[1]
+			 \State $res \gets \langle m, False, NULL, NULL, vacio \rangle$ \Comment $\Theta(1)$
 
-        \begin{algorithm}[H]{\textbf{iMover}(\Inout{f}{fichin}, \In{d}{direccion}) $\to$ $res$ : $bool$}
-            \begin{algorithmic}[1]
-                \If{$f.alguienJugando$}
-                    \State partida.iMover(f.partidaActual, d)	\Comment $\Theta(1)$
-                    \State $res\gets True$
-                    \If{partida.iGanó?(f.partidaActual)}	\Comment $\bigO(1)$
-                    \If{def?(f.jugadorActual, f.ranking)}\Comment{$\bigO(|J|)$}
-                    \If{obtener(f.jugadorActual, f.ranking) $>$ partida.iCantMov(f.partidaActual)} \Comment{$\bigO(|J|)$} \\
-                    \qquad\qquad definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$} \EndIf
-                \Else\hspace{0.05cm} definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$}\EndIf
-                    \EndIf
-                    \Else
-                    \State $res\gets False$	\Comment $\Theta(1)$
-                \EndIf 
+			\medskip
+			\Statex
+			\underline{Complejdad:} $\Theta(1)$
+    	\end{algorithmic}
+\end{algorithm}
 
-                \medskip
-                \Statex \underline{Complejidad:} $\bigO(|J|)$ si se realiza un movimiento que finaliza la partida
-                \Statex \underline{Justificación:} El diccionario se implementa con un trie, que tiene $\bigO(|J|)$ como complejidad de def?, acceder a significado y definir.
-            \end{algorithmic}
-        \end{algorithm}
-            
-        
-        \begin{algorithm}[H]{\textbf{iVerRanking}(\In{f}{fichin}) $\to$ $res$ : $dicc$}
-            \begin{algorithmic}[1]
-                \State $res \gets f.ranking$	 \Comment $\Theta(1)$
-            
-                \medskip
-                \Statex \underline{Complejidad:} $\Theta(1)$
-                \end{algorithmic}
-        \end{algorithm}	
-        
-        \begin{algorithm}[H]{\textbf{iObjetivo}(\In{f}{fichin}, \In{j}{jugador}) $\to$ $res$ : $\langle jugador, nat\rangle$}
-            \begin{algorithmic}[1]
+\begin{algorithm}[H]{\textbf{iNuevaPartida}(\Inout{f}{fichin}, \In{a}{jugador}) $\to$ $res$ : $bool$}
+	\begin{algorithmic}
+	        \State $res\gets False$
+	       \If{$\neg f.alguienJugando$}
+			 \State $f.jugadorActual \gets a$ 				\Comment $\Theta(1)$
+			 \State $f.alguienJugando \gets True$ 				\Comment $\Theta(1)$
+             \State $f.partidaActual \gets partida.iNuevaPartida(f.mapa)$ 				\Comment $\bigO(c)$
+             \State $res\gets True$
+             \EndIf
+			\medskip
+			\Statex
+			\underline{Complejdad:} $\bigO(c)$
+			\Statex
+			\underline{Justificación:} La complejidad de este algoritmo es igual a la complejidad de $iNuevaPartida$, que es $\bigO(c)$, con $c = \#chocolates$. 
+    	\end{algorithmic}
+\end{algorithm}
 
-                \State $i \gets 0$\Comment $\Theta(1)$
-                \State $C \gets obtenerClavesTrie(f.ranking)$\Comment $\Theta(J)$
-                \State $S \gets \emptyset$ \Comment $\Theta(1)$
-                \While{$i < long(C)-1$}			
-                    \If{$obtener(C[i], f.ranking)<obtener(jugador, f.ranking)$}		\Comment $\bigO(|J|)$
-                    \State $Ag(C[i], S)$ \Comment{$\Theta(1)$}
-                    \EndIf
-                \State $i \gets i + 1$		\Comment $\Theta(1)$
-                \EndWhile
-                \If{$\emptyset$?($S$)}
-                \State $res \gets \langle jugador, obtener(f.ranking, jugador)\rangle$	\Comment $\Theta(1)$
-                \Else
-                \State $max \gets obtener(f.ranking, S[0])$ \Comment{$\bigO(|J|)$}
-                \State $maxJugador \gets S[0]$\Comment $\Theta(1)$
-                \State $j \gets 0$
-                \While{$j<long(S)$}
-                \If{$obtener(f.ranking,S[j])\geq max$}\Comment $\Theta(|J|)$
-                \State $max\gets obtener(f.ranking, S[j])$\Comment $\Theta(|J|)$
-                \State $maxJugador\gets S[j]$\Comment $\Theta(1)$
-                \EndIf
-                \State $j\gets j+1$
-                \EndWhile
-                \State $res \gets \langle maxJugador, max\rangle$
-                \EndIf
-            \medskip
-            \Statex \underline{Complejidad:} $\sum_{k\in J}\bigO(|J|)+\bigO(|J|)+\sum_{k\in S}\bigO(|J|)=\bigO(|J|*J)$
-            \Statex \underline{Justificación:} Los conjuntos $C,S$ son implementados con una lista enlazada para que insertar elementos sea $\bigO(1)$.
-            \end{algorithmic}
-        \end{algorithm}	
+
+\begin{algorithm}[H]{\textbf{iMover}(\Inout{f}{fichin}, \In{d}{direccion}) $\to$ $res$ : $bool$}
+	\begin{algorithmic}[1]
+	        \If{$f.alguienJugando$}
+			 \State partida.iMover(f.partidaActual, d)	\Comment $\Theta(1)$
+			 \State $res\gets True$
+			 \If{partida.iGanó?(f.partidaActual)}	\Comment $\bigO(1)$
+			 \If{def?(f.jugadorActual, f.ranking)}\Comment{$\bigO(|J|)$}
+			 \If{obtener(f.jugadorActual, f.ranking) $>$ partida.iCantMov(f.partidaActual)} \Comment{$\bigO(|J|)$} \\
+			 \qquad\qquad definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$} \EndIf
+		   \Else\hspace{0.05cm} definir(f.jugadorActual, partida.iCantMov(f.partidaActual), f.ranking)\Comment{$\bigO(|J|)$}\EndIf
+		     \EndIf
+			 \Else
+			 \State $res\gets False$	\Comment $\Theta(1)$
+			\EndIf 
+			 
+
+
+			\medskip
+			\Statex \underline{Complejidad:} $\bigO(|J|)$ si se realiza un movimiento que finaliza la partida
+			\Statex \underline{Justificación:} El diccionario se implementa con un trie, que tiene $\bigO(|J|)$ como complejidad de def?, acceder a significado y definir.
+    	\end{algorithmic}
+\end{algorithm}
+	
+
+\begin{algorithm}[H]{\textbf{iVerRanking}(\In{f}{fichin}) $\to$ $res$ : $dicc$}
+	\begin{algorithmic}[1]
+			 \State $res \gets f.ranking$	 \Comment $\Theta(1)$
+    
+			\medskip
+			\Statex \underline{Complejidad:} $\Theta(1)$
+    	\end{algorithmic}
+\end{algorithm}	
+
+
+\begin{algorithm}[H]{\textbf{iObjetivo}(\In{f}{fichin}, \In{j}{jugador}) $\to$ $res$ : $\langle jugador, nat\rangle$}
+	\begin{algorithmic}[1]
+
+			 
+			 \State $i \gets 0$\Comment $\Theta(1)$
+			 \State $C \gets obtenerClavesTrie(f.ranking)$\Comment $\Theta(J)$
+			 \State $S \gets \emptyset$ \Comment $\Theta(1)$
+			 \While{$i < long(C)$}			
+			 	\If{$obtener(C[i], f.ranking)<obtener(jugador, f.ranking)$}		\Comment $\bigO(|J|)$
+			 	\State $Ag(C[i], S)$ \Comment{$\Theta(1)$}
+			 	\EndIf
+				\State $i \gets i + 1$		\Comment $\Theta(1)$
+			 \EndWhile
+			 \If{$\emptyset$?($S$)}
+			 \State $res \gets \langle jugador, obtener(f.ranking, jugador)\rangle$	\Comment $\Theta(1)$
+			 \Else
+			 \State $max \gets obtener(f.ranking, S[0])$ \Comment{$\bigO(|J|)$}
+			 \State $maxJugador \gets S[0]$\Comment $\Theta(1)$
+			 \State $j \gets 0$
+			 \While{$j<long(S)$}
+			 \If{$obtener(f.ranking,S[j])\geq max$}\Comment $\Theta(|J|)$
+			 \State $max\gets obtener(f.ranking, S[j])$\Comment $\Theta(|J|)$
+			 \State $maxJugador\gets S[j]$\Comment $\Theta(1)$
+			 \EndIf
+			 \State $j\gets j+1$
+			 \EndWhile
+			 \State $res \gets \langle maxJugador, max\rangle$
+			 \EndIf
+			\medskip
+			\Statex \underline{Complejidad:} $\sum_{k\leq J}\bigO(|J|)+\bigO(|J|)+\sum_{k\in S}\bigO(|J|)=\bigO(|J|*J)$
+			\Statex \underline{Justificación:} Los conjuntos $C,S$ son implementados con una lista enlazada para que insertar elementos sea $\bigO(1)$.
+    	\end{algorithmic}
+\end{algorithm}	
 
         \subsection*{Servicios usados}
 
