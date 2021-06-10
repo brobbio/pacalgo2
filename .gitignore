@@ -35,6 +35,7 @@
 *.aux
 *.fdb_latexmk
 *.fls
+*.xdv
 *.log
 *.synctex.gz
 __latexindent_temp.tex
