@@ -10,7 +10,7 @@ using namespace std;
 class Mapa
 {
 public:
-    Mapa NuevoMapa(Nat largo,
+    Mapa(Nat largo,
                    Nat alto,
                    Coordenada inicio,
                    Coordenada llegada,
@@ -29,11 +29,18 @@ private:
 
     struct Casillero
     {
-        bool fantasma;
+        
+	Casillero(bool f, bool pel, bool par, int idChoco):
+		fantasma(f), peligrosa(pel), pared(par), idChocolate(idChoco){
+			}
+	bool fantasma;
         bool peligrosa;
         bool pared;
         int idChocolate;
     };
+
+    set<Coordenada> EntornoDistTres(Coordenada posicion);
+
 
     vector<vector<Casillero>> _matriz;
 
