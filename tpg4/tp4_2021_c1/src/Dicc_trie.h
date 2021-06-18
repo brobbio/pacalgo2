@@ -1,5 +1,5 @@
-#ifndef STRING_MAP_H_
-#define STRING_MAP_H_
+#ifndef DICC_TRIE_H_
+#define DICC_TRIE_H_
 
 #include <string>
 
@@ -23,7 +23,8 @@ public:
     /**
     OPERADOR ASIGNACION
      */
-    string_map& operator=(const string_map& d);
+
+//    string_map& operator=(const string_map& d);
 
     /**
     DESTRUCTOR
@@ -34,15 +35,15 @@ public:
     INSERT 
     * Inserta un par clave, valor en el diccionario
     **/
-    void insert(const pair<string, T>&);
+    void insert(const pair<string, T>& a);
 
     /**
     COUNT
     * Devuelve la cantidad de apariciones de la clave (0 o 1).
     * Sirve para identificar si una clave está definida o no.
     **/
-
-    int count(const string &key) const;
+   
+  //  int count(const string &key) const;
 
     /**
     AT
@@ -51,8 +52,8 @@ public:
     --PRODUCE ALIASING--
     -- Versión modificable y no modificable
     **/
-    const T& at(const string& key) const;
-    T& at(const string& key);
+  //  const T& at(const string& key) const;
+   // T& at(const string& key);
 
     /**
     ERASE
@@ -65,22 +66,22 @@ public:
     /**
      SIZE
      * Devuelve cantidad de claves definidas */
-    int size() const;
+   // int size() const;
 
     /**
      EMPTY
      * devuelve true si no hay ningún elemento en el diccionario */
-    bool empty() const;
+  //  bool empty() const;
 
     //Devuelve el conjunto de claves del diccionario.
-    set<T> keys() const;
+   // set<string> keys() const;
 
     /** OPTATIVO
     * operator[]
     * Acceso o definición de pares clave/valor
     **/
-    T &operator[](const string &key);
-
+   // T &operator[](const string &key);
+   
 private:
 
     struct Nodo {
@@ -90,10 +91,14 @@ private:
         T* definicion;
     };
 
-    Nodo* raiz;
+    void destruirNodo(Nodo* n);
+
+   // set<string> keysNodo(string s, Nodo* n) const;
+
+    Nodo* _raiz;
     int _size;
 };
 
-#include "string_map.hpp"
+#include "Dicc_trie.hpp"
 
-#endif // STRING_MAP_H_
+#endif // DICC_TRIE_H_
