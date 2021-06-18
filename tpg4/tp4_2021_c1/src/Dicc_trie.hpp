@@ -11,19 +11,19 @@ string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
 
 template <typename T>
 void string_map<T>::destruirNodo(Nodo* n){
-	vector<Nodo*> temporal = n->siguientes;
 	if(n!=NULL){
+		vector<Nodo*> temporal = n->siguientes;
 		for(Nodo* e: temporal){
 			destruirNodo(e);
 		}
-	delete n;
+		delete n;
 	}
 }
 
 template <typename T>
 string_map<T>::~string_map(){
     if(_raiz != NULL){
-	this->destruirNodo(_raiz);
+		this->destruirNodo(_raiz);
     }
 }
 
