@@ -15,14 +15,14 @@ void string_map<T>::destruirNodo(Nodo* n){
  	     for(Nodo* e: temporal){
 			destruirNodo(e);
 		}
-	delete n;
+		delete n;
 	}
 }
 
 template <typename T>
 string_map<T>::~string_map(){
     if(_raiz != NULL){
-	this->destruirNodo(_raiz);
+		this->destruirNodo(_raiz);
     }
 }
 
