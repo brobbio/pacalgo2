@@ -43,7 +43,7 @@ public:
     * Sirve para identificar si una clave está definida o no.
     **/
    
-  //  int count(const string &key) const;
+    int count(const string &key) const;
 
     /**
     AT
@@ -52,8 +52,8 @@ public:
     --PRODUCE ALIASING--
     -- Versión modificable y no modificable
     **/
-  //  const T& at(const string& key) const;
-   // T& at(const string& key);
+    const T& at(const string& key) const;
+    T& at(const string& key);
 
     /**
     ERASE
@@ -61,26 +61,26 @@ public:
     * PRE: La clave está definida.
     --PRODUCE ALIASING--
     **/
-    //void erase(const string& key);
+    void erase(const string& key);
 
     /**
      SIZE
      * Devuelve cantidad de claves definidas */
-   // int size() const;
+    int size() const;
 
     /**
      EMPTY
      * devuelve true si no hay ningún elemento en el diccionario */
-  //  bool empty() const;
+    bool empty() const;
 
     //Devuelve el conjunto de claves del diccionario.
-   // set<string> keys() const;
+    set<string> keys() const;
 
     /** OPTATIVO
     * operator[]
     * Acceso o definición de pares clave/valor
     **/
-   // T &operator[](const string &key);
+    T &operator[](const string &key);
    
 private:
 
@@ -93,7 +93,7 @@ private:
 
     void destruirNodo(Nodo* n);
 
-   // set<string> keysNodo(string s, Nodo* n) const;
+    set<string> keysNodo(string s, Nodo* n) const;
 
     Nodo* _raiz;
     int _size;

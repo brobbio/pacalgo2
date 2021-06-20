@@ -4,16 +4,15 @@ string_map<T>::string_map(): _size(0), _raiz(new Nodo()){}
 template <typename T>
 string_map<T>::string_map(const string_map<T>& aCopiar) : string_map() { *this = aCopiar; } // Provisto por la catedra: utiliza el operador asignacion para realizar la copia.
 
-/*template <typename T>
-string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
-    
-}*/
+//template <typename T>
+//string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
+//}
 
 template <typename T>
 void string_map<T>::destruirNodo(Nodo* n){
-	vector<Nodo*> temporal = n->siguientes;
 	if(n!=NULL){
-		for(Nodo* e: temporal){
+	     vector<Nodo*> temporal = n->siguientes;
+ 	     for(Nodo* e: temporal){
 			destruirNodo(e);
 		}
 	delete n;
@@ -43,7 +42,7 @@ void string_map<T>::insert(const pair<string, T>& a){
 	_size++;
 }
 
-/*
+
 template <typename T>
 T& string_map<T>::operator[](const string& clave){
     Nodo* temp = _raiz;
@@ -98,25 +97,23 @@ int string_map<T>::size() const{
 
 template <typename T>
 set<string> string_map<T>::keysNodo(string s , Nodo* n) const{
+	set<string> claves;
 	if(n!=NULL){
 		vector<Nodo*> sig = n->siguientes;
-		set<string> claves;
   		int i = 0;
 		while(i<256){
 			if(sig[i]!=NULL){
 				if(sig[i]->definicion!=NULL){
-					s.push_back(char(i));
-					claves.insert(s);
-				}else{
-					s.push_back(char(i));
-					claves.insert(keysNodo(s, sig[i]));
+					claves.insert(s+char(i));
+				}
+				for(string e: keysNodo(s+char(i), sig[i])){
+					claves.insert(e);
 				}
 			}
 			i++;
 		}
-	}else{
-		return set<string>();
 	}
+	return claves;
 }
 
 template <typename T>
@@ -128,4 +125,4 @@ template <typename T>
 bool string_map<T>::empty() const{
     return _size == 0;
 }
-*/
+
