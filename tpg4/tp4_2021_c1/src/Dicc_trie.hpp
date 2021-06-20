@@ -49,7 +49,7 @@ T& string_map<T>::operator[](const string& clave){
     for(char e : clave){
         temp = temp->siguientes[int(e)];
     }
-    return temp->definicion;
+    return *(temp->definicion);
 }
 
 
