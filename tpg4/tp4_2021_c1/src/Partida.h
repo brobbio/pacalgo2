@@ -15,6 +15,9 @@ public:
 	bool Perdio();
 	Coordenada Jugador();
 	Nat CantMov();
+	set<Coordenada> chocolatesActuales();
+	Nat inmunidad();
+	Coordenada jugador() const;
 	
 private:
 	

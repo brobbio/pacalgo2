@@ -73,7 +73,7 @@ const T& string_map<T>::at(const string& clave) const {
     for(char e : clave){
     	temp = temp->siguientes[int(e)];
     }
-    return temp->definicion;
+    return *(temp->definicion);
 }
 
 template <typename T>

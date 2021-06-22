@@ -1,6 +1,6 @@
 #ifndef AED2_FICHIN_H
 #define AED2_FICHIN_H
-
+#include "Fichin.h"
 #include "Tipos.h"
 
 class aed2_Fichin {
@@ -47,7 +47,12 @@ public:
     set<Coordenada> chocolatesActuales() const;
 
 private:
-    // Completar
+    Fichin _fichin;
+    set<Coordenada> _fantasmas;
+    set<Coordenada> _paredes;
+    set<Coordenada> _chocolatesIniciales;
+    Nat _largo;
+    Nat _alto;
 };
 
 #endif // AED2_FICHIN_H

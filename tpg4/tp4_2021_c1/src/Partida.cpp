@@ -68,3 +68,22 @@ Coordenada Partida::Jugador(){
 Nat Partida::CantMov(){
 	return _cantMov;
 }
+
+
+set<Coordenada> Partida::chocolatesActuales(){
+	set<Coordenada> res;
+	for(Coordenada e: _mapa.conjuntoDeChocolates()){
+		if(_chocolates[_mapa.IdChocolate(e)]){
+			res.insert(e);
+		}
+	}
+	return res;
+}
+
+Nat Partida::inmunidad(){
+	return _inmunidad;
+}
+
+Coordenada Partida::jugador() const{
+	return _jugador;
+}

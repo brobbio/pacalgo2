@@ -10,7 +10,8 @@ Mapa::Mapa(Nat largo,
                    set<Coordenada> fantasmas,
                    set<Coordenada> paredes,
                    set<Coordenada> chocolates): 
-			_alto(alto), _inicio(inicio), _llegada(llegada), _matriz(largo), _cantChocolates(chocolates.size())
+			_alto(alto), _largo(largo), _inicio(inicio), _llegada(llegada), _matriz(largo), _cantChocolates(chocolates.size()), 
+			_conjuntodeChocolates(chocolates)
 {
 	int idChocolate = 0;
 	int i = 0;
@@ -85,4 +86,8 @@ Coordenada Mapa::Llegada(){
 
 int Mapa::IdChocolate(Coordenada posicion){
 	return this->_matriz[posicion.first][posicion.second].idChocolate;
+}
+
+set<Coordenada> Mapa::conjuntoDeChocolates(){
+	return _conjuntodeChocolates;
 }

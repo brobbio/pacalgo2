@@ -24,6 +24,7 @@ public:
     Coordenada Inicio();
     Coordenada Llegada();
     int IdChocolate(Coordenada posicion);
+    set<Coordenada> conjuntoDeChocolates();
 
 private:
 
@@ -49,6 +50,7 @@ private:
     Nat _largo;
     Coordenada _inicio;
     Coordenada _llegada;
+    set<Coordenada> _conjuntodeChocolates;
 };
 
 #endif // MAPA_H
