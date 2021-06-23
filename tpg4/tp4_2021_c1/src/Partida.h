@@ -32,5 +32,5 @@ private:
 	bool _perdio;
 };
 
-//#include "../src/Partida.cpp"
+#include "../src/Partida.cpp"
 #endif // PARTIDA_H

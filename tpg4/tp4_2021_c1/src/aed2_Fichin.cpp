@@ -1,4 +1,4 @@
-#include "aed2_Fichin.h"
+//#include "aed2_Fichin.h"
 
 
     aed2_Fichin::aed2_Fichin(Nat largo, Nat alto, Coordenada inicio, Coordenada llegada, set<Coordenada> paredes,

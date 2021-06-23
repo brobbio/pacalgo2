@@ -1,4 +1,4 @@
-#include "Fichin.h"
+//#include "Fichin.h"
 
 Fichin::Fichin(Mapa m): _mapa(m), _alguienJugando(false), _jugadorActual(""), _partidaActual(NULL), _ranking(){}
 
@@ -126,7 +126,7 @@ Nat Fichin::inmunidad() const{
 }
 
 Coordenada Fichin::jugador() const{
-	return (*_partidaActual).jugador();
+	return (*_partidaActual).Jugador();
 }
 
 Coordenada Fichin::inicio() const{

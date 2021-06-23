@@ -1,6 +1,6 @@
 
 
-#include "Mapa.h"
+//#include "Mapa.h"
 
 
 Mapa::Mapa(Nat largo,
@@ -56,15 +56,6 @@ set<Coordenada> Mapa::EntornoDistTres(Coordenada posicion){
 			}
 		}
 	}
-/*	while(d>0){
-		for(Coordenada e: res){
-			res.insert(make_pair(e.first,e.second -1));
-                	res.insert(make_pair(e.first + 1,e.second));
-                	res.insert(make_pair(e.first,e.second +1));
-                	res.insert(make_pair(e.first - 1,e.second));
-		};
-		d = d-1;
-	};*/
 	return res;
 }
 
