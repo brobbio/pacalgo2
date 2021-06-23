@@ -1,5 +1,5 @@
 template <typename T>
-string_map<T>::string_map(): _size(0), _raiz(new Nodo()){}
+string_map<T>::string_map(): _size(0), _raiz(NULL){}
 
 template <typename T>
 string_map<T>::string_map(const string_map<T>& aCopiar) : string_map() { *this = aCopiar; } // Provisto por la catedra: utiliza el operador asignacion para realizar la copia.
@@ -82,7 +82,7 @@ T& string_map<T>::at(const string& clave) {
     for(char e : clave){
         temp = temp->siguientes[int(e)];
     }
-    return temp->definicion;
+    return *(temp->definicion);
 }
 
 //template <typename T>

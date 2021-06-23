@@ -1,6 +1,7 @@
 #include "gtest-1.8.1/gtest.h"
 #include "../src/aed2_Fichin.h"
 
+
 class FichinTest : public testing::Test {
 protected:
     Coordenada posI, posIA, posIB, posII, posID, posL, posLA, posLB, posLI, posLD;

@@ -21,10 +21,11 @@ public:
     bool EnRango(Coordenada posicion);
     Nat CantChocolates();
     bool EsPared(Coordenada posicion);
-    Coordenada Inicio();
-    Coordenada Llegada();
-    int IdChocolate(Coordenada posicion);
-    set<Coordenada> conjuntoDeChocolates();
+    Coordenada Inicio() const;
+    Coordenada Llegada() const;
+    int IdChocolate(Coordenada posicion) const;
+    set<Coordenada> conjuntoDeChocolates() const;
+    set<Coordenada> EntornoDistTres(Coordenada posicion);
 
 private:
 
@@ -40,8 +41,6 @@ private:
         int idChocolate;
     };
 
-    set<Coordenada> EntornoDistTres(Coordenada posicion);
-
 
     vector<vector<Casillero>> _matriz;
 
@@ -52,5 +51,7 @@ private:
     Coordenada _llegada;
     set<Coordenada> _conjuntodeChocolates;
 };
+
+//#include "../src/Mapa.cpp"
 
 #endif // MAPA_H

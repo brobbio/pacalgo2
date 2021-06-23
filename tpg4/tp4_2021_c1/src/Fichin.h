@@ -16,12 +16,14 @@ public:
 	ResultadoMovimiento Mover2(Direccion dir);
 	string_map<Puntaje> VerRanking() const;
 	pair<Jugador, Puntaje> Objetivo() const;
-	set<Coordenada> chocolatesActuales();
+	set<Coordenada> chocolatesActuales() const;
 	Jugador jugadorActual() const;
 	bool alguienJugando() const;
-	Nat cantMov();
-	Nat inmunidad();
+	Nat cantMov() const;
+	Nat inmunidad() const;
 	Coordenada jugador() const;
+	Coordenada inicio() const;
+	Coordenada llegada() const;
 private:
 	Mapa _mapa;
 	bool _alguienJugando;
@@ -29,5 +31,7 @@ private:
 	Partida* _partidaActual;
 	string_map<Puntaje> _ranking;
 };
+
+//#include "../src/Fichin.cpp"
 
 #endif // FICHIN_H

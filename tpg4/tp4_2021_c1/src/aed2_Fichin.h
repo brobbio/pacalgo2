@@ -1,7 +1,9 @@
 #ifndef AED2_FICHIN_H
 #define AED2_FICHIN_H
-#include "Fichin.h"
-#include "Tipos.h"
+
+//#include "Tipos.h"
+#include "../src/Fichin.h"
+
 
 class aed2_Fichin {
 public:
@@ -53,6 +55,10 @@ private:
     set<Coordenada> _chocolatesIniciales;
     Nat _largo;
     Nat _alto;
+    Coordenada _inicio;
+    Coordenada _llegada;
 };
+
+//#include "../src/aed2_Fichin.cpp"
 
 #endif // AED2_FICHIN_H

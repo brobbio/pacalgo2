@@ -19,7 +19,7 @@ Partida::Partida(Mapa m): _mapa(m), _jugador(), _chocolates(), _cantMov(0), _inm
 }
 
 void Partida::Mover(Direccion dir){
-	Coordenada nuevaPosicion = _jugador;
+	Coordenada nuevaPosicion;
 	if(dir == ARRIBA){
 		nuevaPosicion = make_pair(_jugador.first,1+_jugador.second);
 	};
@@ -65,12 +65,12 @@ Coordenada Partida::Jugador(){
 	return _jugador;
 }
 
-Nat Partida::CantMov(){
+Nat Partida::CantMov() const{
 	return _cantMov;
 }
 
 
-set<Coordenada> Partida::chocolatesActuales(){
+set<Coordenada> Partida::chocolatesActuales() const{
 	set<Coordenada> res;
 	for(Coordenada e: _mapa.conjuntoDeChocolates()){
 		if(_chocolates[_mapa.IdChocolate(e)]){
@@ -80,10 +80,18 @@ set<Coordenada> Partida::chocolatesActuales(){
 	return res;
 }
 
-Nat Partida::inmunidad(){
+Nat Partida::inmunidad() const{
 	return _inmunidad;
 }
 
 Coordenada Partida::jugador() const{
 	return _jugador;
+}
+
+Coordenada Partida::inicio() const{
+	return _mapa.Inicio();
+}
+
+Coordenada Partida::llegada() const{
+        return _mapa.Llegada();
 }

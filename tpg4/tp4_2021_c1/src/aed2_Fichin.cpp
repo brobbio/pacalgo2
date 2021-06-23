@@ -5,7 +5,7 @@
                 set<Coordenada> fantasmas, set<Coordenada> chocolates):
 				   _fichin(Mapa(largo, alto, inicio, llegada, fantasmas, paredes, chocolates)),
 				   _fantasmas(fantasmas), _paredes(paredes), 
-				  _chocolatesIniciales(chocolates), _alto(alto), _largo(largo) {}
+				  _chocolatesIniciales(chocolates), _alto(alto), _largo(largo), _inicio(inicio), _llegada(llegada) {}
 
     void aed2_Fichin::nuevaPartida(Jugador j){
 	_fichin.NuevaPartida(j);
@@ -31,7 +31,7 @@
 	map<Jugador, Puntaje> nuevo_dic;
 	set<Jugador> C = _fichin.VerRanking().keys();
 	for(Jugador e: C){
-		nuevo_dic[e] = _fichin.VerRanking()[e];
+		nuevo_dic.insert({e, _fichin.VerRanking().at(e)});
 	}
     	return nuevo_dic;
     }

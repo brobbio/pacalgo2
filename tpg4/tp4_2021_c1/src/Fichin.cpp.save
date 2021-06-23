@@ -1,4 +1,4 @@
-#include "Fichin.h"
+//#include "Fichin.h"
 
 Fichin::Fichin(Mapa m): _mapa(m), _alguienJugando(false), _jugadorActual(""), _partidaActual(NULL), _ranking(){}
 

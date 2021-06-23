@@ -14,10 +14,12 @@ public:
 	bool Gano();
 	bool Perdio();
 	Coordenada Jugador();
-	Nat CantMov();
-	set<Coordenada> chocolatesActuales();
-	Nat inmunidad();
+	Nat CantMov() const;
+	set<Coordenada> chocolatesActuales() const;
+	Nat inmunidad() const;
 	Coordenada jugador() const;
+	Coordenada inicio() const;
+	Coordenada llegada() const;
 	
 private:
 	
@@ -29,4 +31,6 @@ private:
 	bool _gano;
 	bool _perdio;
 };
+
+//#include "../src/Partida.cpp"
 #endif // PARTIDA_H
