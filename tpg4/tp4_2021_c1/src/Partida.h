@@ -26,11 +26,11 @@ private:
 	Mapa _mapa;
 	Coordenada _jugador;
 	vector<bool> _chocolates;
-	Nat _cantMov;
+	Puntaje _cantMov;
 	Nat _inmunidad;
 	bool _gano;
 	bool _perdio;
 };
 
-#include "../src/Partida.cpp"
+// #include "../src/Partida.cpp"
 #endif // PARTIDA_H

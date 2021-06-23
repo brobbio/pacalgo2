@@ -59,6 +59,6 @@ private:
     Coordenada _llegada;
 };
 
-#include "../src/aed2_Fichin.cpp"
+//#include "../src/aed2_Fichin.cpp"
 
 #endif // AED2_FICHIN_H

@@ -32,6 +32,6 @@ private:
 	string_map<Puntaje> _ranking;
 };
 
-#include "../src/Fichin.cpp"
+// #include "../src/Fichin.cpp"
 
 #endif // FICHIN_H

@@ -1,4 +1,4 @@
-//#include "Fichin.h"
+#include "Fichin.h"
 
 Fichin::Fichin(Mapa m): _mapa(m), _alguienJugando(false), _jugadorActual(""), _partidaActual(NULL), _ranking(){}
 
@@ -30,7 +30,7 @@ bool Fichin::Mover(Direccion dir){
 					_ranking[_jugadorActual] = (*_partidaActual).CantMov();
 				}
 			}else{
-				_ranking[_jugadorActual] = (*_partidaActual).CantMov();
+				_ranking.insert(make_pair(_jugadorActual, (*_partidaActual).CantMov()));
 			}
 		delete _partidaActual;
 		_alguienJugando = false;
@@ -48,26 +48,28 @@ bool Fichin::Mover(Direccion dir){
 ResultadoMovimiento Fichin::Mover2(Direccion dir){
         ResultadoMovimiento res = SIGUE;
         if(_alguienJugando){
-                (*_partidaActual).Mover(dir);
-                if((*_partidaActual).Gano()){
-                        if(_ranking.count(_jugadorActual)){
-                                if(_ranking[_jugadorActual]>(*_partidaActual).CantMov()){
-                                        _ranking[_jugadorActual] = (*_partidaActual).CantMov();
-                                }
-                        }else{
-                                _ranking[_jugadorActual] = (*_partidaActual).CantMov();
-                        }
-                	delete _partidaActual;
-                	_alguienJugando = false;
-	                _jugadorActual = "";
-			res = GANO;
-                }
-                if((*_partidaActual).Perdio()){
-                        delete _partidaActual;
-                        _alguienJugando = false;
-                        _jugadorActual = "";
-			res = PERDIO;
-                }
+			(*_partidaActual).Mover(dir);
+			if((*_partidaActual).Gano()){
+					if(_ranking.count(_jugadorActual)){
+						if(_ranking[_jugadorActual]>(*_partidaActual).CantMov()){
+							_ranking[_jugadorActual] = (*_partidaActual).CantMov();
+						}
+					}else{
+						_ranking.insert(make_pair(_jugadorActual, (*_partidaActual).CantMov()));
+					}
+				delete _partidaActual;
+				_partidaActual = NULL;
+				_alguienJugando = false;
+				_jugadorActual = "";
+				res = GANO;
+			}
+			if((*_partidaActual).Perdio()){
+				delete _partidaActual;
+				_partidaActual = NULL;
+				_alguienJugando = false;
+				_jugadorActual = "";
+				res = PERDIO;
+			}
         }
         return res;
 

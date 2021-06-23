@@ -28,6 +28,10 @@ string_map<T>::~string_map(){
 
 template <typename T>
 void string_map<T>::insert(const pair<string, T>& a){
+	if(_raiz == NULL)
+	{
+		_raiz = new Nodo();
+	}
 	Nodo* temp = _raiz;
 	for(char e: a.first){
 		if(temp->siguientes[int(e)] != NULL){
@@ -38,33 +42,36 @@ void string_map<T>::insert(const pair<string, T>& a){
 			temp = temp->siguientes[int(e)];
 		}
 	}
-	temp->definicion = new int(a.second);
+	temp->definicion = new T(a.second);
 	_size++;
 }
 
 
 template <typename T>
 T& string_map<T>::operator[](const string& clave){
-    Nodo* temp = _raiz;
-    for(char e : clave){
-        temp = temp->siguientes[int(e)];
-    }
-    return *(temp->definicion);
+	Nodo* temp = _raiz;
+	for(char e : clave){
+		temp = temp->siguientes[int(e)];
+	}
+	return *(temp->definicion);
 }
 
 
 template <typename T>
 int string_map<T>::count(const string& clave) const{
-    Nodo* temp = _raiz;
-    for(char e : clave){
-	if(temp->siguientes[int(e)]==NULL){
-		return false;
-	}else{
-        	temp = temp->siguientes[int(e)];
+	if(_raiz != NULL)
+	{
+		Nodo* temp = _raiz;
+		for(char e : clave){
+			if(temp->siguientes[int(e)]==NULL){
+				return false;
+			}else{
+				temp = temp->siguientes[int(e)];
+			}
+		}
+		return temp->definicion == NULL;
 	}
-    }
-    return temp->definicion == NULL;
-
+	return 0;
 }
 
 template <typename T>

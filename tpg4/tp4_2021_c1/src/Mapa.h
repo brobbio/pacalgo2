@@ -52,6 +52,6 @@ private:
     set<Coordenada> _conjuntodeChocolates;
 };
 
-#include "../src/Mapa.cpp"
+// #include "../src/Mapa.cpp"
 
 #endif // MAPA_H
