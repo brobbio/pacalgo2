@@ -24,7 +24,7 @@ public:
     OPERADOR ASIGNACION
      */
 
-//    string_map& operator=(const string_map& d);
+   string_map& operator=(const string_map& d);
 
     /**
     DESTRUCTOR

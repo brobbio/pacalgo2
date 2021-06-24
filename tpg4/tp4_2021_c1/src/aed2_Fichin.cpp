@@ -27,11 +27,12 @@
     }
 
     map<Jugador, Puntaje> aed2_Fichin::ranking() const{
-	map<Jugador, Puntaje> nuevo_dic;
-	set<Jugador> C = _fichin.VerRanking().keys();
-	for(Jugador e: C){
-		nuevo_dic.insert({e, _fichin.VerRanking().at(e)});
-	}
+        map<Jugador, Puntaje> nuevo_dic;
+        string_map<Puntaje> ranking = _fichin.VerRanking();
+        set<Jugador> C = ranking.keys();
+        for(Jugador e: C){
+            nuevo_dic.insert({e, ranking.at(e)});
+        }
     	return nuevo_dic;
     }
 

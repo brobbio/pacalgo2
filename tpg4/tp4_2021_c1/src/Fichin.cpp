@@ -50,25 +50,24 @@ ResultadoMovimiento Fichin::Mover2(Direccion dir){
         if(_alguienJugando){
 			(*_partidaActual).Mover(dir);
 			if((*_partidaActual).Gano()){
-					if(_ranking.count(_jugadorActual)){
-						if(_ranking[_jugadorActual]>(*_partidaActual).CantMov()){
-							_ranking[_jugadorActual] = (*_partidaActual).CantMov();
-						}
-					}else{
-						_ranking.insert(make_pair(_jugadorActual, (*_partidaActual).CantMov()));
+				if(_ranking.count(_jugadorActual)){
+					if(_ranking[_jugadorActual]>(*_partidaActual).CantMov()){
+						_ranking[_jugadorActual] = (*_partidaActual).CantMov();
 					}
-				delete _partidaActual;
-				_partidaActual = NULL;
-				_alguienJugando = false;
-				_jugadorActual = "";
+				}else{
+					_ranking.insert(make_pair(_jugadorActual, (*_partidaActual).CantMov()));
+				}
 				res = GANO;
 			}
 			if((*_partidaActual).Perdio()){
+				res = PERDIO;
+			}
+
+			if(res == PERDIO || res == GANO) {
 				delete _partidaActual;
 				_partidaActual = NULL;
 				_alguienJugando = false;
 				_jugadorActual = "";
-				res = PERDIO;
 			}
         }
         return res;
