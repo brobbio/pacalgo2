@@ -95,9 +95,10 @@ int string_map<T>::count(const string &clave) const
 				temp = temp->siguientes[int(e)];
 			}
 		}
-		return temp->definicion == NULL;
+		return temp->definicion != NULL;
+	} else {
+		return 0;
 	}
-	return 0;
 }
 
 template <typename T>
