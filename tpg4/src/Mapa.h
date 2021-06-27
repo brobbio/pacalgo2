@@ -1,9 +1,7 @@
 #ifndef MAPA_H
 #define MAPA_H
 
-#include <set>
-#include <vector>
-#include "../src/Tipos.h"
+#include "Tipos.h"
 
 using namespace std;
 
@@ -51,7 +49,5 @@ private:
     Coordenada _llegada;
     set<Coordenada> _conjuntodeChocolates;
 };
-
-// #include "../src/Mapa.cpp"
 
 #endif // MAPA_H

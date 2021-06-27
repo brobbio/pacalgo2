@@ -1,8 +1,7 @@
 #ifndef PARTIDA_H
 #define PARTIDA_H
 
-//#include "../src/Tipos.h"
-#include "../src/Mapa.h"
+#include "Mapa.h"
 
 using namespace std;
 
@@ -32,5 +31,4 @@ private:
 	bool _perdio;
 };
 
-// #include "../src/Partida.cpp"
 #endif // PARTIDA_H
