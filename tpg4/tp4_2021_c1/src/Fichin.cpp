@@ -15,6 +15,13 @@ bool Fichin::NuevaPartida(Jugador a)
 	bool res = false;
 	if (!(_alguienJugando))
 	{
+		if(_partidaActual != NULL)
+		{
+			//Para que funciona la GUI
+			delete _partidaActual;
+			_partidaActual = NULL;
+			_jugadorActual = "";
+		}
 		_jugadorActual = a;
 		_alguienJugando = true;
 		_partidaActual = new Partida(_mapa);
@@ -85,10 +92,11 @@ ResultadoMovimiento Fichin::Mover2(Direccion dir)
 
 		if (res == PERDIO || res == GANO)
 		{
-			delete _partidaActual;
-			_partidaActual = NULL;
 			_alguienJugando = false;
-			_jugadorActual = "";
+			//No funciona la GUI
+			// delete _partidaActual;
+			// _partidaActual = NULL;
+			// _jugadorActual = "";
 		}
 	}
 	return res;
