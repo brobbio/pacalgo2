@@ -7,13 +7,13 @@ string_map<T>::string_map(const string_map<T> &aCopiar) : string_map() { *this =
 template <typename T>
 string_map<T> &string_map<T>::operator=(const string_map<T> &d)
 {
-	if(d._raiz != NULL)
+	if (d._raiz != NULL)
 	{
 		set<string> keys = d.keys();
-        for(string e: keys){
-            this->insert(make_pair(e, d.at(e)));
-			// make_pair(_jugadorActual, (*_partidaActual).CantMov())
-        }
+		for (string e : keys)
+		{
+			this->insert(make_pair(e, d.at(e)));
+		}
 	}
 
 	return *this;
@@ -29,7 +29,15 @@ void string_map<T>::destruirNodo(Nodo *n)
 		{
 			destruirNodo(e);
 		}
+
+		if (n->definicion != NULL)
+		{
+			delete n->definicion;
+			n->definicion = NULL;
+		}
+
 		delete n;
+		n = NULL;
 	}
 }
 
@@ -63,7 +71,15 @@ void string_map<T>::insert(const pair<string, T> &a)
 			temp = temp->siguientes[int(e)];
 		}
 	}
-	temp->definicion = new T(a.second);
+
+	if (temp->definicion == NULL)
+	{
+		temp->definicion = new T(a.second);
+	}
+	else
+	{
+		*temp->definicion = a.second;
+	}
 	_size++;
 }
 
@@ -96,7 +112,9 @@ int string_map<T>::count(const string &clave) const
 			}
 		}
 		return temp->definicion != NULL;
-	} else {
+	}
+	else
+	{
 		return 0;
 	}
 }
@@ -122,11 +140,6 @@ T &string_map<T>::at(const string &clave)
 	}
 	return *(temp->definicion);
 }
-
-//template <typename T>
-//void string_map<T>::erase(const string& clave) {
-// COMPLETAR
-//}
 
 template <typename T>
 int string_map<T>::size() const
