@@ -4,7 +4,7 @@ project(TP4_Pacalgo2)
 option(WITH_GUI "Preparar compilacion con interfaz grafica (necesita SDL instalado)" OFF)
 
 # IMPORTANTE: Descomentar la siguiente linea para preparar compilacion con interfaz grafica (leer el readme para las instrucciones completas)
-# set(WITH_GUI ON)
+set(WITH_GUI ON)
 
 set(CMAKE_CXX_STANDARD 11)
 

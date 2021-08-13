@@ -1,0 +1,7 @@
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/rebuild_cache.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/edit_cache.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/correrValgrind.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/correrTests.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/pacalgo2GUI.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/gtest_main.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/tp4_2021_c1/build/CMakeFiles/gtest.dir

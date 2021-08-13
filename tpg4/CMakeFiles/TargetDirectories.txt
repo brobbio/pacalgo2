@@ -1,0 +1,6 @@
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/rebuild_cache.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/edit_cache.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/correrValgrind.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/correrTests.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/gtest_main.dir
+/home/brobbio/Documents/algo2-2021c1-grupal/tpg4/CMakeFiles/gtest.dir
