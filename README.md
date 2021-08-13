@@ -1,3 +1,6 @@
+# Status
+Terminado.
+
 # Para los tests
 
 ## Opción 1: Compilar y Ejecutar desde CLion
